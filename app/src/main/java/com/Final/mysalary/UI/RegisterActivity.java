@@ -24,17 +24,19 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void saveDetails() {
         if (isBoss()){
-            Boss newBoss = new Boss(getMailFromScreen(), getNameFromScreen(), getPasswordFromScreen(), getUserNameFromScreen());
+            Boss newBoss = new Boss(getMailFromScreen(), getFirstNameFromScreen(),getLastNameFromScreen(), getPasswordFromScreen(), getUserNameFromScreen());
             if (!verificationOfDetails(newBoss)) return;
             DB.setInBosses(newBoss);
         }
         else {
-            Worker newWorker = new Worker(getMailFromScreen(), getNameFromScreen(), getPasswordFromScreen(), getUserNameFromScreen());
+            Worker newWorker = new Worker(getMailFromScreen(), getFirstNameFromScreen(),getLastNameFromScreen(), getPasswordFromScreen(), getUserNameFromScreen());
             if (!verificationOfDetails(newWorker)) return;
             DB.setInWorkers(newWorker);
         }
         moveToTheLoginScreen();
     }
+
+
 
 
     private boolean verificationOfDetails(User newUser) {
@@ -50,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+
     private boolean isBoss() {
         return false;
     }
@@ -59,13 +62,15 @@ public class RegisterActivity extends AppCompatActivity {
     private String getPasswordFromScreen() {
         return "";
     }
-    private String getNameFromScreen() {
-        return "";
-    }
     private String getMailFromScreen() {
         return "";
     }
-
+    private String getLastNameFromScreen() {
+        return "";
+    }
+    private String getFirstNameFromScreen() {
+        return "";
+    }
 
     private void popUpTheMessageUserNameIsInvalid() {
 
@@ -75,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean validatePassword() { return true; }
     private void moveToTheLoginScreen(){}
+
 
 
 

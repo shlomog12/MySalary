@@ -7,11 +7,11 @@ public class Job {
     double salary;
     int jobId;
 
-    public Job(String userNameWorker, String userNameBoss, double salary, int jobId) {
+    public Job(String userNameWorker, String userNameBoss, double salary) {
         this.userNameWorker = userNameWorker;
         this.userNameBoss = userNameBoss;
         this.salary = salary;
-        this.jobId = jobId;
+        this.jobId = -1;
     }
 
     public String getUserNameWorker() {

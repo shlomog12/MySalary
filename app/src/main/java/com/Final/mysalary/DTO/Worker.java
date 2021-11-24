@@ -8,9 +8,10 @@ public class Worker implements User {
     String lastName;
     String password;
 
-    public Worker(String mail, String firstName, String password, String userName) {
+    public Worker(String mail, String firstName,String lastName, String password, String userName) {
         this.mail = mail;
         this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.userName = userName;
     }

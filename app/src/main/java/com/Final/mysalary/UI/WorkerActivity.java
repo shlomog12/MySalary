@@ -27,7 +27,7 @@ public class WorkerActivity extends AppCompatActivity {
 
     private void addJob() {
         openWindowAddJob();
-        Job newJob = new Job(getUserNameWarker(),getUserNameBoss(),0,getJobIdFromScrean());
+        Job newJob = new Job(getUserNameWarker(),getUserNameBoss(),0);
         DB.setInJobs(newJob);
         closeWindowAddJob();
     }
