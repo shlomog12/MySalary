@@ -2,21 +2,23 @@ package com.Final.mysalary.DTO;
 
 public class Boss implements User{
 
+    String lastNmae;
     String mail;
     String userName;
     String firstName;
     String password;
 
-    public Boss(String mail, String firstName, String password, String userName) {
+    public Boss(String mail, String firstName,String lastName ,String password, String userName) {
         this.mail = mail;
         this.firstName = firstName;
+        this.lastNmae = lastName;
         this.password = password;
         this.userName= userName;
     }
 
     @Override
     public String getUserName() {
-        return null;
+        return this.userName;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class Boss implements User{
 
     @Override
     public String getFirstName() {
-        return null;
+        return this.firstName;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class Boss implements User{
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class Boss implements User{
 
     @Override
     public String getLastName() {
-        return null;
+        return this.lastNmae;
     }
 
     @Override
