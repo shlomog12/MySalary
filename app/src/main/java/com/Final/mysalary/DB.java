@@ -23,8 +23,6 @@ public class DB {
 
 
 
-
-
 //        DatabaseReference myRef = database.getReference("test/"+path);
 //        myRef.setValue(test);
 //        System.out.println("setting");
