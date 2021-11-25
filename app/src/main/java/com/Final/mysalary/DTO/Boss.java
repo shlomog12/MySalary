@@ -65,4 +65,9 @@ public class Boss implements User{
     public void setLastName(String lastName) {
 
     }
+
+    @Override
+    public String getType() {
+        return "bosses";
+    }
 }

@@ -66,5 +66,10 @@ public class Worker implements User {
 
     }
 
+    @Override
+    public String getType() {
+        return "workers";
+    }
+
 
 }

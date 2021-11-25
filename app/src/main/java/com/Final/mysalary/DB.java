@@ -1,44 +1,29 @@
 package com.Final.mysalary;
 
-import android.gesture.GestureOverlayView;
+
+
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.Final.mysalary.DTO.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class DB {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public static void setTest(String path , String test){
-////        Worker worker = new Worker("TEST@Gmail.com","moshe","d","1111","mosh44");
-////        setInWorkers(worker);
-////        Shift shift = new Shift(LocalDateTime.now(),LocalDateTime.now(),"shlomo123",2);
-////        setInShifts(shift);
-//    }
-
-    public static void setInWorkers(Worker worker) {
-        if (false) return;
-        setUser("workers/",worker);
-    }
-    public static void setInBosses(Boss boss) {
-        if (false) return;
-        setUser("bosses/",boss);
-    }
-
-
-    private static void setUser(String path,User user) {
+    public static void setUser(User user) {
+        String path = user.getType()+"/";
         path += user.getUserName();
         setData(path + "/first_name",user.getFirstName());
         setData(path + "/last_name",user.getLastName());
@@ -65,8 +50,6 @@ public class DB {
     }
 
 
-
-
     private static int getMaxIdOfShifts() {
         return 0;
     }
@@ -75,16 +58,89 @@ public class DB {
     }
 
     public static double getSalaryForJob(String userName, int jobId) { return 0; }
-    public static Shift[] getShifts(LocalDateTime start, LocalDateTime end, String userNameWorker) {
-        return null;
+
+
+    public static void getShifts(LocalDateTime start, LocalDateTime end, String userNameWorker, Callback callback) {
+        DatabaseReference dbRef = database.getReference("workers/"+userNameWorker+"/shifts");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<Shift> shifts = new ArrayList<>();
+                for (DataSnapshot child: snapshot.getChildren()){
+                    Shift shift = child.getValue(Shift.class);
+                    if (shift.getDateTimeStart().isAfter(start) && shift.getDateTimeEnd().isBefore(end)){
+                        shifts.add(shift);
+                    }
+                }
+                callback.play(shifts);
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){
+                return;
+            }
+        });
+
+        return;
     }
-    private static Boss getBossByUserName(String userName) {
-        return null;
+    private static void getBossByUserName(String userName, Callback callback) {
+        DatabaseReference dbRef = database.getReference("bosses/"+userName);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Boss boss =snapshot.getValue(Boss.class);
+                callback.play(boss);
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){
+                return;
+            }
+        });
+        return;
     }
-    private static Worker getWorkerByUserName(String userName){
-        return null;
+    private static void getWorkerByUserName(String userName, Callback callback){
+        DatabaseReference dbRef = database.getReference("workers/"+userName);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Worker worker =snapshot.getValue(Worker.class);
+                callback.play(worker);
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){
+                return;
+            }
+        });
+        return;
     }
-    public static boolean validNewUser(User user) {
-        return false;
+    public static void CheckIfTheUserNameIsBusy(User user, Callback callback){
+        DatabaseReference dbRef = database.getReference();
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot type: snapshot.getChildren()) {
+                        for (DataSnapshot userFromDB: type.getChildren()){
+                            if (userFromDB.getKey().equals(user.getUserName())){
+                                callback.play(true);
+                                return;
+                            }
+                        }
+                }
+                DB.setUser(user);
+                callback.play(false);
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("error = "+error.toString());
+            }
+        });
+        return;
     }
+
+
+
 }
