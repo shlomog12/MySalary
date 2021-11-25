@@ -1,16 +1,11 @@
 package com.Final.mysalary.UI;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
-import com.Final.mysalary.DB;
-import com.Final.mysalary.DTO.Boss;
 import com.Final.mysalary.R;
 
 public class LoginActivity extends AppCompatActivity {

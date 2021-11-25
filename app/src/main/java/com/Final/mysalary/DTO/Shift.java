@@ -4,7 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.Final.mysalary.DB;
+import com.Final.mysalary.db.DB;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
