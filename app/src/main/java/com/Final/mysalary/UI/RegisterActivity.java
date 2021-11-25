@@ -11,9 +11,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Final.mysalary.DB;
+import com.Final.mysalary.db.DB;
 import com.Final.mysalary.DTO.Boss;
-import com.Final.mysalary.DTO.Callback;
+import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.DTO.Worker;

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.Final.mysalary.DB;
+import com.Final.mysalary.db.DB;
 import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.R;

@@ -1,4 +1,4 @@
-package com.Final.mysalary;
+package com.Final.mysalary.db;
 
 
 
