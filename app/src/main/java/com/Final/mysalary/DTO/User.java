@@ -13,5 +13,6 @@ public interface User {
     public void setMail(String mail);
     public String getLastName();
     public void setLastName(String lastName);
+    public String getType();
 
 }

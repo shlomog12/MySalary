@@ -3,12 +3,14 @@ package com.Final.mysalary.UI;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
 import com.Final.mysalary.DB;
+import com.Final.mysalary.DTO.Boss;
 import com.Final.mysalary.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,11 +29,29 @@ public class LoginActivity extends AppCompatActivity {
         moveToTheMainScreen();
     }
     public void forgotThePasswordׂ(View view){ }
-    private void moveToTheRegisterScreen(View view) {
+    public void moveToTheRegisterScreen(View view) {
+        Intent intent = new Intent(this,RegisterActivity.class);
+        startActivity(intent);
     }
 
 
-    private void moveToTheMainScreen() { }
+
+
+    private void moveToTheMainScreen() {
+//      moveToWorkerScreen();
+//      moveToBossScreen();
+    }
+
+    public void moveToBossScreen(View view) {
+        Intent intent = new Intent(this, BossActivity.class);
+        startActivity(intent);
+    }
+
+    public void moveToWorkerScreen(View view) {
+        Intent intent = new Intent(this,WorkerActivity.class);
+        startActivity(intent);
+    }
+
     private boolean VerifyUsernameAndPassword() {
         return true;
     }
