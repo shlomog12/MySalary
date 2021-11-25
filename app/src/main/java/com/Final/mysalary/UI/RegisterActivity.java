@@ -1,9 +1,13 @@
 package com.Final.mysalary.UI;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -20,6 +24,8 @@ import com.Final.mysalary.DTO.Worker;
 import com.Final.mysalary.R;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -31,13 +37,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
     }
-
     public void moveToLoginScreen(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
     }
-
-    public void clean(View view) throws InterruptedException {
+    public void clean(View view){
         ((EditText)findViewById(R.id.editMail)).setText("", TextView.BufferType.EDITABLE);
         ((EditText)findViewById(R.id.editUserName)).setText("", TextView.BufferType.EDITABLE);
         ((EditText)findViewById(R.id.editFirstName)).setText("", TextView.BufferType.EDITABLE);
@@ -49,14 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
        moveToLoginScreen();
     }
 
-    public void sendFeedbackToUser(boolean busyUserName){
-        if (busyUserName){
-            popUpMessage("שם משתמש תפוס, אנא בחר שם אחר");
-            return;
-        }
-        popUpMessage("ההרשמה בוצעה בהצלחה!!");
-        moveToLoginScreen();
-    }
     public void saveDetails(View view) {
         validate = true;
         String mail = getMailFromScreen();
@@ -94,8 +90,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
-
+    public void sendFeedbackToUser(boolean busyUserName){
+        if (busyUserName){
+            popUpMessage("שם משתמש תפוס, אנא בחר שם אחר");
+            return;
+        }
+        popUpMessage("ההרשמה בוצעה בהצלחה!!");
+        moveToLoginScreen();
+    }
     private void updateTypeUser() {
         RadioGroup radioGroup =  findViewById(R.id.radioGroupReg);
         int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -107,8 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
         isBoss = (radioButton == findViewById(R.id.radBtnBossReg));
     }
 
-
-
     private String getUserNameFromScreen() {
         String userName = ((EditText)findViewById(R.id.editUserName)).getText().toString();
         if (!validUserName(userName)){
@@ -117,9 +117,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return userName;
     }
-
-
-
     private boolean validUserName(String userName){
         if (userName.length() < 1){
             popUpMessage("שם משתמש קצר מדיי");
@@ -127,38 +124,29 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return true;
     }
-    private String getPasswordFromScreen() {
-        String password = ((EditText)findViewById(R.id.editPassword)).getText().toString();
-        String validPassword = ((EditText)findViewById(R.id.editValidPassword)).getText().toString();
-        if (!validatePassword(password,validPassword)) {
-            validate = false;
-            return null;
-        }
-        return password;
-    }
-    private boolean validatePassword(String password, String validPassword) {
-        if (password.length() < 6) {
-            popUpMessage("הסימה קצרה מדיי סיסמה צריכה להכיל לפחות 6 תווים");
-            return false;
-        }
-        if (!password.equals(validPassword)){
-            popUpMessage("אימות סיסמה לא תואם לסיסמה");
-            return false;
-        }
-
-        return true;
-    }
     private String getMailFromScreen() {
         String mail = ((EditText)findViewById(R.id.editMail)).getText().toString();
-        if (!validMail(mail)){
+        if (!isValidEmail(mail)){
             validate = false;
-            popUpMessage("מייל לא תקין");
+            popUpMessage("כתובת מייל לא תקינה");
             return null;
         }
         return mail;
     }
-    private boolean validMail(String mail) {
-        if (mail.length() < 1) return false;
+    private boolean isValidEmail(String mail) {
+        return (!TextUtils.isEmpty(mail) && Patterns.EMAIL_ADDRESS.matcher(mail).matches());
+    }
+    private String getFirstNameFromScreen() {
+        String firstName = ((EditText)findViewById(R.id.editFirstName)).getText().toString();
+        if (!validFirstName(firstName)) {
+            popUpMessage("שם פרטי לא תקין");
+            validate = false;
+            return null;
+        }
+        return firstName;
+    }
+    private boolean validFirstName(String firstName) {
+        if (firstName.length() < 1) return false;
         return true;
     }
     private String getLastNameFromScreen() {
@@ -174,24 +162,47 @@ public class RegisterActivity extends AppCompatActivity {
         if (lastName.length() < 1) return false;
         return true;
     }
-    private String getFirstNameFromScreen() {
-        String firstName = ((EditText)findViewById(R.id.editFirstName)).getText().toString();
-        if (!validFirstName(firstName)) {
-            popUpMessage("שם פרטי לא תקין");
+    private String getPasswordFromScreen() {
+        String password = ((EditText)findViewById(R.id.editPassword)).getText().toString();
+        String validPassword = ((EditText)findViewById(R.id.editValidPassword)).getText().toString();
+        passwordCheck(password,validPassword);
+        return password;
+    }
+    private void passwordCheck(String password, String validPassword) {
+        if (!isValidPassword(password)){
+            popUpMessage("הסימה לא תקינה.\nאורך הסיסמה לפחות 5 תווים.\nבנוסף סיסמה צריכה להכיל אותיות גדולות, סימנים, ומספרים");
             validate = false;
-            return null;
+            return;
         }
-        return firstName;
+        if (!password.equals(validPassword)){
+            popUpMessage("אימות סיסמה לא תואם לסיסמה");
+            validate = false;
+            return;
+        }
+        return;
     }
-    private boolean validFirstName(String firstName) {
-        if (firstName.length() < 1) return false;
-        return true;
+    public static boolean isValidPassword(final String password) {
+        Pattern pattern;
+        Matcher matcher;
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$";
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        return matcher.matches();
     }
-
 
     private void popUpMessage(String message) {
         Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_LONG).show();
     }
+
+
+
+
+
+
+
+
+
+
 
 
 }
