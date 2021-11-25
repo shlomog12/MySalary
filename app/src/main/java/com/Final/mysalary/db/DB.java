@@ -2,6 +2,8 @@ package com.Final.mysalary.db;
 
 
 
+import static java.lang.Math.max;
+
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -21,7 +23,10 @@ public class DB {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-
+    private static void setData(String path, String value) {
+        DatabaseReference myRef = database.getReference(path);
+        myRef.setValue(value);
+    }
     public static void setUser(User user) {
         String path = user.getType()+"/";
         path += user.getUserName();
@@ -30,35 +35,75 @@ public class DB {
         setData(path + "/mail",user.getMail());
         setData(path + "/password",user.getPassword());
     }
-    private static void setData(String path, String value) {
-        DatabaseReference myRef = database.getReference(path);
-        myRef.setValue(value);
-    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void setInShifts(Shift shift) {
-        int shift_id = getMaxIdOfShifts();
-        String path = "workers/"+ shift.getUserName()+"/shifts/"+shift_id;
-        setData(path+"/end",shift.getDateTimeEnd().toString());
-        setData(path+"/start",shift.getDateTimeStart().toString());
-        setData(path+"/job_id",String.valueOf(shift.getJobId()));
+        DatabaseReference dbRef = database.getReference("workers/"+shift.getUserName()+"/shifts");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                int max =0;
+                for (DataSnapshot child: snapshot.getChildren()) {
+                    max = max(Integer.valueOf(child.getKey()),max);
+                }
+                int shift_id = max;
+                String path = "workers/"+ shift.getUserName()+"/shifts/"+shift_id;
+                setData(path+"/end",shift.getDateTimeEnd().toString());
+                setData(path+"/start",shift.getDateTimeStart().toString());
+                setData(path+"/job_id",String.valueOf(shift.getJobId()));
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){
+                return;
+            }
+        });
+
+        return;
+
     }
     public static void setInJobs(Job newJob) {
-        int job_id = getMaxIdOfJobs();
-        String path = "workers/"+ newJob.getUserNameWorker()+"/jobs/"+job_id;
-        setData(path+"/salary",String.valueOf(newJob.getSalary()));
-        setData(path+"/userNameBoss",newJob.getUserNameBoss());
+        DatabaseReference dbRef = database.getReference("workers/"+newJob.getUserNameWorker()+"/jobs");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                int max =0;
+                for (DataSnapshot child: snapshot.getChildren()) {
+                    max = max(Integer.valueOf(child.getKey()),max);
+                }
+                int job_id = max;
+                String path = "workers/"+ newJob.getUserNameWorker()+"/jobs/"+job_id;
+                setData(path+"/salary",String.valueOf(newJob.getSalary()));
+                setData(path+"/userNameBoss",newJob.getUserNameBoss());
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){
+                return;
+            }
+        });
+
+        return;
     }
-
-
-    private static int getMaxIdOfShifts() {
-        return 0;
+    public static void getSalaryForJob(String userName, int jobId, Callback callback) {
+        DatabaseReference dbRef = database.getReference("workers/"+userName+"/jobs/"+jobId);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Job job = snapshot.getValue(Job.class);
+                callback.play(job.getSalary());
+                return;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){
+                return;
+            }
+        });
+        return;
     }
-    private static int getMaxIdOfJobs() {
-        return 0;
-    }
-
-    public static double getSalaryForJob(String userName, int jobId) { return 0; }
-
 
     public static void getShifts(LocalDateTime start, LocalDateTime end, String userNameWorker, Callback callback) {
         DatabaseReference dbRef = database.getReference("workers/"+userNameWorker+"/shifts");

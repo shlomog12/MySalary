@@ -87,7 +87,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void play(ArrayList<Shift> shifts) {
+            }
 
+            @Override
+            public void play(double num) {
             }
         });
     }
