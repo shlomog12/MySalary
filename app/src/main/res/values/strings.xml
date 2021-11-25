@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">MySalary</string>
+    <string name="firstName">שם פרטי:</string>
+    <string name="password">סיסמה:</string>
+    <string name="mail">מייל:</string>
+    <string name="userName">שם משתמש:</string>
+    <string name="lastName">שם משפחה:</string>
+    <string name="enterMail">הכנס מייל</string>
+    <string name="enterUserName">הכנס שם משתמש</string>
+    <string name="x">X</string>
+    <string name="cleanAll">נקה הכל</string>
+    <string name="enterFirstName">הכנס שם פרטי</string>
+    <string name="save">שמור</string>
+    <string name="worker">עובד</string>
+    <string name="enterLastName">הכנס שם משפחה</string>
+    <string name="boss">מנהל</string>
+    <string name="verifyPassword">אמת סיסמה:</string>
+    <string name="register">הרשמה</string>
 </resources>
