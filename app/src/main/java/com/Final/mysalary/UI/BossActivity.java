@@ -36,6 +36,10 @@ public class BossActivity extends AppCompatActivity {
             public void play(ArrayList<Shift> shifts) {
                 showShifts(shifts);
             }
+
+            @Override
+            public void play(double num) {
+            }
         });
     }
 

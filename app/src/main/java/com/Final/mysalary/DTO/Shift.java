@@ -4,10 +4,12 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public class Shift {
 
@@ -28,11 +30,28 @@ public class Shift {
         this.totalHours = end.until(start, ChronoUnit.HOURS);
         this.userName = userName;
         this.jobId = jobId;
-        updateSalary();
+        DB.getSalaryForJob(this.userName, this.jobId, new Callback() {
+            @Override
+            public void play(User user) {
+            }
+
+            @Override
+            public void play(boolean bool) {
+            }
+
+            @Override
+            public void play(ArrayList<Shift> shifts) {
+            }
+
+            @Override
+            public void play(double num) {
+                updateSalary(num);
+            }
+        });
     }
 
-    private void updateSalary() {
-        double salaryForHour = DB.getSalaryForJob(this.userName,this.jobId);
+    private void updateSalary(double num) {
+        double salaryForHour = num;
         this.salary = salaryForHour*this.totalHours;
     }
 
