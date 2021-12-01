@@ -1,10 +1,10 @@
 package com.Final.mysalary.UI;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -22,6 +22,12 @@ import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.DTO.Worker;
 import com.Final.mysalary.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -31,12 +37,18 @@ public class RegisterActivity extends AppCompatActivity {
 
     boolean validate;
     boolean isBoss;
+    User newUser;
+    public FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        mAuth = FirebaseAuth.getInstance();
     }
+
+
+
     public void moveToLoginScreen(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
@@ -53,6 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
        moveToLoginScreen();
     }
 
+
+
     public void saveDetails(View view) {
         validate = true;
         String mail = getMailFromScreen();
@@ -67,10 +81,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (!validate) return;
         updateTypeUser();
         if (!validate) return;
-        User newUser;
         if (isBoss) newUser = new Boss(mail,firstName,lastName,password,userName);
         else newUser = new Worker(mail, firstName, lastName, password, userName);
-        DB.CheckIfTheUserNameIsBusy(newUser, new Callback() {
+        DB.CheckIfTheUserNameIsBusy(userName, new Callback() {
             @Override
             public void play(User user) {
                 return;
@@ -82,8 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void play(ArrayList<Shift> shifts) {
-            }
+            public void play(ArrayList<Shift> shifts) { }
 
             @Override
             public void play(double num) {
@@ -95,8 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
             popUpMessage("שם משתמש תפוס, אנא בחר שם אחר");
             return;
         }
-        popUpMessage("ההרשמה בוצעה בהצלחה!!");
-        moveToLoginScreen();
+        registerWithFireBase();
     }
     private void updateTypeUser() {
         RadioGroup radioGroup =  findViewById(R.id.radioGroupReg);
@@ -189,20 +200,38 @@ public class RegisterActivity extends AppCompatActivity {
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
-
     private void popUpMessage(String message) {
         Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_LONG).show();
     }
 
+    public  void registerWithFireBase(){
 
+        mAuth.createUserWithEmailAndPassword(newUser.getMail(),newUser.getPassword())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @SuppressLint("RestrictedApi")
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            popUpMessage("ההרשמה בוצעה בהצלחה");
+                            DB.setUser(newUser);
+                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(newUser.getUserName()).build();
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            firebaseUser.updateProfile(profileChangeRequest);
+                            moveToMainScrean();
+                        }else {
+                            System.out.println(task.getException());
+                            popUpMessage("הרשמה נכשלה, המייל כבר קיים במערכת");
+                        }
+                    }
+                });
+    }
 
-
-
-
-
-
-
-
-
+    private void moveToMainScrean() {
+        Intent intent;
+        if (newUser.getType() == "worker") intent = new Intent(this,WorkerActivity.class);
+        else intent = new Intent(this,BossActivity.class);
+        startActivity(intent);
+    }
 
 }

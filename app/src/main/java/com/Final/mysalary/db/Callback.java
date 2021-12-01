@@ -4,7 +4,6 @@ import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface Callback {
 

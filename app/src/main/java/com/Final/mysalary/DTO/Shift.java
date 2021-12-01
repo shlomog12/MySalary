@@ -17,7 +17,7 @@ public class Shift {
     LocalDateTime dateTimeEnd;
     int jobId;
     double totalHours;
-    double salary;
+    double totalSalary;
     String userName;
 
 
@@ -52,7 +52,7 @@ public class Shift {
 
     private void updateSalary(double num) {
         double salaryForHour = num;
-        this.salary = salaryForHour*this.totalHours;
+        this.totalSalary = salaryForHour*this.totalHours;
     }
 
 
@@ -88,12 +88,12 @@ public class Shift {
         this.totalHours = totalHours;
     }
 
-    public double getSalary() {
-        return salary;
+    public double getTotalSalary() {
+        return totalSalary;
     }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
+    public void setTotalSalary(double totalSalary) {
+        this.totalSalary = totalSalary;
     }
 
     public String getUserName() {
