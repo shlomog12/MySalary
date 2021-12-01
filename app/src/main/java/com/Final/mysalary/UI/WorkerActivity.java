@@ -31,7 +31,7 @@ public class WorkerActivity extends AppCompatActivity {
 
     private void addJob() {
         openWindowAddJob();
-        Job newJob = new Job(getUserNameWarker(),getUserNameBoss(),0);
+        Job newJob = new Job(getUserNameWarker(),getUserNameBoss(),"22");
         DB.setInJobs(newJob);
         closeWindowAddJob();
     }

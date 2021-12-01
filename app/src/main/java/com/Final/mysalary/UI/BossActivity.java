@@ -9,7 +9,6 @@ import android.view.View;
 import com.Final.mysalary.db.DB;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,7 +26,7 @@ public class BossActivity extends AppCompatActivity {
 
     private void showShiftsLive() { }
     private void showShiftsByFilter(){
-        DB.getShifts(getStartFromFilter(), getEndFromFilter(), getUserNameFromFilter(), new Callback<ArrayList<Shift>>() {
+        DB.getShifts(0,getStartFromFilter(), getEndFromFilter(), getUserNameFromFilter(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 showShifts(shifts);

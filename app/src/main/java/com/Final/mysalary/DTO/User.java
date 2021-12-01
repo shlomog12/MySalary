@@ -1,63 +1,74 @@
 package com.Final.mysalary.DTO;
 
-public interface User {
 
 
-    public String getUserName();
-    public void setUserName(String userName);
-    public String getFirst_name();
-    public void setFirst_name(String first_name);
-    public String getPassword();
-    public void setPassword(String password);
-    public String getMail();
-    public void setMail(String mail);
-    public String getLast_name();
-    public void setLast_name(String last_name);
-    public String getType();
+public class User {
 
-    public String toString();
+    private String firstName;
+    private String lastName;
+    private String mail;
+    private String password;
+    private String userName;
+    private Type type;
 
 
+    public User(String mail, String firstName, String lastName , String password, String userName, Type type) {
+        this.mail = mail;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.userName= userName;
+        this.type = type;
+    }
 
-//    @Override
-//    public String getFirst_name() {
-//        return first_name;
-//    }
-//
-//    @Override
-//    public void setFirst_name(String first_name) {
-//        this.first_name = first_name;
-//    }
-//
-//    @Override
-//    public String getLast_name() {
-//        return last_name;
-//    }
-//
-//    @Override
-//    public void setLast_name(String last_name) {
-//        this.last_name = last_name;
-//    }
-//
-//    @Override
-//    public String getMail() {
-//        return mail;
-//    }
-//
-//    @Override
-//    public void setMail(String mail) {
-//        this.mail = mail;
-//    }
-//
-//    @Override
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    @Override
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
+    public User(){}
 
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public String getUserName() {
+        return this.userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getMail() {
+        return mail;
+    }
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+    public Type getType() {
+        return this.type;
+    }
+    public void setType(Type type) {
+        this.type = type;
+    }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", mail='" + mail + '\'' +
+                ", password='" + password + '\'' +
+                ", userName='" + userName + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

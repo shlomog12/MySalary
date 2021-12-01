@@ -15,12 +15,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.Final.mysalary.db.DB;
-import com.Final.mysalary.DTO.Boss;
-import com.Final.mysalary.db.Callback;
-import com.Final.mysalary.DTO.Shift;
+import com.Final.mysalary.DTO.Type;
 import com.Final.mysalary.DTO.User;
-import com.Final.mysalary.DTO.Worker;
+import com.Final.mysalary.db.DB;
+import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,8 +26,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,8 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
-
-
     public void moveToLoginScreen(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
@@ -64,9 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
     public void close(View view){
        moveToLoginScreen();
     }
-
-
-
     public void saveDetails(View view) {
         validate = true;
         String mail = getMailFromScreen();
@@ -79,11 +70,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (!validate) return;
         String userName = getUserNameFromScreen();
         if (!validate) return;
-        updateTypeUser();
+        Type typeOfUser = getTypeOfUser();
         if (!validate) return;
-        if (isBoss) newUser = new Boss(mail,firstName,lastName,password,userName);
-        else newUser = new Worker(mail, firstName, lastName, password, userName);
-        DB.CheckIfTheUserNameIsBusy(userName, new Callback<Boolean>() {
+        newUser = new User(mail,firstName,lastName,password,userName, typeOfUser);
+        DB.CheckIfTheUserNameIsExists(userName, new Callback<Boolean>() {
             @Override
             public void play(Boolean isBusy) {
                 sendFeedbackToUser(isBusy);
@@ -97,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         registerWithFireBase();
     }
-    private void updateTypeUser() {
+    private Type getTypeOfUser() {
         RadioGroup radioGroup =  findViewById(R.id.radioGroupReg);
         int selectedId = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = findViewById(selectedId);
@@ -105,9 +95,9 @@ public class RegisterActivity extends AppCompatActivity {
             popUpMessage("אנא בחר סוג משתמש");
             validate = false;
         }
-        isBoss = (radioButton == findViewById(R.id.radBtnBossReg));
+        if (radioButton == findViewById(R.id.radBtnBossReg)) return Type.BOSS;
+        return Type.WORKER;
     }
-
     private String getUserNameFromScreen() {
         String userName = ((EditText)findViewById(R.id.editUserName)).getText().toString();
         if (!validUserName(userName)){
@@ -169,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void passwordCheck(String password, String validPassword) {
         if (!isValidPassword(password)){
-            popUpMessage("הסימה לא תקינה.\nאורך הסיסמה לפחות 5 תווים.\nבנוסף סיסמה צריכה להכיל אותיות גדולות, סימנים, ומספרים");
+            popUpMessage("הסימה לא תקינה.\nאורך הסיסמה לפחות 6 תווים.\nבנוסף סיסמה צריכה להכיל אותיות גדולות, סימנים, ומספרים");
             validate = false;
             return;
         }
@@ -183,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity {
     public static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;
-        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$";
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{6,}$";
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         return matcher.matches();
@@ -191,7 +181,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void popUpMessage(String message) {
         Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_LONG).show();
     }
-
     public  void registerWithFireBase(){
 
         mAuth.createUserWithEmailAndPassword(newUser.getMail(),newUser.getPassword())
@@ -214,10 +203,9 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void moveToMainScrean() {
         Intent intent;
-        if (newUser.getType() == "worker") intent = new Intent(this,WorkerActivity.class);
+        if (newUser.getType() == Type.WORKER) intent = new Intent(this,WorkerActivity.class);
         else intent = new Intent(this,BossActivity.class);
         startActivity(intent);
     }
