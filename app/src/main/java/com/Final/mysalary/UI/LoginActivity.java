@@ -69,56 +69,40 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) return;
-        DB.getUserByUserName(currentUser.getDisplayName(), new Callback() {
+        DB.getUserByUserName(currentUser.getDisplayName(), new Callback<User>() {
             @Override
             public void play(User user) {
                 curUser = user;
                 System.out.println(user);
                 moveToTheMainScreen();
             }
-
-            @Override
-            public void play(boolean bool) {
-
-            }
-
-            @Override
-            public void play(ArrayList<Shift> shifts) {
-
-            }
-
-            @Override
-            public void play(double num) {
-
-            }
         });
-
     }
 
 
 
     public void login(View view) {
-        EditText userEditText = findViewById(R.id.input_username);
-        EditText passEditText = findViewById(R.id.input_pass);
-        int checkId = rg.getCheckedRadioButtonId();
-        mAuth.signInWithEmailAndPassword(userEditText.getText().toString(), passEditText.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            switch (checkId) {
-                                case -1:
-                                    Toast.makeText(LoginActivity.this, "you must enter type", Toast.LENGTH_SHORT).show();
-                                case R.id.rdoBtnBoss:
-                                    startActivity(new Intent(LoginActivity.this, BossActivity.class));
-                                case R.id.rdoBtnWork:
-                                    startActivity(new Intent(LoginActivity.this, WorkerActivity.class));
-                            }
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+//        EditText userEditText = findViewById(R.id.input_username);
+//        EditText passEditText = findViewById(R.id.input_pass);
+//        int checkId = rg.getCheckedRadioButtonId();
+//        mAuth.signInWithEmailAndPassword(userEditText.getText().toString(), passEditText.getText().toString())
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            switch (checkId) {
+//                                case -1:
+//                                    Toast.makeText(LoginActivity.this, "you must enter type", Toast.LENGTH_SHORT).show();
+//                                case R.id.rdoBtnBoss:
+//                                    startActivity(new Intent(LoginActivity.this, BossActivity.class));
+//                                case R.id.rdoBtnWork:
+//                                    startActivity(new Intent(LoginActivity.this, WorkerActivity.class));
+//                            }
+//                        } else {
+//                            Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                });
     }
 
     public void register(View view) {
@@ -138,12 +122,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(this, RegisterActivity.class));
     }
 
-    public void forgotThePasswordׂ(View view){ }
-    public void moveToTheRegisterScreen(View view) {
-        Intent intent = new Intent(this,RegisterActivity.class);
-        startActivity(intent);
 
-    }
+
 
     public void forgotThePasswordׂ(View view) {
     }

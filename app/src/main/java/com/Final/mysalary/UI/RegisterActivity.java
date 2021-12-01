@@ -83,22 +83,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (!validate) return;
         if (isBoss) newUser = new Boss(mail,firstName,lastName,password,userName);
         else newUser = new Worker(mail, firstName, lastName, password, userName);
-        DB.CheckIfTheUserNameIsBusy(userName, new Callback() {
+        DB.CheckIfTheUserNameIsBusy(userName, new Callback<Boolean>() {
             @Override
-            public void play(User user) {
-                return;
-            }
-
-            @Override
-            public void play(boolean isBusy) {
+            public void play(Boolean isBusy) {
                 sendFeedbackToUser(isBusy);
-            }
-
-            @Override
-            public void play(ArrayList<Shift> shifts) { }
-
-            @Override
-            public void play(double num) {
             }
         });
     }

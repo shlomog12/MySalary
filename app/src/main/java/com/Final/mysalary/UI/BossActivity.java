@@ -27,23 +27,12 @@ public class BossActivity extends AppCompatActivity {
 
     private void showShiftsLive() { }
     private void showShiftsByFilter(){
-        DB.getShifts(getStartFromFilter(), getEndFromFilter(), getUserNameFromFilter(), new Callback() {
-            @Override
-            public void play(User user) {
-            }
-
-            @Override
-            public void play(boolean bool) {
-            }
-
+        DB.getShifts(getStartFromFilter(), getEndFromFilter(), getUserNameFromFilter(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 showShifts(shifts);
             }
 
-            @Override
-            public void play(double num) {
-            }
         });
     }
 

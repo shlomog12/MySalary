@@ -30,21 +30,9 @@ public class Shift {
         this.totalHours = end.until(start, ChronoUnit.HOURS);
         this.userName = userName;
         this.jobId = jobId;
-        DB.getSalaryForJob(this.userName, this.jobId, new Callback() {
+        DB.getSalaryForJob(this.userName, this.jobId, new Callback<Double>() {
             @Override
-            public void play(User user) {
-            }
-
-            @Override
-            public void play(boolean bool) {
-            }
-
-            @Override
-            public void play(ArrayList<Shift> shifts) {
-            }
-
-            @Override
-            public void play(double num) {
+            public void play(Double num) {
                 updateSalary(num);
             }
         });
