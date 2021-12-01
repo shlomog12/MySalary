@@ -6,12 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".UI.WorkerActivity">
 
-    <ToggleButton
-        android:id="@+id/toggleOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="38dp" />
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="125dp"
+        android:layout_height="68dp"
+        android:onClick="logout"
+        android:text="התנתק"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.854"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.035" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
