@@ -3,13 +3,17 @@ package com.Final.mysalary.UI;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import com.Final.mysalary.db.DB;
 import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDateTime;
 
@@ -95,4 +99,9 @@ public class WorkerActivity extends AppCompatActivity {
     private void popUpAddShiftWindow() {
     }
     private void closeAddShiftWindow() { }
+
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this,LoginActivity.class));
+    }
 }
