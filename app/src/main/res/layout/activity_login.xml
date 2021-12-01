@@ -8,44 +8,93 @@
 
 
     <EditText
-        android:id="@+id/myInput2"
-        android:layout_width="215dp"
-        android:layout_height="60dp"
+        android:id="@+id/input_pass"
+        android:layout_width="262dp"
+        android:layout_height="55dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="path"
+        android:text="Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.458"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.291" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="223dp"
-        android:layout_height="267dp"
-        android:onClick="login"
-        android:text="log"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.684" />
+        app:layout_constraintVertical_bias="0.236" />
 
     <EditText
-        android:id="@+id/myInput"
-        android:layout_width="215dp"
-        android:layout_height="60dp"
+        android:id="@+id/input_username"
+        android:layout_width="261dp"
+        android:layout_height="48dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="mes"
+        android:text="User Name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.212" />
+        app:layout_constraintVertical_bias="0.142" />
+
+    <Button
+        android:id="@+id/button_reg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="register"
+        android:text="Register"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.757"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.534" />
+
+    <Button
+        android:id="@+id/button_log"
+        android:layout_width="108dp"
+        android:layout_height="51dp"
+        android:onClick="login"
+        android:text="Log-In"
+        android:textSize="20sp"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.536" />
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="114dp"
+        android:layout_height="102dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.252"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.378">
+
+        <RadioButton
+            android:id="@+id/rdoBtnWork"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:text="Employee" />
+
+        <RadioButton
+            android:id="@+id/rdoBtnBoss"
+            android:layout_width="89dp"
+            android:layout_height="wrap_content"
+            android:text="Worker" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/button_google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="google_sign"
+        android:text="Google Sign-In"
+        tools:layout_editor_absoluteX="126dp"
+        tools:layout_editor_absoluteY="454dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".UI.WorkerActivity">
 
+    <ToggleButton
+        android:id="@+id/toggleOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="38dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
