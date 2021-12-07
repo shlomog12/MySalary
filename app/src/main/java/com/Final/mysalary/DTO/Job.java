@@ -4,13 +4,14 @@ public class Job {
 
     String userNameWorker;
     String userNameBoss;
-    double salary;
+    String salaryForHour;
     int jobId;
 
-    public Job(String userNameWorker, String userNameBoss, double salary) {
+    public Job(){}
+    public Job(String userNameWorker, String userNameBoss, String salaryForHour) {
         this.userNameWorker = userNameWorker;
         this.userNameBoss = userNameBoss;
-        this.salary = salary;
+        this.salaryForHour = salaryForHour;
         this.jobId = -1;
     }
 
@@ -26,16 +27,25 @@ public class Job {
     public void setUserNameBoss(String userNameBoss) {
         this.userNameBoss = userNameBoss;
     }
-    public double getSalary() {
-        return salary;
-    }
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
     public int getJobId() {
         return jobId;
     }
     public void setJobId(int jobId) {
         this.jobId = jobId;
+    }
+    public String getSalaryForHour() {
+        return salaryForHour;
+    }
+    public void setSalaryForHour(String salaryForHour) {
+        this.salaryForHour = salaryForHour;
+    }
+    @Override
+    public String toString() {
+        return "Job{" +
+                "userNameWorker='" + userNameWorker + '\'' +
+                ", userNameBoss='" + userNameBoss + '\'' +
+                ", salaryForHour='" + salaryForHour + '\'' +
+                ", jobId=" + jobId +
+                '}';
     }
 }

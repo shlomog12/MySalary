@@ -12,7 +12,7 @@
         android:layout_width="262dp"
         android:layout_height="55dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPersonName|textPassword"
         android:text="Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,8 +27,8 @@
         android:layout_width="261dp"
         android:layout_height="48dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="User Name"
+        android:inputType="textEmailAddress"
+        android:text="Mail"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,10 +44,10 @@
         app:backgroundTint="#3F51B5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.757"
+        app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.534" />
+        app:layout_constraintVertical_bias="0.383" />
 
     <Button
         android:id="@+id/button_log"
@@ -60,36 +60,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintHorizontal_bias="0.31"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.536" />
-
-    <RadioGroup
-        android:id="@+id/radiogroup"
-        android:layout_width="114dp"
-        android:layout_height="102dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintHorizontal_bias="0.252"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.378">
-
-        <RadioButton
-            android:id="@+id/rdoBtnWork"
-            android:layout_width="105dp"
-            android:layout_height="wrap_content"
-            android:text="Employee" />
-
-        <RadioButton
-            android:id="@+id/rdoBtnBoss"
-            android:layout_width="89dp"
-            android:layout_height="wrap_content"
-            android:text="Worker" />
-
-    </RadioGroup>
+        app:layout_constraintVertical_bias="0.385" />
 
     <Button
         android:id="@+id/button_google"
@@ -97,7 +71,39 @@
         android:layout_height="wrap_content"
         android:onClick="google_sign"
         android:text="Google Sign-In"
-        tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="454dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <Button
+        android:id="@+id/btnForgot"
+        android:layout_width="118dp"
+        android:layout_height="63dp"
+        android:onClick="forgot"
+        android:text="forgot the password"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.705" />
+
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="104dp"
+        android:layout_height="58dp"
+        android:onClick="testDB"
+        android:text="test"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.066"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.708" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
