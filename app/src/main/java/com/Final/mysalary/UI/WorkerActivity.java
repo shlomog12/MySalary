@@ -70,7 +70,7 @@ public class WorkerActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showListOfShifts() {
         if (currentUser == null){ return; }
-        DB.getShifts(-1, LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getUserName(), new Callback<ArrayList<Shift>>() {
+        DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getUserName(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(WorkerActivity.this, shifts);
@@ -83,7 +83,7 @@ public class WorkerActivity extends AppCompatActivity {
 
     private void addJob() {
         openWindowAddJob();
-        Job newJob = new Job(getUserNameWarker(), getUserNameBoss(), "22");
+        Job newJob = new Job(getUserNameWarker(), getUserNameBoss(), "22","teacher");
         DB.setInJobs(newJob);
         closeWindowAddJob();
     }
@@ -110,14 +110,14 @@ public class WorkerActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addNewShift() {
         popUpAddShiftWindow();
-        Shift shift = new Shift(getStart(), getEnd(), getMail(), getJobId());
+        Shift shift = new Shift(getStart(), getEnd(), getMail(), getJobName());
         DB.setInShifts(shift);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void StartAndEndShift() {
         if (ButtonIsStart()) {
-            Shift shift = new Shift(LocalDateTime.now(), null, getMail(), getJobId());
+            Shift shift = new Shift(LocalDateTime.now(), null, getMail(), getJobName());
             DB.setInShifts(shift);
         } else updateEndOfShift();
     }
@@ -133,8 +133,8 @@ public class WorkerActivity extends AppCompatActivity {
         return false;
     }
 
-    private int getJobId() {
-        return 0;
+    private String getJobName() {
+        return "";
     }
 
     private String getMail() {
@@ -154,7 +154,7 @@ public class WorkerActivity extends AppCompatActivity {
     private void saveShift() {
 //        LocalDateTime start = LocalDateTime.of(2021,11,15,21,22);
 //        LocalDateTime end = LocalDateTime.of(2021,11,15,21,22);
-        Shift shift = new Shift(null, null, "0", 0);
+        Shift shift = new Shift(null, null, "0", "");
         DB.setInShifts(shift);
         closeAddShiftWindow();
     }

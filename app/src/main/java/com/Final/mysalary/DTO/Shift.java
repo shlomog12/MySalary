@@ -4,30 +4,29 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.Final.mysalary.db.Callback;
-import com.Final.mysalary.db.DB;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class Shift {
 
-    LocalDateTime start;
-    LocalDateTime end;
-    int jobId;
-    double totalHours;
-    double totalSalary;
-    String userName;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private String jobName;
+    private double totalHours;
+    private double totalSalary;
+    private String userName;
 
 
 
     public Shift(){ }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Shift(LocalDateTime start, LocalDateTime end , String userName, int jobId) {
+    public Shift(LocalDateTime start, LocalDateTime end , String userName, String jobName) {
         this.start =start;
         this.end = end;
         this.userName = userName;
-        this.jobId = jobId;
+        this.jobName = jobName;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -51,13 +50,10 @@ public class Shift {
     public void setEnd(String end) {
         this.setEndTime(LocalDateTime.parse(end));
     }
-    public void setJobIdFromInt(int jobId) {
-        this.jobId = jobId;
-    }
-    public LocalDateTime getStart() {
+    public LocalDateTime Start() {
         return start;
     }
-    public LocalDateTime getEnd() {
+    public LocalDateTime End() {
         return end;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -66,42 +62,47 @@ public class Shift {
         double salaryForHour = Double.parseDouble(salary);
         this.totalSalary = salaryForHour*this.totalHours;
     }
-    public int getJobId() {
-        return jobId;
-    }
-    public double getTotalHours() {
+    public double TotalHours() {
         return totalHours;
     }
-    public void setTotalHours(double totalHours) {
+    public void setTotalOfHours(double totalHours) {
         this.totalHours = totalHours;
     }
-    public double getTotalSalary() {
+    public double TotalSalary() {
         return totalSalary;
     }
-    public void setTotalSalary(double totalSalary) {
+    public void setTotalOfSalary(double totalSalary) {
         this.totalSalary = totalSalary;
     }
-    public String getUserName() {
+    public String UserName() {
         return userName;
     }
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
-
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
+    public String JobName() {
+        return jobName;
     }
+    public void setJobOfName(String jobName) {
+        this.jobName = jobName;
+    }
+    public String getStart() {
+        return start.toString();
+    }
+
+    public String getEnd() {
+        return end.toString();
+    }
+
     @Override
     public String toString() {
         return "Shift{" +
                 "start=" + start +
                 ", end=" + end +
-                ", jobId=" + jobId +
+                ", jobName='" + jobName + '\'' +
                 ", totalHours=" + totalHours +
                 ", totalSalary=" + totalSalary +
                 ", userName='" + userName + '\'' +
                 '}';
     }
-
 }

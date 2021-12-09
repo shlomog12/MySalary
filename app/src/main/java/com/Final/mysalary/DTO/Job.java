@@ -5,22 +5,19 @@ public class Job {
     String userNameBoss;
     String salaryForHour;
     String userNameWorker;
+    String jobName;
 
-
-    int jobId;
-
-//    public Job(String userNameBoss, String salaryForHour) {
-//        this.userNameBoss = userNameBoss;
-//        this.salaryForHour = salaryForHour;
-//    }
 
     public Job(){}
-    public Job(String userNameWorker, String userNameBoss, String salaryForHour) {
-        this.userNameWorker = userNameWorker;
+    public Job(String userNameBoss, String salaryForHour, String userNameWorker, String jobName) {
         this.userNameBoss = userNameBoss;
         this.salaryForHour = salaryForHour;
-        this.jobId = -1;
+        this.userNameWorker = userNameWorker;
+        this.jobName = jobName;
     }
+
+
+
 
     public String getUserNameWorker() {
         return userNameWorker;
@@ -34,25 +31,26 @@ public class Job {
     public void setUserNameBoss(String userNameBoss) {
         this.userNameBoss = userNameBoss;
     }
-    public int getJobId() {
-        return jobId;
-    }
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
-    }
     public String getSalaryForHour() {
         return salaryForHour;
     }
     public void setSalaryForHour(String salaryForHour) {
         this.salaryForHour = salaryForHour;
     }
+    public String JobName() {
+        return jobName;
+    }
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
     @Override
     public String toString() {
         return "Job{" +
-                "userNameWorker='" + userNameWorker + '\'' +
-                ", userNameBoss='" + userNameBoss + '\'' +
+                "userNameBoss='" + userNameBoss + '\'' +
                 ", salaryForHour='" + salaryForHour + '\'' +
-                ", jobId=" + jobId +
+                ", userNameWorker='" + userNameWorker + '\'' +
+                ", jobName='" + jobName + '\'' +
                 '}';
     }
 }

@@ -16,11 +16,11 @@ public class DBTest{
     static String userName;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void test(String userName_) throws InterruptedException {
-        userName = userName_;
+    public static void test() throws InterruptedException {
+        userName = "testDb4";
 //        testSetUser();
 //        testSetJobs();
-        testSetShifts();
+//        testSetShifts();
 //        testGetSalaryOfJob();
 //        testGetShifts();
 //        testGetUser();
@@ -29,12 +29,12 @@ public class DBTest{
     }
 
     private static void testGetJobs() {
-        DB.getJobs(userName, new Callback<ArrayList<Job>>() {
+        DB.getJobs(userName, new Callback<ArrayList<String>>() {
             @Override
-            public void play(ArrayList<Job> jobs) {
+            public void play(ArrayList<String> jobs) {
                 System.out.println("************************************TEST**************************************8");
-                for (Job job:jobs) {
-                    System.out.println(job);
+                for (String jobName:jobs) {
+                    System.out.println(jobName);
                 }
                 System.out.println("**************************************************************************8");
             }
@@ -68,7 +68,7 @@ public class DBTest{
     private static void testGetShifts() {
 
         System.out.println("***********************************70");
-        DB.getShifts(1,  LocalDateTime.MIN ,LocalDateTime.MAX,userName, new Callback<ArrayList<Shift>>() {
+        DB.getShifts("",  LocalDateTime.MIN ,LocalDateTime.MAX,userName, new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 System.out.println("************************************TEST**************************************8");
@@ -81,40 +81,42 @@ public class DBTest{
 
 
     }
-    private static void testGetSalaryOfJob() {
-        DB.getSalaryForJob(userName, 1, new Callback<String>() {
-            @Override
-            public void play(String salary) {
-                System.out.println("************************************TEST**************************************8");
-                double mys = Double.parseDouble(salary);
-                System.out.println("salary = "+mys);
-                System.out.println("**************************************************************************8");
-            }
-        });
-    }
+//    private static void testGetSalaryOfJob() {
+//        DB.getSalaryForJob(userName, 1, new Callback<String>() {
+//            @Override
+//            public void play(String salary) {
+//                System.out.println("************************************TEST**************************************8");
+//                double mys = Double.parseDouble(salary);
+//                System.out.println("salary = "+mys);
+//                System.out.println("**************************************************************************8");
+//            }
+//        });
+//    }
     private static void testSetUser() {
         User user = new User();
         user.setUserName(userName);
-        user.setFirstName("test9_12");
-        user.setLastName("test9_12");
-        user.setPassword("0812*D9_12");
-        user.setMail("test@812.com9_12");
-        user.setType(Type.BOSS.ordinal());
+        user.setFirstName("testDB9_12");
+        user.setLastName("LAtestDB9_12");
+        user.setPassword("A#0912");
+        user.setMail("9_12@testDB.COM");
+        user.setType(Type.WORKER.ordinal());
         DB.setUser(user);
     }
     private static void testSetJobs() {
-        Job job = new Job(userName,"avi8_12","812");
+        Job job = new Job("avi8_12","22",userName,"teacher");
         DB.setInJobs(job);
+        Job job2 = new Job("avi8_12","200",userName,"programmer");
+        DB.setInJobs(job2);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testSetShifts() {
-        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),userName,0);
+        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),userName,"programmer");
         DB.setInShifts(shift);
 
 
 
 
-        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),userName,1);
+        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),userName,"teacher");
         DB.setInShifts(shift2);
     }
 

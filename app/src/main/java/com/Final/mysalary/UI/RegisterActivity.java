@@ -212,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void moveToMainScrean(){
         Intent intent;
-        if (newUser.getType() == Type.WORKER) intent = new Intent(this,WorkerActivity.class);
+        if (newUser.getType() == Type.WORKER.ordinal()) intent = new Intent(this,WorkerActivity.class);
         else intent = new Intent(this,BossActivity.class);
         intent.putExtra("user",  newUser.getUserName());
         startActivity(intent);

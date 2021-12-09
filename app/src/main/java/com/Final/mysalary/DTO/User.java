@@ -53,8 +53,8 @@ public class User {
     public void setMail(String mail) {
         this.mail = mail;
     }
-    public Type getType() {
-        return this.type;
+    public int getType() {
+        return this.type.ordinal();
     }
     public void setType(int type) {
         this.type = (type == 0) ? Type.WORKER : Type.BOSS;
