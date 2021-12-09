@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
-    int jobId = -1;
+    String jobName = "";
 
     // invoke the suitable constructor of the ArrayAdapter class
     public ShiftsAdapter(@NonNull Context context, ArrayList<Shift> arrayList) {
@@ -49,9 +49,9 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
 
         TextView textView = currentItemView.findViewById(R.id.textViewBorder);
-        if (jobId != currentShift.jobId) {
-            textView.setText(String.valueOf(currentShift.getJobId()));
-            jobId = currentShift.jobId;
+        if (jobName != currentShift.JobName()) {
+            textView.setText(currentShift.JobName());
+            jobName = currentShift.JobName();
         } else {
             textView.setVisibility(View.GONE);
         }
@@ -68,25 +68,25 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
         // then according to the position of the view assign the desired TextView 2 for the same
         TextView textView2 = currentItemView.findViewById(R.id.textView2);
-        LocalDateTime localDate2 = currentShift.getStart();//For reference
+        LocalDateTime localDate2 = currentShift.Start();//For reference
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String formattedString2 = localDate2.format(formatter);
         textView2.setText(formattedString2);
 
         // then according to the position of the view assign the desired TextView 2 for the same
         TextView textView3 = currentItemView.findViewById(R.id.textView3);
-        LocalDateTime localDate3 = currentShift.getEnd();//For reference
+        LocalDateTime localDate3 = currentShift.End();//For reference
         DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String formattedString3 = localDate3.format(formatter3);
         textView3.setText(formattedString3);
 
         // then according to the position of the view assign the desired TextView 2 for the same
         TextView textView4 = currentItemView.findViewById(R.id.textView4);
-        textView4.setText(String.format("%.2f", currentShift.getTotalHours()));
+        textView4.setText(String.format("%.2f", currentShift.TotalHours()));
 
         // then according to the position of the view assign the desired TextView 2 for the same
         TextView textView5 = currentItemView.findViewById(R.id.textView5);
-        textView5.setText(String.format("%.2f", currentShift.getTotalSalary()));
+        textView5.setText(String.format("%.2f", currentShift.TotalSalary()));
 
         // then return the recyclable view
         return currentItemView;
