@@ -40,6 +40,7 @@ public class WorkerActivity extends AppCompatActivity {
         FirebaseUser curr_user = mAuth.getCurrentUser();
         user_name = curr_user.getDisplayName();
 
+
 //        recyclerView = findViewById(R.id.shiftsList);
         DB.getShifts(-1, LocalDateTime.MIN, LocalDateTime.MAX, user_name, new Callback<ArrayList<Shift>>() {
             @Override

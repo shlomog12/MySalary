@@ -20,7 +20,7 @@ public class DBTest{
         userName = userName_;
 //        testSetUser();
 //        testSetJobs();
-//        testSetShifts();
+        testSetShifts();
 //        testGetSalaryOfJob();
 //        testGetShifts();
 //        testGetUser();
@@ -108,7 +108,7 @@ public class DBTest{
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testSetShifts() {
-        Shift shift =new Shift(LocalDateTime.of(2009,11,30,20,55,44),LocalDateTime.of(2009,12,1,07,22,04),userName,0);
+        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),userName,0);
         DB.setInShifts(shift);
 
 
