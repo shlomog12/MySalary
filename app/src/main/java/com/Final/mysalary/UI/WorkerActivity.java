@@ -1,5 +1,6 @@
 package com.Final.mysalary.UI;
 
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,12 +11,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.Final.mysalary.DTO.Job;
-import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.ShiftsAdapter;
+import com.Final.mysalary.DTO.*;
 import com.Final.mysalary.R;
-import com.Final.mysalary.db.Callback;
-import com.Final.mysalary.db.DB;
+import com.Final.mysalary.db.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,68 +24,60 @@ public class WorkerActivity extends AppCompatActivity {
 
     ShiftsAdapter myAdapter;
     FirebaseAuth mAuth;
-    String user_name;
-    ArrayList<Shift> list;
+    User currentUser;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
-
-        list = new ArrayList<>();
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser curr_user = mAuth.getCurrentUser();
-        user_name = curr_user.getDisplayName();
+    }
 
 
-//        recyclerView = findViewById(R.id.shiftsList);
-        DB.getShifts(-1, LocalDateTime.MIN, LocalDateTime.MAX, user_name, new Callback<ArrayList<Shift>>() {
+    public void onStart() {
+        super.onStart();
+        updateUser();
+    }
+
+    private void updateUser() {
+        String userName = updateUserName();
+        if (userName == null) return;
+        DB.getUserByUserName(userName, new Callback<User>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void play(ArrayList<Shift> shifts) {
-                // Now create the instance of the NumebrsViewAdapter and pass
-                // the context and arrayList created above
-                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(WorkerActivity.this, shifts);
-
-                // create the instance of the ListView to set the numbersViewAdapter
-                ListView shiftsListView = findViewById(R.id.listView);
-
-                // set the numbersViewAdapter for ListView
-                shiftsListView.setAdapter(shiftsArrayAdapter);
-
-//                list.add(shift);
-//                shiftsArrayAdapter.notifyDataSetChanged();
+            public void play(User user) {
+                currentUser = user;
+                showListOfShifts();
             }
         });
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-//        myAdapter = new ShiftsAdapter(this, list);
-//        recyclerView.setAdapter(myAdapter);
-
-
-//        DB.getShifts();
-
-//        database.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-//                    Shift shift = datasnapshot.getValue(Shift.class);
-//                    list.add(shift);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+    }
+    private String updateUserName() {
+        String userName;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            userName = extras.getString("user");
+            if (userName != null) return userName;
+        }
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        userName = firebaseUser.getDisplayName();
+        return userName;
     }
 
     private void showTotalSumOfSalary() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void showListOfShifts() {
+        if (currentUser == null){ return; }
+        DB.getShifts(-1, LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getUserName(), new Callback<ArrayList<Shift>>() {
+            @Override
+            public void play(ArrayList<Shift> shifts) {
+                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(WorkerActivity.this, shifts);
+                ListView shiftsListView = findViewById(R.id.listView);
+                shiftsListView.setAdapter(shiftsArrayAdapter);
+            }
+        });
     }
 
 

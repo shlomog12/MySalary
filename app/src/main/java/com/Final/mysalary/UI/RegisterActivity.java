@@ -1,8 +1,11 @@
 package com.Final.mysalary.UI;
 
+import static java.lang.Thread.sleep;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -193,14 +196,12 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             popUpMessage("ההרשמה בוצעה בהצלחה");
-                            DB.setUser(newUser);
                             UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(newUser.getUserName()).build();
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            System.out.println(newUser.getUserName());
                             firebaseUser.updateProfile(profileChangeRequest);
-                            System.out.println(firebaseUser.getDisplayName());
-
-
+                            DB.setUser(newUser);
                             moveToMainScrean();
                         }else {
                             System.out.println(task.getException());
@@ -209,11 +210,25 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void moveToMainScrean() {
+    private void moveToMainScrean(){
         Intent intent;
         if (newUser.getType() == Type.WORKER) intent = new Intent(this,WorkerActivity.class);
         else intent = new Intent(this,BossActivity.class);
+        intent.putExtra("user",  newUser.getUserName());
         startActivity(intent);
+    }
+
+    private void waiting() {
+        FirebaseUser curr_user = mAuth.getCurrentUser();
+        while (curr_user.getDisplayName() != null){
+            curr_user = mAuth.getCurrentUser();
+        }
+
+//        try {
+//            sleep(500);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

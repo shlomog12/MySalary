@@ -109,6 +109,7 @@ public class DB {
 
 
     public static void getShifts(int jobId,LocalDateTime start, LocalDateTime end, String userNameWorker, Callback callback) {
+        if (userNameWorker ==null || start == null || end == null) return;
         DatabaseReference dbRef = database.getReference().child(config.USERS).child(userNameWorker).child(config.JOBS);
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -174,7 +175,6 @@ public class DB {
 
     public static void getUserByUserName(String userName, Callback callback){
         DatabaseReference dbRef = database.getReference(config.USERS).child(userName);
-
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
