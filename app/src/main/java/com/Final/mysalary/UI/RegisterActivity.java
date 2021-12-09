@@ -218,17 +218,4 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void waiting() {
-        FirebaseUser curr_user = mAuth.getCurrentUser();
-        while (curr_user.getDisplayName() != null){
-            curr_user = mAuth.getCurrentUser();
-        }
-
-//        try {
-//            sleep(500);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-    }
-
 }
