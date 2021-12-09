@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void play(User user) {
                 curUser = user;
-                System.out.println(user);
                 moveToTheMainScreen();
             }
         });
@@ -61,31 +60,21 @@ public class LoginActivity extends AppCompatActivity {
             popUpMessage("סיסמה לא תקינה");
             return;
         }
-        mAuth.signInWithEmailAndPassword(mail,password)
-
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @SuppressLint("RestrictedApi")
+        mAuth.signInWithEmailAndPassword(mail,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Intent i = new Intent(LoginActivity.this,WorkerActivity.class);
-                        i.putExtra("user",mail);
-                        startActivity(i);
-//                        if (task.isSuccessful()){
-//                            System.out.println("1mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
-//                            System.out.println(mAuth.getCurrentUser().getDisplayName());
-//                            DB.getUserByUserName(mAuth.getCurrentUser().getDisplayName(), new Callback<User>() {
-//                                @Override
-//                                public void play(User user) {
-//                                    System.out.println(user);
-//                                    curUser = user;
-//                                    System.out.println(curUser);
-//                                    moveToTheMainScreen();
-//                                }
-//                            });
-//                        }else {
-//                            popUpMessage("ההתחברות נכשלה");
-//                            System.out.println(task.getException());
-//                        }
+                        if (task.isSuccessful()){
+                            DB.getUserByUserName(mAuth.getCurrentUser().getDisplayName(), new Callback<User>() {
+                                @Override
+                                public void play(User user) {
+                                    curUser = user;
+                                    moveToTheMainScreen();
+                                }
+                            });
+                        }else {
+                            popUpMessage("ההתחברות נכשלה");
+                            System.out.println(task.getException());
+                        }
                     }
                 });
     }
@@ -95,9 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void moveToTheMainScreen() {
-        System.out.println("************************************************************************************************");
-        System.out.println(curUser.getType());
-        System.out.println("************************************************************************************************");
+        if (curUser.getType() == null) return;
         if (curUser.getType() == Type.WORKER) startActivity(new Intent(this, WorkerActivity.class));
         else startActivity(new Intent(this, BossActivity.class));
     }
@@ -120,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) throws InterruptedException {
-//        System.out.println("108");
         DBTest.test("avha");
     }
 }
