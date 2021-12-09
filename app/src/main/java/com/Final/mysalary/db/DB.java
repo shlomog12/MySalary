@@ -110,12 +110,12 @@ public class DB {
 
     public static void getShifts(int jobId,LocalDateTime start, LocalDateTime end, String userNameWorker, Callback callback) {
         DatabaseReference dbRef = database.getReference().child(config.USERS).child(userNameWorker).child(config.JOBS);
-
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                ArrayList<Shift> shifts = new ArrayList<>();
+                if (!snapshot.exists()) return;
+                    ArrayList<Shift> shifts = new ArrayList<>();
 
                 if (jobId == -1) shifts = getListOfAllShifts(start,end,snapshot,userNameWorker);
                 else{

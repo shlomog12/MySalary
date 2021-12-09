@@ -95,6 +95,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void moveToTheMainScreen() {
+        System.out.println("************************************************************************************************");
+        System.out.println(curUser.getType());
+        System.out.println("************************************************************************************************");
         if (curUser.getType() == Type.WORKER) startActivity(new Intent(this, WorkerActivity.class));
         else startActivity(new Intent(this, BossActivity.class));
     }
@@ -118,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) throws InterruptedException {
 //        System.out.println("108");
-        DBTest.test("test8_12");
+        DBTest.test("avha");
     }
 }
 
