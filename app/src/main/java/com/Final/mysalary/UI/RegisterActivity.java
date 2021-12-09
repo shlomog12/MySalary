@@ -79,6 +79,9 @@ public class RegisterActivity extends AppCompatActivity {
                 sendFeedbackToUser(isBusy);
             }
         });
+
+
+
     }
     public void sendFeedbackToUser(boolean busyUserName){
         if (busyUserName){
@@ -182,7 +185,6 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_LONG).show();
     }
     public  void registerWithFireBase(){
-
         mAuth.createUserWithEmailAndPassword(newUser.getMail(),newUser.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @SuppressLint("RestrictedApi")
@@ -195,6 +197,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     .setDisplayName(newUser.getUserName()).build();
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             firebaseUser.updateProfile(profileChangeRequest);
+                            System.out.println(firebaseUser.getDisplayName());
+
+
                             moveToMainScrean();
                         }else {
                             System.out.println(task.getException());

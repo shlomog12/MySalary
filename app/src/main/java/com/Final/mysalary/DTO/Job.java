@@ -2,10 +2,17 @@ package com.Final.mysalary.DTO;
 
 public class Job {
 
-    String userNameWorker;
     String userNameBoss;
     String salaryForHour;
+    String userNameWorker;
+
+
     int jobId;
+
+//    public Job(String userNameBoss, String salaryForHour) {
+//        this.userNameBoss = userNameBoss;
+//        this.salaryForHour = salaryForHour;
+//    }
 
     public Job(){}
     public Job(String userNameWorker, String userNameBoss, String salaryForHour) {

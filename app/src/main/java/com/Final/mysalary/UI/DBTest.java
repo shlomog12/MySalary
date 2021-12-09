@@ -66,7 +66,9 @@ public class DBTest{
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testGetShifts() {
-        DB.getShifts(-1,  LocalDateTime.MIN ,LocalDateTime.MAX,userName, new Callback<ArrayList<Shift>>() {
+
+        System.out.println("***********************************70");
+        DB.getShifts(1,  LocalDateTime.MIN ,LocalDateTime.MAX,userName, new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 System.out.println("************************************TEST**************************************8");
@@ -93,22 +95,26 @@ public class DBTest{
     private static void testSetUser() {
         User user = new User();
         user.setUserName(userName);
-        user.setFirstName("shlomo");
-        user.setLastName("gl");
-        user.setPassword("A!22333222");
-        user.setMail("shlomo@am.com");
-        user.setType(Type.WORKER);
+        user.setFirstName("test9_12");
+        user.setLastName("test9_12");
+        user.setPassword("0812*D9_12");
+        user.setMail("test@812.com9_12");
+        user.setType(Type.BOSS.ordinal());
         DB.setUser(user);
     }
     private static void testSetJobs() {
-        Job job0 = new Job(userName,"avi44","114");
-        DB.setInJobs(job0);
+        Job job = new Job(userName,"avi8_12","812");
+        DB.setInJobs(job);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testSetShifts() {
         Shift shift =new Shift(LocalDateTime.of(2009,11,30,20,55,44),LocalDateTime.of(2009,12,1,07,22,04),userName,0);
         DB.setInShifts(shift);
-        Shift shift2 =new Shift(LocalDateTime.of(2009,11,30,20,55,44),LocalDateTime.of(2009,12,1,07,22,04),userName,1);
+
+
+
+
+        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),userName,1);
         DB.setInShifts(shift2);
     }
 

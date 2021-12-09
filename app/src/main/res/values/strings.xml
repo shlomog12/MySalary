@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MySalary</string>
-    <string name="firstName">שם פרטי:</string>
+    <string name="firstName">שם פרטי</string>
     <string name="password">סיסמה:</string>
     <string name="mail">מייל:</string>
     <string name="userName">שם משתמש:</string>

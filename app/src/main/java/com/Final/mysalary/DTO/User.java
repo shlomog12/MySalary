@@ -56,8 +56,8 @@ public class User {
     public Type getType() {
         return this.type;
     }
-    public void setType(Type type) {
-        this.type = type;
+    public void setType(int type) {
+        this.type = (type == 0) ? Type.WORKER : Type.BOSS;
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Shift;
@@ -16,6 +17,7 @@ import com.Final.mysalary.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class WorkerActivity extends AppCompatActivity {
 
@@ -102,6 +104,101 @@ public class WorkerActivity extends AppCompatActivity {
 
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
+
+
+        DB.getShifts(-1, LocalDateTime.MIN, LocalDateTime.MAX, "dDD", new Callback<ArrayList<Shift>>() {
+            @Override
+            public void play(ArrayList<Shift> shifts) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//private.
+/*
+play(userName){
+print
+    user.userName = userName;
+}
+
+
+
+
+ */
+
+
+
+
+
+
+//    DB.getUserName(play);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
