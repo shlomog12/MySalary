@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Aviem/AndroidStudioProjects/MySalary/app/src/main/res/layout/activity_login.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Aviem/AndroidStudioProjects/MySalary/app/src/main/res/layout/activity_register.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/Aviem/AndroidStudioProjects/MySalary/app/src/main/res/layout/activity_worker.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/Aviem/AndroidStudioProjects/MySalary/app/src/main/res/layout/shift_viewer.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/shlom/AndroidStudioProjects/MySalary/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18541666666666667" />
         <entry key="..\:/Users/shlom/AndroidStudioProjects/MySalary/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18541666666666667" />
         <entry key="..\:/Users/shlom/AndroidStudioProjects/MySalary/app/src/main/res/layout/activity_boss.xml" value="0.12360688956433637" />
