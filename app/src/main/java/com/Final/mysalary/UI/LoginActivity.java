@@ -50,10 +50,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void login(View view) {
-        String mail = ((EditText) findViewById(R.id.input_username)).getText().toString();
-        String password = ((EditText) findViewById(R.id.input_pass)).getText().toString();//
-        mAuth.signInWithEmailAndPassword(mail, password)
+    public void login(View view){
+        String mail = ((EditText)findViewById(R.id.input_username)).getText().toString();
+        String password = ((EditText)findViewById(R.id.input_pass)).getText().toString();
+        if (mail.length() < 5){
+            popUpMessage("מייל לא תקין");
+            return;
+        }
+        if(password.length() < 6){
+            popUpMessage("סיסמה לא תקינה");
+            return;
+        }
+        mAuth.signInWithEmailAndPassword(mail,password)
+
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @SuppressLint("RestrictedApi")
                     @Override
@@ -108,7 +117,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) throws InterruptedException {
-        DBTest.test("shlomo12");
+//        System.out.println("108");
+        DBTest.test("test8_12");
     }
 }
 

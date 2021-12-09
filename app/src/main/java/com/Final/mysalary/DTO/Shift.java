@@ -20,6 +20,7 @@ public class Shift {
     String userName;
 
 
+
     public Shift(){ }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Shift(LocalDateTime start, LocalDateTime end , String userName, int jobId) {
@@ -27,19 +28,8 @@ public class Shift {
         this.end = end;
         this.userName = userName;
         this.jobId = jobId;
-        updateTotalSalary();
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void updateTotalSalary() {
-        updateTotalHours();
-        if (this.userName ==null) return;
-        DB.getSalaryForJob(this.userName, this.jobId, new Callback<String>() {
-            @Override
-            public void play(String salary) {
-                updateSalary(salary);
-            }
-        });
-    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateTotalHours() {
         double totalMinutes = this.start.until(this.end, ChronoUnit.MINUTES);
@@ -48,7 +38,6 @@ public class Shift {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setStartTime(LocalDateTime start) {
         this.start = start;
-        if (this.end!= null) updateTotalSalary();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setStart(String start) {
@@ -57,7 +46,6 @@ public class Shift {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEndTime(LocalDateTime end) {
         this.end = end;
-        if (this.start!= null) updateTotalSalary();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEnd(String end) {
@@ -66,16 +54,15 @@ public class Shift {
     public void setJobIdFromInt(int jobId) {
         this.jobId = jobId;
     }
-    public void setJobId(String jobId) {
-        this.setJobIdFromInt(Integer.parseInt(jobId));
-    }
     public LocalDateTime getStart() {
         return start;
     }
     public LocalDateTime getEnd() {
         return end;
     }
-    private void updateSalary(String salary) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void updateSalary(String salary) {
+        updateTotalHours();
         double salaryForHour = Double.parseDouble(salary);
         this.totalSalary = salaryForHour*this.totalHours;
     }
@@ -99,6 +86,11 @@ public class Shift {
     }
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
     }
     @Override
     public String toString() {

@@ -80,6 +80,9 @@ public class RegisterActivity extends AppCompatActivity {
                 sendFeedbackToUser(isBusy);
             }
         });
+
+
+
     }
     public void sendFeedbackToUser(boolean busyUserName){
         if (busyUserName){
@@ -195,6 +198,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     .setDisplayName(newUser.getUserName()).build();
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             firebaseUser.updateProfile(profileChangeRequest);
+                            System.out.println(firebaseUser.getDisplayName());
+
+
                             moveToMainScrean();
                         }else {
                             System.out.println(task.getException());

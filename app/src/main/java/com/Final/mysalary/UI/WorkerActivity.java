@@ -9,6 +9,7 @@ import android.widget.ListView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.ShiftsAdapter;
@@ -176,5 +177,72 @@ public class WorkerActivity extends AppCompatActivity {
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this, LoginActivity.class));
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//private.
+/*
+play(userName){
+print
+    user.userName = userName;
+}
+
+
+
+
+ */
+
+
+
+
+
+
+//    DB.getUserName(play);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
