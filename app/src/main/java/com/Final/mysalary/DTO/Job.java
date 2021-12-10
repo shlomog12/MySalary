@@ -2,34 +2,34 @@ package com.Final.mysalary.DTO;
 
 public class Job {
 
-    String userNameBoss;
+    String mailBoss;
     String salaryForHour;
-    String userNameWorker;
+    String mailWorker;
     String jobName;
 
 
     public Job(){}
-    public Job(String userNameBoss, String salaryForHour, String userNameWorker, String jobName) {
-        this.userNameBoss = userNameBoss;
+    public Job(String mailBoss, String salaryForHour, String mailWorker, String jobName) {
+        this.mailBoss = mailBoss;
         this.salaryForHour = salaryForHour;
-        this.userNameWorker = userNameWorker;
+        this.mailWorker = mailWorker;
         this.jobName = jobName;
     }
 
 
 
 
-    public String getUserNameWorker() {
-        return userNameWorker;
+    public String getMailWorker() {
+        return mailWorker;
     }
-    public void setUserNameWorker(String userNameWorker) {
-        this.userNameWorker = userNameWorker;
+    public void setMailWorker(String mailWorker) {
+        this.mailWorker = mailWorker;
     }
-    public String getUserNameBoss() {
-        return userNameBoss;
+    public String getMailBoss() {
+        return mailBoss;
     }
-    public void setUserNameBoss(String userNameBoss) {
-        this.userNameBoss = userNameBoss;
+    public void setMailBoss(String mailBoss) {
+        this.mailBoss = mailBoss;
     }
     public String getSalaryForHour() {
         return salaryForHour;
@@ -47,9 +47,9 @@ public class Job {
     @Override
     public String toString() {
         return "Job{" +
-                "userNameBoss='" + userNameBoss + '\'' +
+                "mailBoss='" + mailBoss + '\'' +
                 ", salaryForHour='" + salaryForHour + '\'' +
-                ", userNameWorker='" + userNameWorker + '\'' +
+                ", MailWorker='" + mailWorker + '\'' +
                 ", jobName='" + jobName + '\'' +
                 '}';
     }

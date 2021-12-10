@@ -14,7 +14,7 @@ public class Shift {
     private String jobName;
     private double totalHours;
     private double totalSalary;
-    private String userName;
+    private String userMail;
 
 
 
@@ -22,10 +22,10 @@ public class Shift {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Shift(LocalDateTime start, LocalDateTime end , String userName, String jobName) {
+    public Shift(LocalDateTime start, LocalDateTime end , String userMail, String jobName) {
         this.start =start;
         this.end = end;
-        this.userName = userName;
+        this.userMail = userMail;
         this.jobName = jobName;
     }
 
@@ -74,11 +74,11 @@ public class Shift {
     public void setTotalOfSalary(double totalSalary) {
         this.totalSalary = totalSalary;
     }
-    public String UserName() {
-        return userName;
+    public String UserMail() {
+        return userMail;
     }
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserMail(String userMail) {
+        this.userMail = userMail;
     }
     public String JobName() {
         return jobName;
@@ -102,7 +102,7 @@ public class Shift {
                 ", jobName='" + jobName + '\'' +
                 ", totalHours=" + totalHours +
                 ", totalSalary=" + totalSalary +
-                ", userName='" + userName + '\'' +
+                ", userMail='" + userMail + '\'' +
                 '}';
     }
 }

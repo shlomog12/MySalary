@@ -5,7 +5,6 @@ import static java.lang.Thread.sleep;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -60,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         ((EditText)findViewById(R.id.editValidPassword)).setText("", TextView.BufferType.EDITABLE);
     }
     public void close(View view){
-       moveToLoginScreen();
+        moveToLoginScreen();
     }
     public void saveDetails(View view) {
         validate = true;
@@ -77,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
         Type typeOfUser = getTypeOfUser();
         if (!validate) return;
         newUser = new User(mail,firstName,lastName,password,userName, typeOfUser);
-        DB.CheckIfTheUserNameIsExists(userName, new Callback<Boolean>() {
+        DB.CheckIfTheUserMailIsExists(userName, new Callback<Boolean>() {
             @Override
             public void play(Boolean isBusy) {
                 sendFeedbackToUser(isBusy);
@@ -214,7 +213,7 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent;
         if (newUser.getType() == Type.WORKER.ordinal()) intent = new Intent(this,WorkerActivity.class);
         else intent = new Intent(this,BossActivity.class);
-        intent.putExtra("user",  newUser.getUserName());
+        intent.putExtra("userMail",  newUser.getMail());
         startActivity(intent);
     }
 

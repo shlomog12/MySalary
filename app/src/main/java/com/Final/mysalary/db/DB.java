@@ -26,10 +26,9 @@ import java.util.ArrayList;
 public class DB {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-
     public static void setUser(User user) {
         if (user == null) return;
-        String userId =getSHA(user.getUserName());
+        String userId =getSHA(user.getMail());
         database.getReference().child(config.USERS).child(userId).setValue(user);
     }
     private static String getSHA(String input) {
@@ -53,7 +52,7 @@ public class DB {
         });
     }
     private static void setJObWithTheUser(Job newJob, int jobId) {
-        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(newJob.getUserNameWorker()))
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(newJob.getMailWorker()))
                 .child(config.JOBS).child(newJob.JobName());
         dbRef.child(config.SALARY_FOR_HOUR).setValue(newJob.getSalaryForHour());
         dbRef.child(config.JOB_ID).setValue(jobId);
@@ -61,7 +60,7 @@ public class DB {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void setInShifts(Shift shift) {
         if (shift == null) return;
-        DatabaseReference dbRefToShiftsOfThisWorker = database.getReference().child(config.USERS).child(getSHA(shift.UserName())).child(config.JOBS).child(String.valueOf(shift.JobName())).child(config.SHIFTS);
+        DatabaseReference dbRefToShiftsOfThisWorker = database.getReference().child(config.USERS).child(getSHA(shift.UserMail())).child(config.JOBS).child(String.valueOf(shift.JobName())).child(config.SHIFTS);
         dbRefToShiftsOfThisWorker.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -76,41 +75,19 @@ public class DB {
 
         });
     }
-
-
-//    public static void getSalaryForJob(String userName, int jobId, Callback callback) {
-//        DatabaseReference dbRef = database.getReference().child(config.USERS).child(userName).child(config.JOBS).child(String.valueOf(jobId));
-//        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    Job job = snapshot.getValue(Job.class);
-//                    callback.play(job.getSalaryForHour());
-//                    return;
-//                }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//
-//            }
-//        });
-//    }
-
-
-    public static void getShifts(String jobName,LocalDateTime start, LocalDateTime end, String userNameWorker, Callback callback) {
-        if (userNameWorker ==null || start == null || end == null) return;
-        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userNameWorker)).child(config.JOBS);
+    public static void getShifts(String jobName,LocalDateTime start, LocalDateTime end, String userMailWorker, Callback callback) {
+        if (userMailWorker ==null || start == null || end == null) return;
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMailWorker)).child(config.JOBS);
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (!snapshot.exists()) return;
-                    ArrayList<Shift> shifts = new ArrayList<>();
-                if (jobName == "") shifts = getListOfAllShifts(start,end,snapshot,userNameWorker);
+                ArrayList<Shift> shifts = new ArrayList<>();
+                if (jobName == "") shifts = getListOfAllShifts(start,end,snapshot,userMailWorker);
                 else{
                     DataSnapshot snapshotOfJob = snapshot.child(jobName);
-                    shifts = getListOfShifts(start,end,snapshotOfJob,shifts,userNameWorker);
+                    shifts = getListOfShifts(start,end,snapshotOfJob,shifts,userMailWorker);
 
                 }
                 callback.play(shifts);
@@ -124,41 +101,31 @@ public class DB {
         });
         return;
     }
-
-
-
-
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static ArrayList<Shift> getListOfAllShifts(LocalDateTime start, LocalDateTime end, DataSnapshot snapshot, String userNameWorker) {
+    private static ArrayList<Shift> getListOfAllShifts(LocalDateTime start, LocalDateTime end, DataSnapshot snapshot, String userMailWorker) {
         ArrayList shifts = new ArrayList();
         for (DataSnapshot dataSnapshotJob : snapshot.getChildren()) {
-            getListOfShifts(start,end,dataSnapshotJob,shifts, userNameWorker);
+            getListOfShifts(start,end,dataSnapshotJob,shifts, userMailWorker);
         }
         return shifts;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static ArrayList getListOfShifts(LocalDateTime start, LocalDateTime end, DataSnapshot dataSnapshotJob, ArrayList shifts, String userNameWorker) {
         String salaryForHour = dataSnapshotJob.getValue(Job.class).getSalaryForHour();
+        String jobName = dataSnapshotJob.getKey();
         DataSnapshot shiftsOfJob = dataSnapshotJob.child(config.SHIFTS);
         for (DataSnapshot shiftFromDB : shiftsOfJob.getChildren()) {
             Shift shift = shiftFromDB.getValue(Shift.class);
-//            shift.setUserName(userNameWorker);
             shift.updateSalary(salaryForHour);
+            shift.setJobOfName(jobName);
             if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
                 shifts.add(shift);
             }
         }
         return shifts;
     }
-
-    public static void getUserByUserName(String userName, Callback callback){
-        DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userName));
+    public static void getUserByUserMail(String userMail, Callback callback){
+        DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userMail));
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -167,7 +134,7 @@ public class DB {
                     return;
                 }
                 User user = snapshot.getValue(User.class);
-                user.setUserName(userName);
+                user.setMail(userMail);
                 callback.play(user);
                 return;
             }
@@ -180,9 +147,8 @@ public class DB {
         return;
 
     }
-
-    public static void CheckIfTheUserNameIsExists(String userName, Callback callback){
-        DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userName));
+    public static void CheckIfTheUserMailIsExists(String userMail, Callback callback){
+        DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userMail));
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -201,10 +167,8 @@ public class DB {
 
         return;
     }
-
-
-    public static void getJobs(String userName, Callback callback){
-        DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userName)).child(config.JOBS);
+    public static void getJobs(String userMail, Callback callback){
+        DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userMail)).child(config.JOBS);
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -227,8 +191,6 @@ public class DB {
         });
     }
 
-
 }
-
 
 
