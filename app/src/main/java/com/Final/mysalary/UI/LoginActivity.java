@@ -1,15 +1,11 @@
 package com.Final.mysalary.UI;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,9 +29,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 120;
@@ -53,7 +46,6 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
-
     public void onStart() {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -72,8 +64,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
-
     public void google_sign(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -88,8 +78,6 @@ public class LoginActivity extends AppCompatActivity {
             else System.out.println(task.getException());
         }
     }
-
-
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -106,35 +94,14 @@ public class LoginActivity extends AppCompatActivity {
                         });
                     }
                     else {
-
-                        User user = new User(account.getEmail(),account.getGivenName(),account.getFamilyName(),"",account.getDisplayName(),Type.WORKER);
-
+                        curUser =new User(account.getEmail(),account.getGivenName(),account.getFamilyName(),"",account.getDisplayName(),Type.WORKER);
+                        showSelectTypeDialog();
                     }
                 }
             });
-
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$113");
-            System.out.println(account.getEmail());
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$115");
-
-//            if ()
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$120");
-//            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//            System.out.println(firebaseUser.getEmail());
-
-
-
-//            updateUI(account);
         } catch (ApiException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$126");
-            System.out.println("ERROR 120");
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$128");
-//            updateUI(null);
         }
     }
-
-
-
     private void moveToMainScreen() {
         if (curUser == null) return;
         Intent intent;
@@ -143,9 +110,6 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtra("userMail",  curUser.getMail());
         startActivity(intent);
     }
-
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(View view){
@@ -183,40 +147,46 @@ public class LoginActivity extends AppCompatActivity {
     private void popUpMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-
-
-
     public void forgot(View view) {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) {
-
         DBTest.test();
-//        showRadioButtonDialog();
+    }
+    private void showSelectTypeDialog() {
+        System.out.println("***************************************189");
+        String[] types = {"עובד","מנהל"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("בחר את סוג המשתמש");
+        System.out.println("***************************************193");
+        builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String type = types[which];
+                if (type == "מנהל") curUser.setType(Type.BOSS.ordinal());
+            }
+        });
+        builder.setPositiveButton("אישור", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                popUpMessage("תודה");
+                dialog.dismiss();
+                DB.setUser(curUser);
+                moveToMainScreen();
+            }
+        });
+        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
     }
 
-//    private void showRadioButtonDialog() {
-//        // custom dialog
-//        final Dialog dialog = new Dialog(this);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(R.layout.dialog_layout);
-//        List<String> stringList=new ArrayList<>();  // here is list
-//        for(int i=0;i<2;i++) {
-//            if (i==0){
-//                stringList.add("Number Mode");
-//            }else {
-//                stringList.add("Character Mode");
-//            }
-//
-//        }
-//        RadioGroup rg = (RadioGroup) dialog.findViewById(R.id.radio_group);
-//        for(int i=0;i<stringList.size();i++){
-//            RadioButton rb=new RadioButton(this); // dynamically creating RadioButton and adding to RadioGroup.
-//            rb.setText(stringList.get(i));
-//            rg.addView(rb);
-//        }
-//    }
+
 }
 
 
