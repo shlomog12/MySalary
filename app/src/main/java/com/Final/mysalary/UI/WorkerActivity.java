@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.Final.mysalary.DTO.*;
 import com.Final.mysalary.R;
 import com.Final.mysalary.db.*;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -171,74 +175,17 @@ public class WorkerActivity extends AppCompatActivity {
 
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
-
+        signOutFromGoogle();
         startActivity(new Intent(this, LoginActivity.class));
-
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//private.
-/*
-play(userName){
-print
-    user.userName = userName;
-}
-
-
-
-
- */
-
-
-
-
-
-
-//    DB.getUserName(play);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void signOutFromGoogle() {
+        LoginActivity.mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(WorkerActivity.this, "good by", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 }

@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 120;
     public FirebaseAuth mAuth;
     User curUser;
-    GoogleSignInClient mGoogleSignInClient;
+    public static GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +74,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            if (task.isSuccessful()) handleSignInResult(task);
-            else System.out.println(task.getException());
+            if (task.isSuccessful()) {
+                handleSignInResult(task);
+            }
+            else {
+                System.out.println(task.getException());
+            }
         }
     }
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -155,11 +159,9 @@ public class LoginActivity extends AppCompatActivity {
         DBTest.test();
     }
     private void showSelectTypeDialog() {
-        System.out.println("***************************************189");
         String[] types = {"עובד","מנהל"};
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setTitle("בחר את סוג המשתמש");
-        System.out.println("***************************************193");
         builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -185,6 +187,7 @@ public class LoginActivity extends AppCompatActivity {
         builder.show();
 
     }
+
 
 
 }
