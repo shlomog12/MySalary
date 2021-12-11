@@ -13,23 +13,52 @@ import java.util.ArrayList;
 
 public class DBTest{
 
-    static String userName;
+
+    static User user;
+    private static void initUser() {
+        user = new User();
+        user.setUserName("testDb4");
+        user.setFirstName("testDB9_12");
+        user.setLastName("LAtestDB9_12");
+        user.setPassword("A#0912");
+        user.setMail("9_12@testDB.COM");
+        user.setType(Type.WORKER.ordinal());
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void test() throws InterruptedException {
-        userName = "testDb4";
+    public static void test(){
+        initUser();
 //        testSetUser();
 //        testSetJobs();
 //        testSetShifts();
-//        testGetSalaryOfJob();
 //        testGetShifts();
 //        testGetUser();
-//        testCheckIfTheUserNameIsExists();
-//        testGetJobs();
+        testCheckIfTheUserNameIsExists();
+        testGetJobs();
     }
+    private static void testSetUser() {
 
+        DB.setUser(user);
+    }
+    private static void testSetJobs() {
+        Job job = new Job("test@gmail.com","22",user.getMail(),"teacher");
+        DB.setInJobs(job);
+        Job job2 = new Job("test@gmail.com","200",user.getMail(),"programmer");
+        DB.setInJobs(job2);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static void testSetShifts(){
+        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),user.getMail(),"programmer");
+        DB.setInShifts(shift);
+
+
+
+
+        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),user.getMail(),"teacher");
+        DB.setInShifts(shift2);
+    }
     private static void testGetJobs() {
-        DB.getJobs(userName, new Callback<ArrayList<String>>() {
+        DB.getJobs(user.getMail(), new Callback<ArrayList<String>>() {
             @Override
             public void play(ArrayList<String> jobs) {
                 System.out.println("************************************TEST**************************************8");
@@ -44,7 +73,7 @@ public class DBTest{
 
     }
     private static void testCheckIfTheUserNameIsExists() {
-        DB.CheckIfTheUserNameIsExists(userName, new Callback<Boolean>() {
+        DB.CheckIfTheUserMailIsExists(user.getMail(), new Callback<Boolean>() {
             @Override
             public void play(Boolean isExits) {
                 System.out.println("************************************TEST**************************************8");
@@ -55,7 +84,7 @@ public class DBTest{
 
     }
     private static void testGetUser() {
-        DB.getUserByUserName(userName, new Callback<User>() {
+        DB.getUserByUserMail(user.getMail(), new Callback<User>() {
             @Override
             public void play(User user) {
                 System.out.println("************************************TEST**************************************8");
@@ -66,9 +95,7 @@ public class DBTest{
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testGetShifts() {
-
-        System.out.println("***********************************70");
-        DB.getShifts("",  LocalDateTime.MIN ,LocalDateTime.MAX,userName, new Callback<ArrayList<Shift>>() {
+        DB.getShifts("",  LocalDateTime.MIN ,LocalDateTime.MAX,user.getMail(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 System.out.println("************************************TEST**************************************8");
@@ -81,43 +108,7 @@ public class DBTest{
 
 
     }
-//    private static void testGetSalaryOfJob() {
-//        DB.getSalaryForJob(userName, 1, new Callback<String>() {
-//            @Override
-//            public void play(String salary) {
-//                System.out.println("************************************TEST**************************************8");
-//                double mys = Double.parseDouble(salary);
-//                System.out.println("salary = "+mys);
-//                System.out.println("**************************************************************************8");
-//            }
-//        });
-//    }
-    private static void testSetUser() {
-        User user = new User();
-        user.setUserName(userName);
-        user.setFirstName("testDB9_12");
-        user.setLastName("LAtestDB9_12");
-        user.setPassword("A#0912");
-        user.setMail("9_12@testDB.COM");
-        user.setType(Type.WORKER.ordinal());
-        DB.setUser(user);
-    }
-    private static void testSetJobs() {
-        Job job = new Job("avi8_12","22",userName,"teacher");
-        DB.setInJobs(job);
-        Job job2 = new Job("avi8_12","200",userName,"programmer");
-        DB.setInJobs(job2);
-    }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private static void testSetShifts() {
-        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),userName,"programmer");
-        DB.setInShifts(shift);
 
 
-
-
-        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),userName,"teacher");
-        DB.setInShifts(shift2);
-    }
 
 }

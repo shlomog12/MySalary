@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.Final.mysalary.DTO.*;
 import com.Final.mysalary.R;
 import com.Final.mysalary.db.*;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,10 +43,11 @@ public class WorkerActivity extends AppCompatActivity {
         updateUser();
     }
 
+
     private void updateUser() {
-        String userName = updateUserName();
-        if (userName == null) return;
-        DB.getUserByUserName(userName, new Callback<User>() {
+        String userMail = getUserMail();
+        if (userMail == null) return;
+        DB.getUserByUserMail(userMail, new Callback<User>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void play(User user) {
@@ -51,18 +56,21 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
     }
-    private String updateUserName() {
-        String userName;
+
+    private String getUserMail() {
+        String userMail;
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            userName = extras.getString("user");
-            if (userName != null) return userName;
+            userMail = extras.getString("userMail");
+            if (userMail != null) return userMail;
         }
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        userName = firebaseUser.getDisplayName();
-        return userName;
+        userMail = firebaseUser.getEmail();
+        return userMail;
     }
+
+
 
     private void showTotalSumOfSalary() {
     }
@@ -70,7 +78,7 @@ public class WorkerActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showListOfShifts() {
         if (currentUser == null){ return; }
-        DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getUserName(), new Callback<ArrayList<Shift>>() {
+        DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(WorkerActivity.this, shifts);
@@ -82,10 +90,10 @@ public class WorkerActivity extends AppCompatActivity {
 
 
     private void addJob() {
-        openWindowAddJob();
-        Job newJob = new Job(getUserNameWarker(), getUserNameBoss(), "22","teacher");
-        DB.setInJobs(newJob);
-        closeWindowAddJob();
+//        openWindowAddJob();
+//        Job newJob = new Job(getUserNameWarker(), getUserNameBoss(), "22","teacher");
+//        DB.setInJobs(newJob);
+//        closeWindowAddJob();
     }
 
     private int getJobIdFromScrean() {
@@ -109,17 +117,17 @@ public class WorkerActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addNewShift() {
-        popUpAddShiftWindow();
-        Shift shift = new Shift(getStart(), getEnd(), getMail(), getJobName());
-        DB.setInShifts(shift);
+//        popUpAddShiftWindow();
+//        Shift shift = new Shift(getStart(), getEnd(), getMail(), getJobName());
+//        DB.setInShifts(shift);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void StartAndEndShift() {
-        if (ButtonIsStart()) {
-            Shift shift = new Shift(LocalDateTime.now(), null, getMail(), getJobName());
-            DB.setInShifts(shift);
-        } else updateEndOfShift();
+//        if (ButtonIsStart()) {
+//            Shift shift = new Shift(LocalDateTime.now(), null, getMail(), getJobName());
+//            DB.setInShifts(shift);
+//        } else updateEndOfShift();
     }
 
     private void sortShifts() {
@@ -154,9 +162,9 @@ public class WorkerActivity extends AppCompatActivity {
     private void saveShift() {
 //        LocalDateTime start = LocalDateTime.of(2021,11,15,21,22);
 //        LocalDateTime end = LocalDateTime.of(2021,11,15,21,22);
-        Shift shift = new Shift(null, null, "0", "");
-        DB.setInShifts(shift);
-        closeAddShiftWindow();
+//        Shift shift = new Shift(null, null, "0", "");
+//        DB.setInShifts(shift);
+//        closeAddShiftWindow();
     }
 
     private void popUpAddShiftWindow() {
@@ -167,73 +175,17 @@ public class WorkerActivity extends AppCompatActivity {
 
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
+        signOutFromGoogle();
         startActivity(new Intent(this, LoginActivity.class));
-
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//private.
-/*
-play(userName){
-print
-    user.userName = userName;
-}
-
-
-
-
- */
-
-
-
-
-
-
-//    DB.getUserName(play);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void signOutFromGoogle() {
+        LoginActivity.mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(WorkerActivity.this, "good by", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 }

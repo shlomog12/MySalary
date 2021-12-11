@@ -36,9 +36,9 @@ public class BossActivity extends AppCompatActivity {
     }
 
     private void updateUser() {
-        String userName = updateUserName();
-        if (userName == null) return;
-        DB.getUserByUserName(userName, new Callback<User>() {
+        String userMail = getUserMail();
+        if (userMail == null) return;
+        DB.getUserByUserMail(userMail, new Callback<User>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void play(User user) {
@@ -51,17 +51,17 @@ public class BossActivity extends AppCompatActivity {
     private void start() {
     }
 
-    private String updateUserName() {
-        String userName;
+    private String getUserMail() {
+        String userMail;
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            userName = extras.getString("user");
-            if (userName != null) return userName;
+            userMail = extras.getString("userMail");
+            if (userMail != null) return userMail;
         }
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        userName = firebaseUser.getDisplayName();
-        return userName;
+        userMail = firebaseUser.getEmail();
+        return userMail;
     }
 
 
