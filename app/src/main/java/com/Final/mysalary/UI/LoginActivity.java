@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Type;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
@@ -153,77 +158,45 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
     public void forgot(View view) {
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("Enter your email");
         final EditText email = new EditText(this);
         email.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         email.setHint("Email...");
-        alert.setView(email);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Enter your email")
+                .setView(email)
+                .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    popUpMessage("תודה, קישור לאיפוס סיסמה נשלח למייל");
-                                    dialog.dismiss();
-//                            Log.d(TAG, "Email sent.");
-                                }else {
-                                    popUpMessage("המייל לא קיים במערכת");
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String mail = email.getText().toString();
+                        if (!isValidEmail(mail)){
+                            popUpMessage("המייל שהוזן שגוי");
+                            return;
+                        }
+                        FirebaseAuth.getInstance().sendPasswordResetEmail(mail)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            popUpMessage("תודה, קישור לאיפוס סיסמה נשלח למייל");
+                                            dialog.dismiss();
+                                        }
+                                        else popUpMessage("המייל לא קיים במערכת");
+                                    }
+                                });
+                    }
+                });
             }
         });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-
-        alert.show();
-
-
-
-
-
-
-
-
-//        builder.setPositiveButton("אישור", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                popUpMessage("תודה");
-//                dialog.dismiss();
-//                DB.setUser(curUser);
-//                moveToMainScreen();
-//            }
-//        });
-//        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//            }
-//        });
-//        builder.show();
-
-
-
-
-
+        dialog.show();
     }
-
-
-
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) {
@@ -258,7 +231,9 @@ public class LoginActivity extends AppCompatActivity {
         builder.show();
 
     }
-
+    private boolean isValidEmail(String mail) {
+        return (!TextUtils.isEmpty(mail) && Patterns.EMAIL_ADDRESS.matcher(mail).matches());
+    }
 
 
 }

@@ -29,7 +29,7 @@ public class DBTest{
     public static void test(){
         initUser();
 //        testSetUser();
-//        testSetJobs();
+        testSetJobs();
 //        testSetShifts();
 //        testGetShifts();
 //        testGetUser();
