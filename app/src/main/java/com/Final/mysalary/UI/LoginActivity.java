@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -152,7 +153,77 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
     public void forgot(View view) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("Enter your email");
+        final EditText email = new EditText(this);
+        email.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        email.setHint("Email...");
+        alert.setView(email);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    popUpMessage("תודה, קישור לאיפוס סיסמה נשלח למייל");
+                                    dialog.dismiss();
+//                            Log.d(TAG, "Email sent.");
+                                }else {
+                                    popUpMessage("המייל לא קיים במערכת");
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+
+        alert.show();
+
+
+
+
+
+
+
+
+//        builder.setPositiveButton("אישור", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                popUpMessage("תודה");
+//                dialog.dismiss();
+//                DB.setUser(curUser);
+//                moveToMainScreen();
+//            }
+//        });
+//        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.show();
+
+
+
+
+
     }
+
+
+
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) {
