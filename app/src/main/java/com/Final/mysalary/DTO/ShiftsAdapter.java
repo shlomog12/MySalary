@@ -58,7 +58,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
 
         // then according to the position of the view assign the desired image for the same
-        ImageView numbersImage = currentItemView.findViewById(R.id.imageView);
+       // ImageView numbersImage = currentItemView.findViewById(R.id.imageView);
         assert currentShift != null;
 //        numbersImage.setImageResource(currentShift.getNumbersImageId());
 
