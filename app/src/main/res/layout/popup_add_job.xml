@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--suppress ALL -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_gravity="center"
+    android:background="#7B9095"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editJobName"
+        android:layout_width="221dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="62dp"
+        android:layout_marginTop="102dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginBottom="548dp"
+        android:ems="10"
+        android:hint="שם המשרה"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textAlignment="center"
+        android:textColor="#F3E5F5" />
+
+    <EditText
+        android:id="@+id/editHourSal"
+        android:layout_width="221dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="169dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginBottom="481dp"
+        android:ems="10"
+        android:hint="שכר שעתי"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/editBossMail"
+        android:layout_width="221dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="244dp"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="406dp"
+        android:ems="10"
+        android:hint="מייל מעסיק"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textAlignment="center"
+        android:textColor="#F3E5F5" />
+
+    <Button
+        android:id="@+id/PopUpSave"
+        android:layout_width="111dp"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="331dp"
+        android:layout_marginEnd="221dp"
+        android:layout_marginBottom="320dp"
+        android:backgroundTint="#3F51B5"
+        android:onClick="addJob"
+        android:text="@string/save"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/PopUpExit"
+        android:layout_width="44dp"
+        android:layout_height="43dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="292dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="635dp"
+        android:backgroundTint="#3F51B5"
+        android:gravity="center_horizontal|top"
+        android:minWidth="15dp"
+        android:minHeight="15dp"
+        android:onClick="logout"
+        android:orientation="horizontal"
+        android:text="@string/x"
+        android:textSize="16sp"
+        tools:ignore="TouchTargetSizeCheck" />
+
+</RelativeLayout>

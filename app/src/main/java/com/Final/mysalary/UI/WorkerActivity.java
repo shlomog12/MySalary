@@ -4,8 +4,14 @@ package com.Final.mysalary.UI;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -70,7 +76,51 @@ public class WorkerActivity extends AppCompatActivity {
         return userMail;
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.test_menu, menu);
+        return true;
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_1:
+                Toast.makeText(this, "check 1", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_2:
+                Toast.makeText(this, "check 2", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+//    public void onButtonShowPopupWindowClick(View view) {
+//
+////         inflate the layout of the popup window
+//        LayoutInflater inflater = (LayoutInflater)
+//                getSystemService(LAYOUT_INFLATER_SERVICE);
+//        View popupView = inflater.inflate(R.layout.popup_add_job, null);
+//
+////         create the popup window
+//        int width = 360;
+//        int height = 700;
+//        boolean focusable = true; // lets taps outside the popup also dismiss it
+//        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+//
+////         show the popup window
+////         which view you pass in doesn't matter, it is only used for the window token
+//        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+//
+////         dismiss the popup window when touched
+//        findViewById(R.id.PopUpExit).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                popupWindow.dismiss();
+//            }
+//        });
+//    }
 
     private void showTotalSumOfSalary() {
     }
