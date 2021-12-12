@@ -21,7 +21,7 @@ public class DBTest{
         user.setFirstName("testDB9_12");
         user.setLastName("LAtestDB9_12");
         user.setPassword("A#0912");
-        user.setMail("9_12@testDB.COM");
+        user.setMail("shlomog12@googlemail.com");
         user.setType(Type.WORKER.ordinal());
     }
 
@@ -30,11 +30,11 @@ public class DBTest{
         initUser();
 //        testSetUser();
 //        testSetJobs();
-//        testSetShifts();
+        testSetShifts();
 //        testGetShifts();
 //        testGetUser();
-        testCheckIfTheUserNameIsExists();
-        testGetJobs();
+//        testCheckIfTheUserNameIsExists();
+//        testGetJobs();
     }
     private static void testSetUser() {
 
@@ -48,13 +48,11 @@ public class DBTest{
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testSetShifts(){
-        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),user.getMail(),"programmer");
+        Shift shift =new Shift(LocalDateTime.of(2021,12,9,20,55,44),LocalDateTime.of(2021,12,10,07,22,04),user.getMail(),"שש");
         DB.setInShifts(shift);
 
 
-
-
-        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),user.getMail(),"teacher");
+        Shift shift2 =new Shift(LocalDateTime.of(2020,11,30,20,55,44),LocalDateTime.of(2020,12,1,07,22,04),user.getMail(),"מלצרות");
         DB.setInShifts(shift2);
     }
     private static void testGetJobs() {
