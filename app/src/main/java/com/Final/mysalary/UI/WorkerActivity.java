@@ -147,7 +147,7 @@ public class WorkerActivity extends AppCompatActivity {
     }
 
 
-    private void addJob(View view) {
+    public void addJob(View view) {
         final EditText inputJobName =  new EditText(this);
         final EditText inputBossMail=  new EditText(this);
         final EditText inputSalaryForHour =  new EditText(this);
@@ -305,4 +305,6 @@ public class WorkerActivity extends AppCompatActivity {
     private void popUpMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
+
 }
