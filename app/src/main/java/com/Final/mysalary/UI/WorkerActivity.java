@@ -229,6 +229,8 @@ public class WorkerActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
+//    aaa
+
     public void signOutFromGoogle() {
         LoginActivity.mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
