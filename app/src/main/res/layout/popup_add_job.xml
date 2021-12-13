@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="הוספת משרה חדשה"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="שם המשרה"
+        android:inputType="text"
+        android:imeOptions="actionNext"
+        android:id="@+id/editJobName"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="שכר שעתי"
+        android:inputType="number"
+        android:imeOptions="actionNext"
+        android:id="@+id/editHourSal"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="מייל מעסיק"
+        android:inputType="text"
+        android:imeOptions="actionNext"
+        android:id="@+id/editBossMail"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="שמור"
+        android:textColor="@color/white"
+        android:background="@color/design_default_color_primary"
+        android:id="@+id/PopUpSave"/>
+</LinearLayout>
