@@ -1,46 +1,43 @@
 package com.Final.mysalary.UI;
 
 
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.util.Patterns;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-
-import com.Final.mysalary.DTO.*;
+import com.Final.mysalary.DTO.Job;
+import com.Final.mysalary.DTO.Shift;
+import com.Final.mysalary.DTO.ShiftsAdapter;
+import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
-import com.Final.mysalary.db.*;
+import com.Final.mysalary.db.Callback;
+import com.Final.mysalary.db.DB;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class WorkerActivity extends AppCompatActivity {
 
-    ShiftsAdapter myAdapter;
     FirebaseAuth mAuth;
     User currentUser;
 
@@ -74,7 +71,7 @@ public class WorkerActivity extends AppCompatActivity {
     private String getUserMail() {
         String userMail;
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
             userMail = extras.getString("userMail");
             if (userMail != null) return userMail;
         }
@@ -93,145 +90,128 @@ public class WorkerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_1:
-                Toast.makeText(this, "check 1", Toast.LENGTH_SHORT).show();
+                addNewShift();
                 return true;
             case R.id.menu_2:
-                Toast.makeText(this, "check 2", Toast.LENGTH_SHORT).show();
+                addJob();
+                return true;
+            case R.id.menu_logout:
+                logout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
-//    public void onButtonShowPopupWindowClick(View view) {
-//
-////         inflate the layout of the popup window
-//        LayoutInflater inflater = (LayoutInflater)
-//                getSystemService(LAYOUT_INFLATER_SERVICE);
-//        View popupView = inflater.inflate(R.layout.popup_add_job, null);
-//
-////         create the popup window
-//        int width = 360;
-//        int height = 700;
-//        boolean focusable = true; // lets taps outside the popup also dismiss it
-//        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-////         show the popup window
-////         which view you pass in doesn't matter, it is only used for the window token
-//        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-//
-////         dismiss the popup window when touched
-//        findViewById(R.id.PopUpExit).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                popupWindow.dismiss();
-//            }
-//        });
-//    }
+    //Function to display the custom dialog.
+    private void addJob() {
+        final Dialog dialog = new Dialog(WorkerActivity.this);
+        //We have added a title in the custom layout. So let's disable the default title.
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
+        dialog.setCancelable(true);
+        //Mention the name of the layout of your custom dialog.
+        dialog.setContentView(R.layout.popup_add_job);
+
+        //Initializing the views of the dialog.
+        final EditText jobName = dialog.findViewById(R.id.editJobName);
+        final EditText hourSal = dialog.findViewById(R.id.editHourSal);
+        final EditText bossId = dialog.findViewById(R.id.editBossMail);
+        Button submitButton = dialog.findViewById(R.id.PopUpSave);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String name = jobName.getText().toString();
+                String hourpay = hourSal.getText().toString();
+                String bossMail = bossId.getText().toString();
+                System.out.println("NAME: "+name+" HOUR PAY: "+hourpay+" bossMail: "+bossMail);
+                Job job = new Job(bossMail, hourpay, currentUser.getMail(), name);
+                DB.setInJobs(job);
+                Toast.makeText(WorkerActivity.this, "משרה נוספה בהצלחה", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     private void showTotalSumOfSalary() {
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showListOfShifts() {
-        if (currentUser == null){ return; }
+        if (currentUser == null) {
+            return;
+        }
         DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
                 ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(WorkerActivity.this, shifts);
                 ListView shiftsListView = findViewById(R.id.listView);
                 shiftsListView.setAdapter(shiftsArrayAdapter);
+                double totalsum=0;
+                double totalHr=0;
+                for (Shift s:shifts) {
+                    totalsum+=s.TotalSalary();
+                    totalHr+=s.TotalHours();
+                }
+                TextView sum = findViewById(R.id.sumSalary);
+                sum.setText("סך כל השכר: "+String.format("%.2f",totalsum)+"\n"+"סך כל השעות: "+String.format("%.2f",totalHr));
             }
         });
     }
 
+    private int getJobIdFromScrean() {
+        return 0;
+    }
 
-    public void addJob(View view) {
-        final EditText inputJobName =  new EditText(this);
-        final EditText inputBossMail=  new EditText(this);
-        final EditText inputSalaryForHour =  new EditText(this);
-        LinearLayout linearLayout = getLinearLayoutOfAddJobs(inputJobName,inputBossMail,inputSalaryForHour);
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("הוסף משרה חדשה")
-                .setView(linearLayout)
-                .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
-                .setNegativeButton(android.R.string.cancel, null)
-                .create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+    private String getUserNameBoss() {
+        return "";
+    }
 
+    private String getUserNameWarker() {
+        return "";
+    }
+
+    private void addNewShift() {
+        final Dialog dialog = new Dialog(WorkerActivity.this);
+        //We have added a title in the custom layout. So let's disable the default title.
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
+        dialog.setCancelable(true);
+        //Mention the name of the layout of your custom dialog.
+        dialog.setContentView(R.layout.popup_add_shift);
+
+        //Initializing the views of the dialog.
+        final EditText jobName = dialog.findViewById(R.id.editShiftName);
+        final EditText ShiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
+        final EditText ShiftStart = dialog.findViewById(R.id.editShiftStart);
+        final EditText ShiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
+        final EditText ShiftEnd = dialog.findViewById(R.id.editShiftEnd);
+        Button submitButton = dialog.findViewById(R.id.buttonShiftSave);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onShow(DialogInterface dialogInterface) {
-                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO Do something
-                        String salary = inputSalaryForHour.getText().toString();
-                        String mailBoss = inputBossMail.getText().toString();
-                        String jobName = inputJobName.getText().toString();
-                        if (!isValidInput(jobName)){
-                            popUpMessage("שם המשרה שהוזן לא תקין");
-                            return;
-                        }
-                        if (!isNumeric(salary)){
-                            popUpMessage("השכר שהוזן לא תקין");
-                            return;
-                        }
-                        if (!isValidEmail(mailBoss)){
-                            popUpMessage("המייל שהוזן שגוי");
-                            return;
-                        }
-                        Job job = new Job(mailBoss,salary,currentUser.getMail(),jobName);
-                        DB.setInJobs(job);
-                        popUpMessage("המשרה נוספה בהצלחה");
-                        dialog.dismiss();
-                    }
-                });
+            public void onClick(View v) {
+                String name = jobName.getText().toString();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                //convert String to LocalDate
+                LocalDateTime shift_start = LocalDateTime.parse(ShiftStartDate.getText().toString()+" "+ShiftStart.getText().toString(), formatter);
+
+                //convert String to LocalDate
+                LocalDateTime shift_end = LocalDateTime.parse(ShiftEndDate.getText().toString()+" "+ShiftEnd.getText().toString(), formatter);
+
+                Shift shift = new Shift(shift_start,shift_end,currentUser.getMail(),name);
+                DB.setInShifts(shift);
+                Toast.makeText(WorkerActivity.this, "משמרת נוספה בהצלחה", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         });
         dialog.show();
-    }
-
-    private LinearLayout getLinearLayoutOfAddJobs(EditText inputJobName, EditText inputBossMail, EditText inputSalaryForHour) {
-        inputJobName.setHint("שם המשרה");
-        inputSalaryForHour.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        inputSalaryForHour.setHint("שכר לשעה");
-        inputBossMail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        inputBossMail.setHint("מייל של המנהל");
-        LinearLayout linearLayout= new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.addView(inputJobName);
-        linearLayout.addView(inputSalaryForHour);
-        linearLayout.addView(inputBossMail);
-        return linearLayout;
-    }
-
-    private boolean isValidInput(String input){
-        return  (input.length() > 1);
-    }
-    private boolean isValidEmail(String mail) {
-        return (!TextUtils.isEmpty(mail) && Patterns.EMAIL_ADDRESS.matcher(mail).matches());
-    }
-    public static boolean isNumeric(String strNum) {
-        if (strNum == null) {
-            return false;
-        }
-        try {
-            double d = Double.parseDouble(strNum);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void addNewShift() {
-//        popUpAddShiftWindow();
-//        Shift shift = new Shift(getStart(), getEnd(), getMail(), getJobName());
-//        DB.setInShifts(shift);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -285,26 +265,19 @@ public class WorkerActivity extends AppCompatActivity {
     private void closeAddShiftWindow() {
     }
 
-    public void logout(View view) {
+    public void logout() {
         FirebaseAuth.getInstance().signOut();
         signOutFromGoogle();
         startActivity(new Intent(this, LoginActivity.class));
     }
-
-//    aaa
 
     public void signOutFromGoogle() {
         LoginActivity.mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(WorkerActivity.this, "good by", Toast.LENGTH_LONG).show();
+                        Toast.makeText(WorkerActivity.this, "להתראות!!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
-    private void popUpMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-
 }
