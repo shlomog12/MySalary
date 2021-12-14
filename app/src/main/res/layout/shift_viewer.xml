@@ -46,17 +46,6 @@
         <TextView
 
             android:id="@+id/textView3"
-            android:layout_width="169dp"
-            android:layout_height="wrap_content"
-            android:background="#3F51B5"
-            android:padding="18dip"
-            android:text="Text 2"
-            android:textColor="#CFD8DC"
-            android:textSize="14dp" />
-
-        <TextView
-
-            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#3F51B5"
@@ -67,7 +56,7 @@
 
         <TextView
 
-            android:id="@+id/textView5"
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#3F51B5"
