@@ -105,6 +105,7 @@ public class WorkerActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     private void addJob() {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -137,6 +138,7 @@ public class WorkerActivity extends AppCompatActivity {
                 Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
                 DB.setInJobs(job);
                 actions.popUpMessage("משרה נוספה בהצלחה");
+                showListOfShifts();
                 dialog.dismiss();
             }
         });
@@ -191,6 +193,7 @@ public class WorkerActivity extends AppCompatActivity {
                     Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                     DB.setInShifts(shift);
                     actions.popUpMessage( "משמרת נוספה בהצלחה");
+                    showListOfShifts();
                 }catch (Exception e){
                     actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                     return;
