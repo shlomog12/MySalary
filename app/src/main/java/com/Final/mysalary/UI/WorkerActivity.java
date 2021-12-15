@@ -221,6 +221,7 @@ public class WorkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
+
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 //convert String to LocalDate
                 try {
