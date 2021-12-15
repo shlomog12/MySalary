@@ -31,7 +31,6 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
     }
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
@@ -60,7 +59,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
 
         // then according to the position of the view assign the desired image for the same
-       // ImageView numbersImage = currentItemView.findViewById(R.id.imageView);
+        // ImageView numbersImage = currentItemView.findViewById(R.id.imageView);
         assert currentShift != null;
 //        numbersImage.setImageResource(currentShift.getNumbersImageId());
 
@@ -84,11 +83,21 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
         // then according to the position of the view assign the desired TextView 2 for the same
         TextView textView4 = currentItemView.findViewById(R.id.textView4);
-        textView4.setText(String.format("%.2f", currentShift.TotalHours()));
-
         // then according to the position of the view assign the desired TextView 2 for the same
-        TextView textView5 = currentItemView.findViewById(R.id.textView5);
-        textView5.setText(String.format("%.2f", currentShift.TotalSalary()));
+        textView4.setText(String.format("%.2f", currentShift.TotalHours()));
+        final boolean[] clicked = {false};
+        textView4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clicked[0]) {
+                    textView4.setText(String.format("%.2f", currentShift.TotalHours()));
+                    clicked[0] = false;
+                } else {
+                    textView4.setText(String.format("%.2f", currentShift.TotalSalary()));
+                    clicked[0] = true;
+                }
+            }
+        });
 
         // then return the recyclable view
         return currentItemView;

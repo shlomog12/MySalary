@@ -126,7 +126,6 @@ public class WorkerActivity extends AppCompatActivity {
                 String name = jobName.getText().toString();
                 String hourpay = hourSal.getText().toString();
                 String bossMail = bossId.getText().toString();
-                System.out.println("NAME: "+name+" HOUR PAY: "+hourpay+" bossMail: "+bossMail);
                 Job job = new Job(bossMail, hourpay, currentUser.getMail(), name);
                 DB.setInJobs(job);
                 Toast.makeText(WorkerActivity.this, "משרה נוספה בהצלחה", Toast.LENGTH_SHORT).show();
@@ -134,10 +133,6 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
         dialog.show();
-    }
-
-    private void showTotalSumOfSalary() {
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -151,14 +146,14 @@ public class WorkerActivity extends AppCompatActivity {
                 ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(WorkerActivity.this, shifts);
                 ListView shiftsListView = findViewById(R.id.listView);
                 shiftsListView.setAdapter(shiftsArrayAdapter);
-                double totalsum=0;
-                double totalHr=0;
-                for (Shift s:shifts) {
-                    totalsum+=s.TotalSalary();
-                    totalHr+=s.TotalHours();
+                double totalsum = 0;
+                double totalHr = 0;
+                for (Shift s : shifts) {
+                    totalsum += s.TotalSalary();
+                    totalHr += s.TotalHours();
                 }
                 TextView sum = findViewById(R.id.sumSalary);
-                sum.setText("סך כל השכר: "+String.format("%.2f",totalsum)+"\n"+"סך כל השעות: "+String.format("%.2f",totalHr));
+                sum.setText("סך כל השכר: " + String.format("%.2f", totalsum) + "\n" + "סך כל השעות: " + String.format("%.2f", totalHr));
             }
         });
     }
@@ -200,12 +195,12 @@ public class WorkerActivity extends AppCompatActivity {
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 //convert String to LocalDate
-                LocalDateTime shift_start = LocalDateTime.parse(ShiftStartDate.getText().toString()+" "+ShiftStart.getText().toString(), formatter);
+                LocalDateTime shift_start = LocalDateTime.parse(ShiftStartDate.getText().toString() + " " + ShiftStart.getText().toString(), formatter);
 
                 //convert String to LocalDate
-                LocalDateTime shift_end = LocalDateTime.parse(ShiftEndDate.getText().toString()+" "+ShiftEnd.getText().toString(), formatter);
+                LocalDateTime shift_end = LocalDateTime.parse(ShiftEndDate.getText().toString() + " " + ShiftEnd.getText().toString(), formatter);
 
-                Shift shift = new Shift(shift_start,shift_end,currentUser.getMail(),name);
+                Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                 DB.setInShifts(shift);
                 Toast.makeText(WorkerActivity.this, "משמרת נוספה בהצלחה", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();

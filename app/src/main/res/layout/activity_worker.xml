@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="שעת התחלה   |"
+            android:text="שעת התחלה     "
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="שעת סיום      |"
+            android:text="שעת סיום           |"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -42,18 +42,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text='סה"כ שעות     |'
+            android:text='סה"כ שעות/שכר |'
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text='סה"כ שכר   |'
-            android:textSize="16sp"
-            android:textStyle="bold" />
     </LinearLayout>
 
     <ListView
@@ -70,8 +62,8 @@
 
     <TextView
         android:id="@+id/sumSalary"
-        android:layout_width="413dp"
-        android:layout_height="82dp"
+        android:layout_width="405dp"
+        android:layout_height="84dp"
         android:text="    סך הכל שכר:"
         android:textColor="@color/black"
         android:textSize="20sp"
