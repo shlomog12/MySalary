@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,12 +22,15 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
     String jobName = "";
 
+
     // invoke the suitable constructor of the ArrayAdapter class
     public ShiftsAdapter(@NonNull Context context, ArrayList<Shift> arrayList) {
         // pass the context and arrayList for the super
         // constructor of the ArrayAdapter class
         super(context, 0, arrayList);
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
