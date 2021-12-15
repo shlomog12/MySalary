@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     boolean isBoss;
     User newUser;
     public FirebaseAuth mAuth;
-
+    UiActions actions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

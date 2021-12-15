@@ -103,7 +103,6 @@ public class WorkerActivity extends AppCompatActivity {
         }
     }
 
-    //Function to display the custom dialog.
     private void addJob() {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         //We have added a title in the custom layout. So let's disable the default title.
@@ -128,7 +127,7 @@ public class WorkerActivity extends AppCompatActivity {
                 String bossMail = bossId.getText().toString();
                 Job job = new Job(bossMail, hourpay, currentUser.getMail(), name);
                 DB.setInJobs(job);
-                Toast.makeText(WorkerActivity.this, R.string.job_added_success, Toast.LENGTH_SHORT).show();
+                actions.popUpMessage(R.string.job_added_success);
                 showListOfShifts();
                 dialog.dismiss();
             }
@@ -204,17 +203,19 @@ public class WorkerActivity extends AppCompatActivity {
                 String name = jobName.getText().toString();
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                //convert String to LocalDate
-                LocalDateTime shift_start = LocalDateTime.parse(ShiftStartDate.getText().toString() + " " + ShiftStart.getText().toString(), formatter);
-
-                //convert String to LocalDate
-                LocalDateTime shift_end = LocalDateTime.parse(ShiftEndDate.getText().toString() + " " + ShiftEnd.getText().toString(), formatter);
-
-                Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
-                DB.setInShifts(shift);
-                Toast.makeText(WorkerActivity.this, R.string.shift_added_successfully, Toast.LENGTH_SHORT).show();
-                showListOfShifts();
-                dialog.dismiss();
+                try {
+                    LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
+                    LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
+                    Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
+                    DB.setInShifts(shift);
+                    actions.popUpMessage( R.string.shift_added_successfully);
+                    dialog.dismiss();
+                    showListOfShifts();
+                }catch (Exception e){
+                    actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
+                    return;
+                }
+                
             }
         });
         dialog.show();
