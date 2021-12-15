@@ -25,6 +25,8 @@ import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.ShiftsAdapter;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
+import com.Final.mysalary.UI.date.DatePickerFragment;
+import com.Final.mysalary.UI.date.TimePickerFragment;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +43,8 @@ public class WorkerActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     User currentUser;
     final boolean[] ShowSalary = {true};
+    UiActions actions;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +94,13 @@ public class WorkerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_shift:
-                addNewShift();
+                DB.getJobs(currentUser.getMail(),new Callback<ArrayList<String>>() {
+                    @Override
+                    public void play(ArrayList<String> jobs) {
+                        addNewShift(jobs);
+                    }
+                });
+
                 return true;
             case R.id.menu_add_job:
                 addJob();
@@ -123,11 +133,23 @@ public class WorkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
-                String hourpay = hourSal.getText().toString();
+                if (!Validate.isValidInput(name)) {
+                    actions.popUpMessage("שם המשרה לא תקין");
+                    return;
+                }
+                String hourPay = hourSal.getText().toString();
+                if (!Validate.isNumeric(hourPay)) {
+                    actions.popUpMessage("השכר שהוזן אינו תקין");
+                    return;
+                }
                 String bossMail = bossId.getText().toString();
-                Job job = new Job(bossMail, hourpay, currentUser.getMail(), name);
+                if (!Validate.isValidEmail(bossMail)){
+                    actions.popUpMessage("המייל שהוזן עבור המנהל אינו תקין");
+                    return;
+                }
+                Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
                 DB.setInJobs(job);
-                actions.popUpMessage(R.string.job_added_success);
+                actions.popUpMessage(String.valueOf(R.string.job_added_success));
                 showListOfShifts();
                 dialog.dismiss();
             }
@@ -179,7 +201,7 @@ public class WorkerActivity extends AppCompatActivity {
     }
 
 
-    private void addNewShift() {
+    private void addNewShift(ArrayList<String> jobs) {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -190,17 +212,21 @@ public class WorkerActivity extends AppCompatActivity {
 
         //Initializing the views of the dialog.
         final EditText jobName = dialog.findViewById(R.id.editShiftName);
-        final EditText ShiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
-        final EditText ShiftStart = dialog.findViewById(R.id.editShiftStartTime);
-        final EditText ShiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
-        final EditText ShiftEnd = dialog.findViewById(R.id.editShiftEndTime);
+        final EditText shiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
+        final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStartTime);
+        final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
+        final EditText shiftTimeEnd = dialog.findViewById(R.id.editShiftEndTime);
+        updateDateTime(shiftStartDate,shiftTimeStart,shiftEndDate,shiftTimeEnd);
         Button submitButton = dialog.findViewById(R.id.btnNewShiftSave);
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
+                if (!jobs.contains(name)) {
+                    actions.popUpMessage("המשרה המבוקשת לא קיימת");
+                    return;
+                }
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 try {
@@ -208,7 +234,7 @@ public class WorkerActivity extends AppCompatActivity {
                     LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
                     Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                     DB.setInShifts(shift);
-                    actions.popUpMessage( R.string.shift_added_successfully);
+                    actions.popUpMessage(String.valueOf(R.string.shift_added_successfully));
                     dialog.dismiss();
                     showListOfShifts();
                 }catch (Exception e){
@@ -220,6 +246,50 @@ public class WorkerActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
+    private void updateDateTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
+        updateDate(shiftStartDate);
+        updateDate(shiftEndDate);
+        updateTime(shiftTimeStart);
+        updateTime(shiftTimeEnd);
+    }
+    private void updateTime(EditText shiftTime) {
+        TimePickerFragment time = new TimePickerFragment();
+        shiftTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTime(time, shiftTime);
+            }
+        });
+        shiftTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) showTime(time, shiftTime);
+            }
+        });
+    }
+    private void showTime(TimePickerFragment time, EditText shiftTime) {
+        time.show(getSupportFragmentManager(), "timePicker");
+        time.setEdit(shiftTime);
+    }
+    private void updateDate(EditText shiftDate) {
+        DatePickerFragment date = new DatePickerFragment();
+        shiftDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDate(date,shiftDate);
+            }
+        });
+            shiftDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (b) showDate(date,shiftDate);
+                }
+            });
+        }private void showDate(DatePickerFragment date, EditText shiftDate) {
+            date.show(getSupportFragmentManager(), "datePicker");
+            date.setEdit(shiftDate);
+        }
 
     public void logout() {
         FirebaseAuth.getInstance().signOut();
