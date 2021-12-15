@@ -50,6 +50,7 @@ public class WorkerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
+        actions = new UiActions(this);
     }
     public void onStart() {
         super.onStart();

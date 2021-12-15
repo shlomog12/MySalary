@@ -23,11 +23,12 @@ public class BossActivity extends AppCompatActivity {
 
     User currentUser;
     FirebaseAuth mAuth;
-
+    UiActions actions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boss);
+        actions = new UiActions(this);
     }
     public void onStart() {
         super.onStart();
