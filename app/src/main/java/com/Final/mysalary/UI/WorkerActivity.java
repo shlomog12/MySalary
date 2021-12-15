@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -51,12 +51,10 @@ public class WorkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
     }
-
     public void onStart() {
         super.onStart();
         updateUser();
     }
-
 
     private void updateUser() {
         String userMail = getUserMail();
@@ -71,7 +69,6 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
     }
-
     private String getUserMail() {
         String userMail;
         Bundle extras = getIntent().getExtras();
@@ -84,13 +81,11 @@ public class WorkerActivity extends AppCompatActivity {
         userMail = firebaseUser.getEmail();
         return userMail;
     }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.test_menu, menu);
         return true;
     }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_shift:
@@ -112,7 +107,6 @@ public class WorkerActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
     private void addJob() {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         //We have added a title in the custom layout. So let's disable the default title.
@@ -156,7 +150,6 @@ public class WorkerActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-
     private void ChangeSum(){
         TextView ShowHoursOrSalary = findViewById(R.id.SumSalaryBar);
         ShowHoursOrSalary.setOnClickListener(new View.OnClickListener() {
@@ -199,8 +192,6 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
     }
-
-
     private void addNewShift(ArrayList<String> jobs) {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         //We have added a title in the custom layout. So let's disable the default title.
@@ -296,13 +287,12 @@ public class WorkerActivity extends AppCompatActivity {
         signOutFromGoogle();
         startActivity(new Intent(this, LoginActivity.class));
     }
-
     public void signOutFromGoogle() {
         LoginActivity.mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(WorkerActivity.this, R.string.bye, Toast.LENGTH_LONG).show();
+                        actions.popUpMessage(String.valueOf(R.string.bye));
                     }
                 });
     }

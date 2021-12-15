@@ -29,12 +29,10 @@ public class BossActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boss);
     }
-
     public void onStart() {
         super.onStart();
         updateUser();
     }
-
     private void updateUser() {
         String userMail = getUserMail();
         if (userMail == null) return;
@@ -43,14 +41,9 @@ public class BossActivity extends AppCompatActivity {
             @Override
             public void play(User user) {
                 currentUser = user;
-                start();
             }
         });
     }
-
-    private void start() {
-    }
-
     private String getUserMail() {
         String userMail;
         Bundle extras = getIntent().getExtras();
@@ -63,26 +56,6 @@ public class BossActivity extends AppCompatActivity {
         userMail = firebaseUser.getEmail();
         return userMail;
     }
-
-
-    private void showShiftsLive() { }
-    private void showShiftsByFilter(){
-    }
-
-    private LocalDateTime getStartFromFilter() {
-        return null;
-    }
-    private LocalDateTime getEndFromFilter() {
-        return null;
-    }
-    private String getUserNameFromFilter() {
-        return "";
-    }
-    private void cleanFilter(){ }
-    private void showShifts(ArrayList<Shift> shifts) {
-    }
-
-
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,LoginActivity.class));

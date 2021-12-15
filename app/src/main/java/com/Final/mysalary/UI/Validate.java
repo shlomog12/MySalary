@@ -15,7 +15,6 @@ public class Validate {
         if (firstName.length() < 1) return false;
         return true;
     }
-
     public static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;
@@ -24,7 +23,6 @@ public class Validate {
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
-
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
@@ -36,6 +34,4 @@ public class Validate {
         }
         return true;
     }
-
-
 }

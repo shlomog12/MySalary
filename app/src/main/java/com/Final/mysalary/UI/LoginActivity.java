@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -113,14 +111,6 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ApiException e) {
         }
     }
-//    private void moveToMainScreen() {
-//        if (curUser == null) return;
-//        Intent intent;
-//        if (curUser.getType() == Type.WORKER.ordinal()) intent = new Intent(this,WorkerActivity.class);
-//        else intent = new Intent(this,BossActivity.class);
-//        intent.putExtra("userMail",  curUser.getMail());
-//        startActivity(intent);
-//    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(View view){
@@ -155,9 +145,6 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view) {
         startActivity(new Intent(this, RegisterActivity.class));
     }
-
-
-
     public void forgot(View view) {
         final EditText email = new EditText(this);
         email.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);

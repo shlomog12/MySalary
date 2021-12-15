@@ -176,12 +176,5 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
-//    private void moveToMainScreen(){
-//        Intent intent;
-//        if (newUser.getType() == Type.WORKER.ordinal()) intent = new Intent(this,WorkerActivity.class);
-//        else intent = new Intent(this,BossActivity.class);
-//        intent.putExtra("userMail",  newUser.getMail());
-//        startActivity(intent);
-//    }
 
 }
