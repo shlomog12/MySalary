@@ -5,17 +5,20 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.DTO.*;
+import com.Final.mysalary.DTO.Type;
+import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
@@ -35,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 120;
     public FirebaseAuth mAuth;
     User curUser;
-    UiActions actions;
     public static GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -43,12 +45,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
-        actions = new UiActions(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
     }
     public void onStart() {
         super.onStart();
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void play(User user) {
                 curUser = user;
-                actions.moveToMainScreen(curUser);
+                moveToMainScreen();
             }
         });
 
@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void play(User user) {
                                 curUser = user;
-                                actions.moveToMainScreen(curUser);
+                                moveToMainScreen();
                             }
                         });
                     }
@@ -110,16 +110,25 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ApiException e) {
         }
     }
+    private void moveToMainScreen() {
+        if (curUser == null) return;
+        Intent intent;
+        if (curUser.getType() == Type.WORKER.ordinal()) intent = new Intent(this,WorkerActivity.class);
+        else intent = new Intent(this,BossActivity.class);
+        intent.putExtra("userMail",  curUser.getMail());
+        startActivity(intent);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(View view){
         String mail = ((EditText)findViewById(R.id.input_username)).getText().toString();
         String password = ((EditText)findViewById(R.id.input_pass)).getText().toString();
         if (mail.length() < 5){
-            actions.popUpMessage("מייל לא תקין");
+            popUpMessage(getApplicationContext().getString(R.string.mail_incorrect));
             return;
         }
         if(password.length() < 6){
-            actions.popUpMessage("סיסמה לא תקינה");
+            popUpMessage(getApplicationContext().getString(R.string.wrong_password));
             return;
         }
         mAuth.signInWithEmailAndPassword(mail,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -129,13 +138,12 @@ public class LoginActivity extends AppCompatActivity {
                     DB.getUserByUserMail(mAuth.getCurrentUser().getEmail(), new Callback<User>() {
                         @Override
                         public void play(User user) {
-                            if (user == null) actions.popUpMessage("ההתחברות נכשלה");
                             curUser = user;
-                            actions.moveToMainScreen(user);
+                            moveToMainScreen();
                         }
                     });
                 }else {
-                    actions.popUpMessage("ההתחברות נכשלה");
+                    popUpMessage(getApplicationContext().getString(R.string.login_failed));
                     System.out.println(task.getException());
                 }
             }
@@ -144,6 +152,11 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view) {
         startActivity(new Intent(this, RegisterActivity.class));
     }
+
+    private void popUpMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
     public void forgot(View view) {
         final EditText email = new EditText(this);
         email.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -163,8 +176,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         String mail = email.getText().toString();
-                        if (!Validate.isValidEmail(mail)){
-                            actions.popUpMessage("המייל שהוזן שגוי");
+                        if (!isValidEmail(mail)){
+                            popUpMessage(getApplicationContext().getString(R.string.mail_incorrect));
                             return;
                         }
                         FirebaseAuth.getInstance().sendPasswordResetEmail(mail)
@@ -172,10 +185,10 @@ public class LoginActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
-                                            actions.popUpMessage("תודה, קישור לאיפוס סיסמה נשלח למייל");
+                                            popUpMessage(getApplicationContext().getString(R.string.thanks_forgot));
                                             dialog.dismiss();
                                         }
-                                        else actions.popUpMessage("המייל לא קיים במערכת");
+                                        else popUpMessage(getApplicationContext().getString(R.string.mail_not_exist));
                                     }
                                 });
                     }
@@ -189,13 +202,6 @@ public class LoginActivity extends AppCompatActivity {
     public void testDB(View view) {
         DBTest.test();
     }
-
-
-
-
-
-
-
     private void showSelectTypeDialog() {
         String[] types = {"עובד","מנהל"};
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -210,10 +216,10 @@ public class LoginActivity extends AppCompatActivity {
         builder.setPositiveButton("אישור", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                actions.popUpMessage("תודה");
+                popUpMessage("תודה");
                 dialog.dismiss();
                 DB.setUser(curUser);
-                actions.moveToMainScreen(curUser);
+                moveToMainScreen();
             }
         });
         builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
@@ -224,11 +230,9 @@ public class LoginActivity extends AppCompatActivity {
         });
         builder.show();
     }
-
+    private boolean isValidEmail(String mail) {
+        return (!TextUtils.isEmpty(mail) && Patterns.EMAIL_ADDRESS.matcher(mail).matches());
+    }
 
 
 }
-
-
-//30652896089-12272i8lgqvqlbb6ber8rs16v2kig76j.apps.googleusercontent.com
-//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

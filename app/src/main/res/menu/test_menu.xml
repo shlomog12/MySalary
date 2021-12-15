@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_1"
-        android:title="הוספת משמרת חדשה" />
+        android:id="@+id/menu_add_shift"
+        android:title="@string/add_shift" />
 
     <item
-        android:id="@+id/menu_2"
-        android:title="הוספת משרה חדשה" />
+        android:id="@+id/menu_add_job"
+        android:title="@string/add_job" />
 
     <item
         android:id="@+id/menu_logout"
-        android:title="התנתק" />
+        android:title="@string/logout" />
 
 </menu>

@@ -7,15 +7,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="הוספת משמרת חדשה"
+        android:text="@string/add_shift"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:layout_marginBottom="16dp"/>
 
-    <AutoCompleteTextView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="שם המשרה"
+        android:hint="@string/job_name"
         android:inputType="text"
         android:imeOptions="actionNext"
         android:id="@+id/editShiftName"/>
@@ -23,7 +23,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="תאריך התחלה dd/mm/yyyy"
+        android:hint="@string/start_date"
         android:inputType="date"
         android:imeOptions="actionNext"
         android:id="@+id/editShiftStartDate"/>
@@ -31,15 +31,15 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="שעת התחלה"
+        android:hint="@string/start_time"
         android:inputType="time"
         android:imeOptions="actionNext"
-        android:id="@+id/editShiftStart"/>
+        android:id="@+id/editShiftStartTime"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="תאריך סיום dd/mm/yyyy"
+        android:hint="@string/end_date"
         android:inputType="date"
         android:imeOptions="actionNext"
         android:id="@+id/editShiftEndDate"/>
@@ -47,17 +47,17 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="שעת סיום"
+        android:hint="@string/end_time"
         android:inputType="time"
         android:imeOptions="actionNext"
-        android:id="@+id/editShiftEnd"/>
+        android:id="@+id/editShiftEndTime"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:text="שמור"
+        android:text="@string/save"
         android:textColor="@color/white"
         android:background="@color/design_default_color_primary"
-        android:id="@+id/buttonShiftSave"/>
+        android:id="@+id/btnNewShiftSave"/>
 </LinearLayout>
