@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".UI.WorkerActivity">
 
 
@@ -20,29 +21,32 @@
         app:layout_constraintVertical_bias="0.12">
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:id="@+id/StartTimeBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="שעת התחלה     "
+            android:text="@string/start_time"
+            android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
+            android:id="@+id/EndTimeBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="שעת סיום           |"
+            android:text="@string/end_time"
+            android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
+            android:id="@+id/SumSalaryBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text='סה"כ שעות/שכר |'
+            android:text="@string/total_hours"
+            android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -62,9 +66,9 @@
 
     <TextView
         android:id="@+id/sumSalary"
-        android:layout_width="405dp"
+        android:layout_width="match_parent"
         android:layout_height="84dp"
-        android:text="    סך הכל שכר:"
+        android:text="@string/sum_payment"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

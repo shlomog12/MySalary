@@ -1,18 +1,18 @@
 package com.Final.mysalary.UI;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
-import com.Final.mysalary.DTO.User;
-import com.Final.mysalary.db.DB;
-import com.Final.mysalary.db.Callback;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.Final.mysalary.DTO.Shift;
+import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
+import com.Final.mysalary.db.Callback;
+import com.Final.mysalary.db.DB;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

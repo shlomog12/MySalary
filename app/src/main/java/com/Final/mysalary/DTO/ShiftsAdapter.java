@@ -21,7 +21,11 @@ import java.util.ArrayList;
 public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
     String jobName = "";
+    boolean ShowSalary=false;
 
+    public void setShowSalary(boolean showSalary) {
+        ShowSalary = !showSalary;
+    }
 
     // invoke the suitable constructor of the ArrayAdapter class
     public ShiftsAdapter(@NonNull Context context, ArrayList<Shift> arrayList) {
@@ -29,7 +33,6 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         // constructor of the ArrayAdapter class
         super(context, 0, arrayList);
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
@@ -49,7 +52,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         Shift currentShift = getItem(position);
 
 
-        TextView textView = currentItemView.findViewById(R.id.textViewBorder);
+        TextView textView = currentItemView.findViewById(R.id.jobs_border);
         if (jobName != currentShift.JobName()) {
             textView.setText(currentShift.JobName());
             jobName = currentShift.JobName();
@@ -68,37 +71,27 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 //        textView1.setText(String.valueOf(currentShift.getJobId()));
 
         // then according to the position of the view assign the desired TextView 2 for the same
-        TextView textView2 = currentItemView.findViewById(R.id.textView2);
+        TextView textView2 = currentItemView.findViewById(R.id.textViewStart);
         LocalDateTime localDate2 = currentShift.Start();//For reference
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String formattedString2 = localDate2.format(formatter);
         textView2.setText(formattedString2);
 
         // then according to the position of the view assign the desired TextView 2 for the same
-        TextView textView3 = currentItemView.findViewById(R.id.textView3);
+        TextView textView3 = currentItemView.findViewById(R.id.textViewEnd);
         LocalDateTime localDate3 = currentShift.End();//For reference
         DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String formattedString3 = localDate3.format(formatter3);
         textView3.setText(formattedString3);
 
         // then according to the position of the view assign the desired TextView 2 for the same
-        TextView textView4 = currentItemView.findViewById(R.id.textView4);
-        // then according to the position of the view assign the desired TextView 2 for the same
-        textView4.setText(String.format("%.2f", currentShift.TotalHours()));
-        final boolean[] clicked = {false};
-        textView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (clicked[0]) {
-                    textView4.setText(String.format("%.2f", currentShift.TotalHours()));
-                    clicked[0] = false;
-                } else {
-                    textView4.setText(String.format("%.2f", currentShift.TotalSalary()));
-                    clicked[0] = true;
-                }
-            }
-        });
-
+        TextView textView4 = currentItemView.findViewById(R.id.textViewSum);
+        if (ShowSalary){
+            textView4.setText(String.format("%.2f", currentShift.TotalSalary()));
+        }
+        else {
+            textView4.setText(String.format("%.2f", currentShift.TotalHours()));
+        }
         // then return the recyclable view
         return currentItemView;
     }
