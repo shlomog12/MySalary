@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -25,6 +26,8 @@ import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.ShiftsAdapter;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
+import com.Final.mysalary.UI.date.DatePickerFragment;
+import com.Final.mysalary.UI.date.TimePickerFragment;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -170,6 +173,32 @@ public class WorkerActivity extends AppCompatActivity {
         return "";
     }
 
+
+
+
+
+//    TimePickerFragment newTime = new TimePickerFragment();
+//        newTime.show(getSupportFragmentManager(), "timePicker");
+//
+//    DatePickerFragment newDate = new DatePickerFragment();
+//        newDate.show(getSupportFragmentManager(), "datePicker");
+//
+//    int year = newDate.getYear();
+//    int month = newDate.getMonth();
+//    int day = newDate.getDay();
+//    int hour = newTime.getHourOfDay();
+//    int min = newTime.getMinute();
+//
+//        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+//        System.out.println("year = "+year + "  month = "+month + "  day=" +day);
+//        System.out.println("hour = "+hour + "  min = "+min);
+//        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+
+
+
+
+
     private void addNewShift() {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         //We have added a title in the custom layout. So let's disable the default title.
@@ -179,86 +208,82 @@ public class WorkerActivity extends AppCompatActivity {
         //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.popup_add_shift);
 
-        //Initializing the views of the dialog.
-        final EditText jobName = dialog.findViewById(R.id.editShiftName);
-        final EditText ShiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
-        final EditText ShiftStart = dialog.findViewById(R.id.editShiftStart);
-        final EditText ShiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
-        final EditText ShiftEnd = dialog.findViewById(R.id.editShiftEnd);
-        Button submitButton = dialog.findViewById(R.id.buttonShiftSave);
 
+        final EditText jobName = dialog.findViewById(R.id.editShiftName);
+        final EditText shiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
+        final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStart);
+        final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
+        final EditText shiftTimeEnd = dialog.findViewById(R.id.editShiftEnd);
+        updateDateTime(shiftStartDate,shiftTimeStart,shiftEndDate,shiftTimeEnd);
+        Button submitButton = dialog.findViewById(R.id.buttonShiftSave);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
-
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 //convert String to LocalDate
-                LocalDateTime shift_start = LocalDateTime.parse(ShiftStartDate.getText().toString() + " " + ShiftStart.getText().toString(), formatter);
-
-                //convert String to LocalDate
-                LocalDateTime shift_end = LocalDateTime.parse(ShiftEndDate.getText().toString() + " " + ShiftEnd.getText().toString(), formatter);
-
-                Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
-                DB.setInShifts(shift);
-                Toast.makeText(WorkerActivity.this, "משמרת נוספה בהצלחה", Toast.LENGTH_SHORT).show();
+                try {
+                    LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
+                    //convert String to LocalDate
+                    LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
+                    Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
+                    DB.setInShifts(shift);
+                    Toast.makeText(WorkerActivity.this, "משמרת נוספה בהצלחה", Toast.LENGTH_SHORT).show();
+                }catch (Exception e){
+                    Toast.makeText(WorkerActivity.this, "הנתונים שהוזנו אינם תקינים", Toast.LENGTH_SHORT).show();
+                }
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void StartAndEndShift() {
-//        if (ButtonIsStart()) {
-//            Shift shift = new Shift(LocalDateTime.now(), null, getMail(), getJobName());
-//            DB.setInShifts(shift);
-//        } else updateEndOfShift();
+    private void updateDateTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
+        updateDate(shiftStartDate);
+        updateDate(shiftEndDate);
+        updateTime(shiftTimeStart);
+        updateTime(shiftTimeEnd);
+    }
+    private void updateTime(EditText shiftTime) {
+        TimePickerFragment time = new TimePickerFragment();
+        shiftTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTime(time,shiftTime);
+            }
+        });
+        shiftTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) showTime(time,shiftTime);
+            }
+        });
+    }
+    private void showTime(TimePickerFragment time, EditText shiftTime) {
+        time.show(getSupportFragmentManager(), "timePicker");
+        time.setEdit(shiftTime);
+    }
+    private void updateDate(EditText shiftDate) {
+        DatePickerFragment date = new DatePickerFragment();
+        shiftDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDate(date,shiftDate);
+            }
+        });
+        shiftDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) showDate(date,shiftDate);
+            }
+        });
+    }
+    private void showDate(DatePickerFragment date, EditText shiftDate) {
+        date.show(getSupportFragmentManager(), "datePicker");
+        date.setEdit(shiftDate);
     }
 
-    private void sortShifts() {
-    }
-
-
-    private void updateEndOfShift() {
-    }
-
-    private boolean ButtonIsStart() {
-        return false;
-    }
-
-    private String getJobName() {
-        return "";
-    }
-
-    private String getMail() {
-        return "";
-    }
-
-    private LocalDateTime getEnd() {
-        return null;
-    }
-
-    private LocalDateTime getStart() {
-        return null;
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void saveShift() {
-//        LocalDateTime start = LocalDateTime.of(2021,11,15,21,22);
-//        LocalDateTime end = LocalDateTime.of(2021,11,15,21,22);
-//        Shift shift = new Shift(null, null, "0", "");
-//        DB.setInShifts(shift);
-//        closeAddShiftWindow();
-    }
-
-    private void popUpAddShiftWindow() {
-    }
-
-    private void closeAddShiftWindow() {
-    }
 
     public void logout() {
         FirebaseAuth.getInstance().signOut();
