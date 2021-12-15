@@ -1,6 +1,7 @@
 package com.Final.mysalary.UI;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
@@ -10,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -85,7 +88,12 @@ public class WorkerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_1:
-                addNewShift();
+                DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
+                    @Override
+                    public void play(ArrayList<String> jobs) {
+                        addNewShift(jobs);
+                    }
+                });
                 return true;
             case R.id.menu_2:
                 addJob();
@@ -112,8 +120,20 @@ public class WorkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
+                if (!Validate.isValidInput(name)) {
+                    actions.popUpMessage("שם המשרה לא תקין");
+                    return;
+                }
                 String hourPay = hourSal.getText().toString();
+                if (!Validate.isNumeric(hourPay)) {
+                    actions.popUpMessage("השכר שהוזן אינו תקין");
+                    return;
+                }
                 String bossMail = bossId.getText().toString();
+                if (!Validate.isValidEmail(bossMail)){
+                    actions.popUpMessage("המייל שהוזן עבור המנהל אינו תקין");
+                    return;
+                }
                 Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
                 DB.setInJobs(job);
                 actions.popUpMessage("משרה נוספה בהצלחה");
@@ -142,13 +162,13 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
     }
-    private void addNewShift() {
+
+    private void addNewShift(ArrayList<String> jobs) {
         final Dialog dialog = new Dialog(WorkerActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.popup_add_shift);
-
-        final EditText jobName = dialog.findViewById(R.id.editShiftName);
+        final TextView jobName = dialog.findViewById(R.id.editShiftName);
         final EditText shiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
         final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStart);
         final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
@@ -160,6 +180,10 @@ public class WorkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
+                if (!jobs.contains(name)) {
+                    actions.popUpMessage("המשרה המבוקשת לא קיימת");
+                    return;
+                }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 try {
                     LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
@@ -169,13 +193,13 @@ public class WorkerActivity extends AppCompatActivity {
                     actions.popUpMessage( "משמרת נוספה בהצלחה");
                 }catch (Exception e){
                     actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
+                    return;
                 }
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
-
     private void updateDateAndTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
         updateDate(shiftStartDate);
         updateDate(shiftEndDate);
