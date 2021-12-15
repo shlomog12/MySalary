@@ -10,9 +10,6 @@ import android.widget.EditText;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
-import com.Final.mysalary.db.Callback;
-
-import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment

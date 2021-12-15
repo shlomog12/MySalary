@@ -9,8 +9,6 @@ import android.widget.TimePicker;
 
 import androidx.fragment.app.DialogFragment;
 
-import com.Final.mysalary.db.Callback;
-
 import java.util.Calendar;
 
 public class TimePickerFragment extends DialogFragment

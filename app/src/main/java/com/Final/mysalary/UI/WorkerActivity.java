@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -43,21 +41,18 @@ public class WorkerActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     User currentUser;
-
+    UiActions actions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
+         actions = new UiActions(this);
     }
-
-
     public void onStart() {
         super.onStart();
         updateUser();
     }
-
-
     private void updateUser() {
         String userMail = getUserMail();
         if (userMail == null) return;
@@ -70,7 +65,6 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
     }
-
     private String getUserMail() {
         String userMail;
         Bundle extras = getIntent().getExtras();
@@ -83,13 +77,11 @@ public class WorkerActivity extends AppCompatActivity {
         userMail = firebaseUser.getEmail();
         return userMail;
     }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.test_menu, menu);
         return true;
     }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_1:
@@ -105,44 +97,34 @@ public class WorkerActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    //Function to display the custom dialog.
     private void addJob() {
         final Dialog dialog = new Dialog(WorkerActivity.this);
-        //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
-        //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.popup_add_job);
 
-        //Initializing the views of the dialog.
         final EditText jobName = dialog.findViewById(R.id.editJobName);
         final EditText hourSal = dialog.findViewById(R.id.editHourSal);
         final EditText bossId = dialog.findViewById(R.id.editBossMail);
         Button submitButton = dialog.findViewById(R.id.PopUpSave);
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
-                String hourpay = hourSal.getText().toString();
+                String hourPay = hourSal.getText().toString();
                 String bossMail = bossId.getText().toString();
-                Job job = new Job(bossMail, hourpay, currentUser.getMail(), name);
+                Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
                 DB.setInJobs(job);
-                Toast.makeText(WorkerActivity.this, "משרה נוספה בהצלחה", Toast.LENGTH_SHORT).show();
+                actions.popUpMessage("משרה נוספה בהצלחה");
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showListOfShifts() {
-        if (currentUser == null) {
-            return;
-        }
+        if (currentUser == null) return;
         DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
             @Override
             public void play(ArrayList<Shift> shifts) {
@@ -160,79 +142,33 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
     }
-
-    private int getJobIdFromScrean() {
-        return 0;
-    }
-
-    private String getUserNameBoss() {
-        return "";
-    }
-
-    private String getUserNameWarker() {
-        return "";
-    }
-
-
-
-
-
-//    TimePickerFragment newTime = new TimePickerFragment();
-//        newTime.show(getSupportFragmentManager(), "timePicker");
-//
-//    DatePickerFragment newDate = new DatePickerFragment();
-//        newDate.show(getSupportFragmentManager(), "datePicker");
-//
-//    int year = newDate.getYear();
-//    int month = newDate.getMonth();
-//    int day = newDate.getDay();
-//    int hour = newTime.getHourOfDay();
-//    int min = newTime.getMinute();
-//
-//        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-//        System.out.println("year = "+year + "  month = "+month + "  day=" +day);
-//        System.out.println("hour = "+hour + "  min = "+min);
-//        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-
-
-
-
-
-
     private void addNewShift() {
         final Dialog dialog = new Dialog(WorkerActivity.this);
-        //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
-        //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.popup_add_shift);
-
 
         final EditText jobName = dialog.findViewById(R.id.editShiftName);
         final EditText shiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
         final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStart);
         final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
         final EditText shiftTimeEnd = dialog.findViewById(R.id.editShiftEnd);
-        updateDateTime(shiftStartDate,shiftTimeStart,shiftEndDate,shiftTimeEnd);
+        updateDateAndTime(shiftStartDate,shiftTimeStart,shiftEndDate,shiftTimeEnd);
         Button submitButton = dialog.findViewById(R.id.buttonShiftSave);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String name = jobName.getText().toString();
-
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                //convert String to LocalDate
                 try {
                     LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
-                    //convert String to LocalDate
                     LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
                     Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                     DB.setInShifts(shift);
-                    Toast.makeText(WorkerActivity.this, "משמרת נוספה בהצלחה", Toast.LENGTH_SHORT).show();
+                    actions.popUpMessage( "משמרת נוספה בהצלחה");
                 }catch (Exception e){
-                    Toast.makeText(WorkerActivity.this, "הנתונים שהוזנו אינם תקינים", Toast.LENGTH_SHORT).show();
+                    actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                 }
                 dialog.dismiss();
             }
@@ -240,7 +176,7 @@ public class WorkerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void updateDateTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
+    private void updateDateAndTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
         updateDate(shiftStartDate);
         updateDate(shiftEndDate);
         updateTime(shiftTimeStart);
@@ -284,20 +220,17 @@ public class WorkerActivity extends AppCompatActivity {
         date.show(getSupportFragmentManager(), "datePicker");
         date.setEdit(shiftDate);
     }
-
-
     public void logout() {
         FirebaseAuth.getInstance().signOut();
         signOutFromGoogle();
         startActivity(new Intent(this, LoginActivity.class));
     }
-
     public void signOutFromGoogle() {
         LoginActivity.mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(WorkerActivity.this, "להתראות!!", Toast.LENGTH_LONG).show();
+                        actions.popUpMessage("להתראות!!");
                     }
                 });
     }
