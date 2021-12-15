@@ -226,7 +226,7 @@ public class WorkerActivity extends AppCompatActivity {
                     LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
                     Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                     DB.setInShifts(shift);
-                    actions.popUpMessage(String.valueOf(R.string.shift_added_successfully));
+                    actions.popUpMessage(R.string.shift_added_successfully);
                     dialog.dismiss();
                     showListOfShifts();
                 }catch (Exception e){
@@ -293,7 +293,7 @@ public class WorkerActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        actions.popUpMessage(String.valueOf(R.string.bye));
+                        actions.popUpMessage(R.string.bye);
                     }
                 });
     }

@@ -28,4 +28,8 @@ public class UiActions {
     public void popUpMessage(String message) {
         Toast.makeText(activity,message,Toast.LENGTH_LONG).show();
     }
+    public void popUpMessage(int message) {
+        String messageStr = activity.getApplicationContext().getString(message);
+        Toast.makeText(activity,messageStr,Toast.LENGTH_LONG).show();
+    }
 }
