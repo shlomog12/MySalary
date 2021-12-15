@@ -26,6 +26,9 @@ import java.util.ArrayList;
 public class DB {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+
+
+
     public static void setUser(User user) {
         if (user == null) return;
         String userId =getSHA(user.getMail());

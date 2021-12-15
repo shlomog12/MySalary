@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
         return;
     }
     public  void registerWithFireBase(){
-        mAuth.createUserWithEmailAndPassword(newUser.getMail(),newUser.getPassword())
+        mAuth.createUserWithEmailAndPassword(newUser.getMail(),newUser.Password())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @SuppressLint("RestrictedApi")
                     @Override
@@ -164,7 +164,6 @@ public class RegisterActivity extends AppCompatActivity {
                             UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(newUser.getUserName()).build();
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                            System.out.println(newUser.getUserName());
                             firebaseUser.updateProfile(profileChangeRequest);
                             DB.setUser(newUser);
                             actions.moveToMainScreen(newUser);

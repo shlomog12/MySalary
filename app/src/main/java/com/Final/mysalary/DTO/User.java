@@ -1,6 +1,7 @@
 package com.Final.mysalary.DTO;
 
 
+import java.util.Locale;
 
 public class User {
 
@@ -13,7 +14,7 @@ public class User {
 
 
     public User(String mail, String firstName, String lastName , String password, String userName, Type type) {
-        this.mail = mail;
+        this.mail = mail.toLowerCase(Locale.ROOT);
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -41,7 +42,7 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    public String getPassword() {
+    public String Password() {
         return password;
     }
     public void setPassword(String password) {
@@ -51,7 +52,7 @@ public class User {
         return mail;
     }
     public void setMail(String mail) {
-        this.mail = mail;
+        this.mail =mail.toLowerCase(Locale.ROOT);;
     }
     public int getType() {
         return this.type.ordinal();

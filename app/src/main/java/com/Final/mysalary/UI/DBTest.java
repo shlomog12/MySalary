@@ -20,7 +20,7 @@ public class DBTest{
         user.setUserName("testDb4");
         user.setFirstName("testDB9_12");
         user.setLastName("LAtestDB9_12");
-        user.setPassword("A#0912");
+//        user.setPassword("A#0912");
         user.setMail("shlomog12@googlemail.com");
         user.setType(Type.WORKER.ordinal());
     }

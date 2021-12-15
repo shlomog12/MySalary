@@ -129,8 +129,9 @@ public class LoginActivity extends AppCompatActivity {
                     DB.getUserByUserMail(mAuth.getCurrentUser().getEmail(), new Callback<User>() {
                         @Override
                         public void play(User user) {
+                            if (user == null) actions.popUpMessage("ההתחברות נכשלה");
                             curUser = user;
-                            actions.moveToMainScreen(curUser);
+                            actions.moveToMainScreen(user);
                         }
                     });
                 }else {
@@ -186,17 +187,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) {
-        String[] COUNTRIES = new String[] {
-                "Belgium", "France", "Italy", "Germany", "Spain"
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, COUNTRIES);
-        AutoCompleteTextView textView = new AutoCompleteTextView(this);
-        textView.setAdapter(adapter);
-
-
-//        DBTest.test();
+        DBTest.test();
     }
 
 
