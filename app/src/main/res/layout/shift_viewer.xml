@@ -41,7 +41,7 @@
             android:padding="18dip"
             android:text="Text 1"
             android:textColor="#CFD8DC"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
 

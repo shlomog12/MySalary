@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "30652896089-mndnm281amtdb8f5ei48ikgadrlj4fmg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Final.mysalary",
+            "certificate_hash": "68c9e02c32e622340303f755660c395eb14e0a1e"
+          }
+        },
+        {
+          "client_id": "30652896089-q7g8b3sqqvp12l95b7lcect2p6h3ek7t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Final.mysalary",
+            "certificate_hash": "9676b61216f4eb736280fe23e24aff406dfbc190"
+          }
+        },
+        {
           "client_id": "30652896089-hc3frmehqg3gi41hm01hneh8vbms442a.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "30652896089-hc3frmehqg3gi41hm01hneh8vbms442a.apps.googleusercontent.com",
+              "client_id": "30652896089-12272i8lgqvqlbb6ber8rs16v2kig76j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

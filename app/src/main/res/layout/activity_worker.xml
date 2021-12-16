@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     tools:context=".UI.WorkerActivity">
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutWorker"
         android:layout_width="410dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
@@ -54,7 +54,7 @@
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="540dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,6 +68,7 @@
         android:id="@+id/sumSalary"
         android:layout_width="match_parent"
         android:layout_height="84dp"
+        android:background="@color/white"
         android:text="@string/sum_payment"
         android:textColor="@color/black"
         android:textSize="20sp"

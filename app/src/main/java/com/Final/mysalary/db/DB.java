@@ -1,23 +1,15 @@
 package com.Final.mysalary.db;
 
-
-
 import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-
-
 import com.Final.mysalary.DTO.*;
-
-
 import com.google.common.hash.Hashing;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,9 +17,6 @@ import java.util.ArrayList;
 
 public class DB {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
-
 
     public static void setUser(User user) {
         if (user == null) return;
@@ -63,7 +52,10 @@ public class DB {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void setInShifts(Shift shift) {
         if (shift == null) return;
-        DatabaseReference dbRefToShiftsOfThisWorker = database.getReference().child(config.USERS).child(getSHA(shift.UserMail())).child(config.JOBS).child(String.valueOf(shift.JobName())).child(config.SHIFTS);
+        DatabaseReference dbRefToShiftsOfThisWorker = database.getReference().child(config.USERS)
+                .child(getSHA(shift.UserMail())).child(config.JOBS)
+                .child(String.valueOf(shift.JobName())).child(config.SHIFTS);
+        // get all shifts
         dbRefToShiftsOfThisWorker.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -152,7 +144,6 @@ public class DB {
     }
     public static void CheckIfTheUserMailIsExists(String userMail, Callback callback){
         DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userMail));
-
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -172,12 +163,10 @@ public class DB {
     }
     public static void getJobs(String userMail, Callback callback){
         DatabaseReference dbRef = database.getReference(config.USERS).child(getSHA(userMail)).child(config.JOBS);
-
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 ArrayList <String> jobs = new ArrayList<>();
                 for (DataSnapshot jobFromData: snapshot.getChildren()) {
                     String jobName = jobFromData.getKey();
