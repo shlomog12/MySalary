@@ -1,8 +1,12 @@
 package com.Final.mysalary.UI;
 
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +19,10 @@ public class Validate {
     public static boolean isValidInput(String firstName) {
         if (firstName.length() < 1) return false;
         return true;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static boolean isValidDateTime(LocalDateTime a, LocalDateTime b) {
+        return a.isBefore(b);
     }
 
     public static boolean isValidPassword(final String password) {

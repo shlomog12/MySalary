@@ -100,6 +100,10 @@ public class BossActivity extends AppCompatActivity {
                 try {
                     shift_start = LocalDateTime.parse(StartDate.getText().toString() + " " + "00:00", formatter);
                     shift_end = LocalDateTime.parse(EndDate.getText().toString() + " " + "23:59", formatter);
+                    if(!Validate.isValidDateTime(shift_start,shift_end)){
+                        actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
+                        return;
+                    }
                 } catch (Exception e) {
                     actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                     return;
