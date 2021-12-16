@@ -49,4 +49,6 @@
     <string name="login_failed">Login failed</string>
     <string name="thanks_forgot">Thank you, reset link sent to your mail</string>
     <string name="mail_not_exist">mail doesn\'t exists</string>
+    <string name="search">Search</string>
+    <string name="worker_mail">Worker Mail</string>
 </resources>

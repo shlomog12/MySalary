@@ -11,10 +11,12 @@ public class Validate {
     public static boolean isValidEmail(String mail) {
         return (!TextUtils.isEmpty(mail) && Patterns.EMAIL_ADDRESS.matcher(mail).matches());
     }
+
     public static boolean isValidInput(String firstName) {
         if (firstName.length() < 1) return false;
         return true;
     }
+
     public static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;
@@ -23,6 +25,7 @@ public class Validate {
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
+
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;

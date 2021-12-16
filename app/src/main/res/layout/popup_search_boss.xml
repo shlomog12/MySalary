@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/worker_mail"
+        android:inputType="text"
+        android:imeOptions="actionNext"
+        android:id="@+id/SearchWorkerMail"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/start_date"
+        android:inputType="number"
+        android:imeOptions="actionNext"
+        android:id="@+id/SearchStartDate"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/end_date"
+        android:inputType="text"
+        android:imeOptions="actionNext"
+        android:id="@+id/SearchEndDate"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/search"
+        android:textColor="@color/white"
+        android:background="@color/design_default_color_primary"
+        android:id="@+id/btnBossSearch"/>
+</LinearLayout>

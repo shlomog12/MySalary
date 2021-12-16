@@ -31,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     User newUser;
     public FirebaseAuth mAuth;
     UiActions actions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,21 +40,24 @@ public class RegisterActivity extends AppCompatActivity {
         actions = new UiActions(this);
     }
 
-    public void moveToLoginScreen(){
-        Intent intent = new Intent(this,LoginActivity.class);
+    public void moveToLoginScreen() {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-    public void clean(View view){
-        ((EditText)findViewById(R.id.editMail)).setText("", TextView.BufferType.EDITABLE);
-        ((EditText)findViewById(R.id.editUserName)).setText("", TextView.BufferType.EDITABLE);
-        ((EditText)findViewById(R.id.editFirstName)).setText("", TextView.BufferType.EDITABLE);
-        ((EditText)findViewById(R.id.editLastName)).setText("", TextView.BufferType.EDITABLE);
-        ((EditText)findViewById(R.id.editPassword)).setText("", TextView.BufferType.EDITABLE);
-        ((EditText)findViewById(R.id.editValidPassword)).setText("", TextView.BufferType.EDITABLE);
+
+    public void clean(View view) {
+        ((EditText) findViewById(R.id.editMail)).setText("", TextView.BufferType.EDITABLE);
+        ((EditText) findViewById(R.id.editUserName)).setText("", TextView.BufferType.EDITABLE);
+        ((EditText) findViewById(R.id.editFirstName)).setText("", TextView.BufferType.EDITABLE);
+        ((EditText) findViewById(R.id.editLastName)).setText("", TextView.BufferType.EDITABLE);
+        ((EditText) findViewById(R.id.editPassword)).setText("", TextView.BufferType.EDITABLE);
+        ((EditText) findViewById(R.id.editValidPassword)).setText("", TextView.BufferType.EDITABLE);
     }
-    public void close(View view){
+
+    public void close(View view) {
         moveToLoginScreen();
     }
+
     public void saveDetails(View view) {
         validate = true;
         String mail = getMailFromScreen();
@@ -68,8 +72,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (!validate) return;
         Type typeOfUser = getTypeOfUser();
         if (!validate) return;
-        newUser = new User(mail,firstName,lastName,password,userName, typeOfUser);
-        DB.CheckIfTheUserMailIsExists(userName, new Callback<Boolean>() {
+        newUser = new User(mail, firstName, lastName, password, userName, typeOfUser);
+        DB.CheckIfTheUserMailIsExists(mail, new Callback<Boolean>() {
             @Override
             public void play(Boolean isBusy) {
                 sendFeedbackToUser(isBusy);
@@ -77,38 +81,41 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-
     }
-    public void sendFeedbackToUser(boolean busyUserName){
-        if (busyUserName){
+
+    public void sendFeedbackToUser(boolean busyUserName) {
+        if (busyUserName) {
             actions.popUpMessage(getApplicationContext().getString(R.string.user_name_used));
             return;
         }
         registerWithFireBase();
     }
+
     private Type getTypeOfUser() {
-        RadioGroup radioGroup =  findViewById(R.id.radioGroupReg);
+        RadioGroup radioGroup = findViewById(R.id.radioGroupReg);
         int selectedId = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = findViewById(selectedId);
-        if (radioButton == null){
+        if (radioButton == null) {
             actions.popUpMessage(getApplicationContext().getString(R.string.choose_user_type));
             validate = false;
         }
         if (radioButton == findViewById(R.id.radBtnBossReg)) return Type.BOSS;
         return Type.WORKER;
     }
+
     private String getUserNameFromScreen() {
-        String userName = ((EditText)findViewById(R.id.editUserName)).getText().toString();
-        if (!Validate.isValidInput(userName)){
+        String userName = ((EditText) findViewById(R.id.editUserName)).getText().toString();
+        if (!Validate.isValidInput(userName)) {
             actions.popUpMessage(getApplicationContext().getString(R.string.user_name_short));
             validate = false;
             return null;
         }
         return userName;
     }
+
     private String getMailFromScreen() {
-        String mail = ((EditText)findViewById(R.id.editMail)).getText().toString();
-        if (!Validate.isValidEmail(mail)){
+        String mail = ((EditText) findViewById(R.id.editMail)).getText().toString();
+        if (!Validate.isValidEmail(mail)) {
             validate = false;
             actions.popUpMessage(getApplicationContext().getString(R.string.mail_incorrect));
             return null;
@@ -117,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private String getFirstNameFromScreen() {
-        String firstName = ((EditText)findViewById(R.id.editFirstName)).getText().toString();
+        String firstName = ((EditText) findViewById(R.id.editFirstName)).getText().toString();
         if (!Validate.isValidInput(firstName)) {
             actions.popUpMessage(getApplicationContext().getString(R.string.invalid_first_name));
             validate = false;
@@ -125,9 +132,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return firstName;
     }
+
     private String getLastNameFromScreen() {
-        String lastName = ((EditText)findViewById(R.id.editLastName)).getText().toString();
-        if(!Validate.isValidInput(lastName)){
+        String lastName = ((EditText) findViewById(R.id.editLastName)).getText().toString();
+        if (!Validate.isValidInput(lastName)) {
             actions.popUpMessage(getApplicationContext().getString(R.string.invalid_last_name));
             validate = false;
             return null;
@@ -136,31 +144,33 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private String getPasswordFromScreen() {
-        String password = ((EditText)findViewById(R.id.editPassword)).getText().toString();
-        String validPassword = ((EditText)findViewById(R.id.editValidPassword)).getText().toString();
-        passwordCheck(password,validPassword);
+        String password = ((EditText) findViewById(R.id.editPassword)).getText().toString();
+        String validPassword = ((EditText) findViewById(R.id.editValidPassword)).getText().toString();
+        passwordCheck(password, validPassword);
         return password;
     }
+
     private void passwordCheck(String password, String validPassword) {
-        if (!Validate.isValidPassword(password)){
+        if (!Validate.isValidPassword(password)) {
             actions.popUpMessage(getApplicationContext().getString(R.string.password_invalid));
             validate = false;
             return;
         }
-        if (!password.equals(validPassword)){
+        if (!password.equals(validPassword)) {
             actions.popUpMessage(getApplicationContext().getString(R.string.verification_wrong));
             validate = false;
             return;
         }
         return;
     }
-    public  void registerWithFireBase(){
-        mAuth.createUserWithEmailAndPassword(newUser.getMail(),newUser.Password())
+
+    public void registerWithFireBase() {
+        mAuth.createUserWithEmailAndPassword(newUser.getMail(), newUser.Password())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @SuppressLint("RestrictedApi")
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             actions.popUpMessage(getApplicationContext().getString(R.string.register_success));
                             UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(newUser.getUserName()).build();
@@ -169,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
                             firebaseUser.updateProfile(profileChangeRequest);
                             DB.setUser(newUser);
                             actions.moveToMainScreen(newUser);
-                        }else {
+                        } else {
                             System.out.println(task.getException());
                             actions.popUpMessage(getApplicationContext().getString(R.string.register_failed));
                         }

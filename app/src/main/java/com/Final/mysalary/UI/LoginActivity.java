@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -37,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
     public FirebaseAuth mAuth;
     User curUser;
     public static GoogleSignInClient mGoogleSignInClient;
-
     UiActions actions;
 
     @Override
@@ -51,12 +49,13 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
+
     public void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String mail;
-        if (account != null) mail = account.getEmail();
+        if (googleAccount != null) mail = googleAccount.getEmail();
         else if (currentUser != null) mail = currentUser.getEmail();
         else return;
         DB.getUserByUserMail(mail, new Callback<User>() {
@@ -69,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
     public void google_sign(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -81,19 +81,19 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             if (task.isSuccessful()) {
                 handleSignInResult(task);
-            }
-            else {
+            } else {
                 System.out.println(task.getException());
             }
         }
     }
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             DB.CheckIfTheUserMailIsExists(account.getEmail(), new Callback<Boolean>() {
                 @Override
                 public void play(Boolean isExits) {
-                    if (isExits){
+                    if (isExits) {
                         DB.getUserByUserMail(account.getEmail(), new Callback<User>() {
                             @Override
                             public void play(User user) {
@@ -101,9 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                                 actions.moveToMainScreen(curUser);
                             }
                         });
-                    }
-                    else {
-                        curUser =new User(account.getEmail(),account.getGivenName(),account.getFamilyName(),"",account.getDisplayName(),Type.WORKER);
+                    } else {
+                        curUser = new User(account.getEmail(), account.getGivenName(), account.getFamilyName(), "", account.getDisplayName(), Type.WORKER);
                         showSelectTypeDialog();
                     }
                 }
@@ -113,21 +112,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void login(View view){
-        String mail = ((EditText)findViewById(R.id.input_username)).getText().toString();
-        String password = ((EditText)findViewById(R.id.input_pass)).getText().toString();
-        if (mail.length() < 5){
-           actions.popUpMessage(getApplicationContext().getString(R.string.mail_incorrect));
+    public void login(View view) {
+        String mail = ((EditText) findViewById(R.id.input_username)).getText().toString();
+        String password = ((EditText) findViewById(R.id.input_pass)).getText().toString();
+        if (mail.length() < 5) {
+            actions.popUpMessage(getApplicationContext().getString(R.string.mail_incorrect));
             return;
         }
-        if(password.length() < 6){
+        if (password.length() < 6) {
             actions.popUpMessage(getApplicationContext().getString(R.string.wrong_password));
             return;
         }
-        mAuth.signInWithEmailAndPassword(mail,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(mail, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DB.getUserByUserMail(mAuth.getCurrentUser().getEmail(), new Callback<User>() {
                         @Override
                         public void play(User user) {
@@ -135,16 +134,18 @@ public class LoginActivity extends AppCompatActivity {
                             actions.moveToMainScreen(curUser);
                         }
                     });
-                }else {
+                } else {
                     actions.popUpMessage(getApplicationContext().getString(R.string.login_failed));
                     System.out.println(task.getException());
                 }
             }
         });
     }
+
     public void register(View view) {
         startActivity(new Intent(this, RegisterActivity.class));
     }
+
     public void forgot(View view) {
         final EditText email = new EditText(this);
         email.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -164,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         String mail = email.getText().toString();
-                        if (!Validate.isValidEmail(mail)){
+                        if (!Validate.isValidEmail(mail)) {
                             actions.popUpMessage(getApplicationContext().getString(R.string.mail_incorrect));
                             return;
                         }
@@ -172,11 +173,11 @@ public class LoginActivity extends AppCompatActivity {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             actions.popUpMessage(getApplicationContext().getString(R.string.thanks_forgot));
                                             dialog.dismiss();
-                                        }
-                                        else actions.popUpMessage(getApplicationContext().getString(R.string.mail_not_exist));
+                                        } else
+                                            actions.popUpMessage(getApplicationContext().getString(R.string.mail_not_exist));
                                     }
                                 });
                     }
@@ -190,8 +191,9 @@ public class LoginActivity extends AppCompatActivity {
     public void testDB(View view) {
         DBTest.test();
     }
+
     private void showSelectTypeDialog() {
-        String[] types = {"עובד","מנהל"};
+        String[] types = {"עובד", "מנהל"};
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setTitle("בחר את סוג המשתמש");
         builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
@@ -218,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
         });
         builder.show();
     }
-
 
 
 }
