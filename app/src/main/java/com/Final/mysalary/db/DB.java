@@ -219,12 +219,14 @@ public class DB {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Shift> shifts = new ArrayList<>();
                 for (Job job : jobs) {
+                    String salaryForHour = job.getSalaryForHour();
                     DataSnapshot jobsSnapshot = snapshot.child(getSHA(job.getMailWorker())).child(config.JOBS)
                             .child(job.getJobName()).child(config.SHIFTS);
                     for (DataSnapshot shiftSnapshot: jobsSnapshot.getChildren()){
                         Shift shift = shiftSnapshot.getValue(Shift.class);
-                        shift.setUserMail(job.getMailWorker());
                         if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
+                            shift.setUserMail(job.getMailWorker());
+                            shift.updateSalary(salaryForHour);
                             shifts.add(shift);
                         }
                     }
