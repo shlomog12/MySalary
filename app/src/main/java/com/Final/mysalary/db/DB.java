@@ -217,8 +217,6 @@ public class DB {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
                 ArrayList<Shift> shifts = new ArrayList<>();
                 for (Job job : jobs) {
                     DataSnapshot jobsSnapshot = snapshot.child(getSHA(job.getMailWorker())).child(config.JOBS)
