@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class DB {
@@ -45,7 +46,7 @@ public class DB {
     }
     private static void setJObWithTheUser(Job newJob, int jobId) {
         DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(newJob.getMailWorker()))
-                .child(config.JOBS).child(newJob.JobName());
+                .child(config.JOBS).child(newJob.getJobName());
         dbRef.child(config.SALARY_FOR_HOUR).setValue(newJob.getSalaryForHour());
         dbRef.child(config.JOB_ID).setValue(jobId);
     }
@@ -183,8 +184,68 @@ public class DB {
         });
     }
 
-}
 
+    public static void getShiftsByBossMail(LocalDateTime start, LocalDateTime end, String userMailBoss, Callback callback) {
+        if (userMailBoss ==null || start == null || end == null) return;
+        DatabaseReference dbRef = database.getReference().child(config.JOBS);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                    if (!snapshot.exists()) return;
+                    ArrayList <Job> jobs = new ArrayList<>();
+                    for (DataSnapshot jobSnapshot :snapshot.getChildren()) {
+                        Job job = jobSnapshot.getValue(Job.class);
+                        if (job.getMailBoss().equals(userMailBoss)) {
+                            jobs.add(job);
+                        }
+                    }
+                getShiftsByJobs(start,end,jobs,callback);
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    }
+
+    private static void getShiftsByJobs(LocalDateTime start, LocalDateTime end, ArrayList<Job> jobs, Callback callback) {
+        if (jobs.size() < 1 ) return;
+        DatabaseReference dbRef = database.getReference().child(config.USERS);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                ArrayList<Shift> shifts = new ArrayList<>();
+                for (Job job : jobs) {
+                    DataSnapshot jobsSnapshot = snapshot.child(getSHA(job.getMailWorker())).child(config.JOBS)
+                            .child(job.getJobName()).child(config.SHIFTS);
+                    for (DataSnapshot shiftSnapshot: jobsSnapshot.getChildren()){
+                        Shift shift = shiftSnapshot.getValue(Shift.class);
+                        shift.setUserMail(job.getMailWorker());
+                        if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
+                            shifts.add(shift);
+                        }
+                    }
+                }
+                callback.play(shifts);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
+    }
+
+
+}
 
 
 

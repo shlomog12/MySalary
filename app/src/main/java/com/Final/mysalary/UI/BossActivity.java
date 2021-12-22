@@ -88,8 +88,7 @@ public class BossActivity extends AppCompatActivity {
                 DB.CheckIfTheUserMailIsExists(mail, new Callback<Boolean>() {
                     @Override
                     public void play(Boolean aBoolean) {
-                        if (!aBoolean)
-                            actions.popUpMessage(R.string.mail_not_exist);
+                        if (!aBoolean) actions.popUpMessage(R.string.mail_not_exist);
                         actions.moveToMainScreen(currentUser);
                         return;
                     }
