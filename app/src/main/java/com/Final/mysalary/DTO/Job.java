@@ -34,7 +34,7 @@ public class Job {
     public void setSalaryForHour(String salaryForHour) {
         this.salaryForHour = salaryForHour;
     }
-    public String JobName() {
+    public String getJobName() {
         return jobName;
     }
     public void setJobName(String jobName) {

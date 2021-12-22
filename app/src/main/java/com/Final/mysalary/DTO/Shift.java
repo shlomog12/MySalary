@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class Shift {
+public class Shift{
 
     private LocalDateTime start;
     private LocalDateTime end;
@@ -105,4 +105,5 @@ public class Shift {
                 ", userMail='" + userMail + '\'' +
                 '}';
     }
+
 }
