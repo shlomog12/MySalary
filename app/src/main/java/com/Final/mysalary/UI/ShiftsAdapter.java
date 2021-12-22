@@ -1,4 +1,4 @@
-package com.Final.mysalary.DTO;
+package com.Final.mysalary.UI;
 
 import android.content.Context;
 import android.os.Build;
@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.R;
 
 import java.time.LocalDateTime;

@@ -17,9 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.ShiftsAdapter;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.UI.date.DatePickerFragment;
