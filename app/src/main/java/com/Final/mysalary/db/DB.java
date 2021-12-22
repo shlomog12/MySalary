@@ -13,7 +13,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class DB {
@@ -183,33 +182,51 @@ public class DB {
             }
         });
     }
-
-
-    public static void getShiftsByBossMail(LocalDateTime start, LocalDateTime end, String userMailBoss, Callback callback) {
-        if (userMailBoss ==null || start == null || end == null) return;
+    public static void getMailsOfWorkersByBossMail(String userMailBoss, Callback callback) {
+        if (userMailBoss ==null ) return;
+        DB.getJobsByBossMail(userMailBoss, new Callback<ArrayList<Job>>() {
+            @Override
+            public void play(ArrayList<Job> jobs) {
+                ArrayList<String> mailsOfWorkers = new ArrayList<>();
+                for (Job job:jobs) {
+                    mailsOfWorkers.add(job.getMailWorker());
+                }
+                callback.play(mailsOfWorkers);
+            }
+        });
+    }
+    public static void getJobsByBossMail(String userMailBoss, Callback callback) {
+        if (userMailBoss ==null ) return;
         DatabaseReference dbRef = database.getReference().child(config.JOBS);
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                    if (!snapshot.exists()) return;
-                    ArrayList <Job> jobs = new ArrayList<>();
-                    for (DataSnapshot jobSnapshot :snapshot.getChildren()) {
-                        Job job = jobSnapshot.getValue(Job.class);
-                        if (job.getMailBoss().equals(userMailBoss)) {
-                            jobs.add(job);
-                        }
+                if (!snapshot.exists()) return;
+                ArrayList <Job> jobs = new ArrayList<>();
+                for (DataSnapshot jobSnapshot :snapshot.getChildren()) {
+                    Job job = jobSnapshot.getValue(Job.class);
+                    if (job.getMailBoss().equals(userMailBoss)) {
+                        jobs.add(job);
                     }
-                getShiftsByJobs(start,end,jobs,callback);
                 }
-
+                callback.play(jobs);
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 
     }
-
+    public static void getShiftsByBossMail(LocalDateTime start, LocalDateTime end, String userMailBoss, Callback callback) {
+        if (userMailBoss ==null || start == null || end == null) return;
+        DB.getJobsByBossMail(userMailBoss, new Callback<ArrayList<Job>>() {
+            @Override
+            public void play(ArrayList<Job> jobs) {
+                getShiftsByJobs(start,end,jobs,callback);
+            }
+        });
+    }
     private static void getShiftsByJobs(LocalDateTime start, LocalDateTime end, ArrayList<Job> jobs, Callback callback) {
         if (jobs.size() < 1 ) return;
         DatabaseReference dbRef = database.getReference().child(config.USERS);
@@ -227,6 +244,7 @@ public class DB {
                         if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
                             shift.setUserMail(job.getMailWorker());
                             shift.updateSalary(salaryForHour);
+                            shift.setJobOfName(job.getJobName());
                             shifts.add(shift);
                         }
                     }
