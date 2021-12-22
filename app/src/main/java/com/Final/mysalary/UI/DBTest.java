@@ -35,8 +35,22 @@ public class DBTest{
 //        testGetUser();
 //        testCheckIfTheUserNameIsExists();
 //        testGetJobs();
-        testgetShiftsByBossMail();
+//        testgetShiftsByBossMail();
+        testgetMailsOfWorkersByBossMail();
 
+    }
+
+    private static void testgetMailsOfWorkersByBossMail() {
+        DB.getMailsOfWorkersByBossMail("btest1@gmail.com", new Callback<ArrayList<String>>() {
+            @Override
+            public void play(ArrayList<String> strings) {
+                System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm");
+                System.out.println(Arrays.toString(strings.toArray()));
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIILLLLLLLLLLLLLL");
+            }
+
+
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
