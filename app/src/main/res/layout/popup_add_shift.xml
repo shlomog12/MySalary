@@ -13,13 +13,17 @@
         android:textColor="@color/black"
         android:layout_marginBottom="16dp"/>
 
-    <EditText
+    <AutoCompleteTextView
+        android:id="@+id/editShiftName"
+        android:hint="@string/job_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/job_name"
         android:inputType="text"
         android:imeOptions="actionNext"
-        android:id="@+id/editShiftName"/>
+        android:completionThreshold="0"
+        android:text="" />
+
+
 
     <EditText
         android:layout_width="match_parent"

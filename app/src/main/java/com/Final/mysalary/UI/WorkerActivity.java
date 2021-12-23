@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -215,18 +218,19 @@ public class WorkerActivity extends AppCompatActivity {
         //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.popup_add_shift);
-        final EditText jobName = dialog.findViewById(R.id.editShiftName);
+        final AutoCompleteTextView AutoTextJobName =(AutoCompleteTextView) dialog.findViewById(R.id.editShiftName);
         final EditText shiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
         final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStartTime);
         final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
         final EditText shiftTimeEnd = dialog.findViewById(R.id.editShiftEndTime);
         updateDateTime(shiftStartDate, shiftTimeStart, shiftEndDate, shiftTimeEnd);
+        updateDropDownJobsName(AutoTextJobName);
         Button submitButton = dialog.findViewById(R.id.btnNewShiftSave);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                String name = jobName.getText().toString();
+                String name = AutoTextJobName.getText().toString();
                 if (!jobs.contains(name)) {
                     actions.popUpMessage("המשרה המבוקשת לא קיימת");
                     return;
@@ -251,6 +255,38 @@ public class WorkerActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    private void updateDropDownJobsName(AutoCompleteTextView jobName) {
+        DB.getJobs(currentUser.getMail(), new Callback<ArrayList<Job>>() {
+            @Override
+            public void play(ArrayList<Job> jobs) {
+                String[] jobsName = new String[jobs.size()];
+                for (int i = 0; i < jobs.size(); i++) {
+                    jobsName[i] = String.valueOf(jobs.get(i));
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                        (WorkerActivity.this,android.R.layout.select_dialog_item,jobsName);
+                jobName.setAdapter(adapter);
+                jobName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus)
+                            jobName.showDropDown();
+                    }
+                });
+                jobName.setOnTouchListener(new View.OnTouchListener() {
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        jobName.showDropDown();
+                        return false;
+                    }
+                });
+            }
+        });
+
     }
 
     private void updateDateTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
@@ -317,6 +353,17 @@ public class WorkerActivity extends AppCompatActivity {
                         actions.popUpMessage(R.string.bye);
                     }
                 });
+    }
+
+
+    public void foo(){
+        String[] language ={"C","C++","Java",".NET","iPhone","Android","ASP.NET","PHP"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this,android.R.layout.select_dialog_item,language);
+        //Getting the instance of AutoCompleteTextView
+        AutoCompleteTextView actv =  (AutoCompleteTextView)findViewById(R.id.editShiftName);
+        actv.setThreshold(1);//will start working from first character
+        actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
     }
 
 
