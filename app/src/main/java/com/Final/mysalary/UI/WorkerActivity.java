@@ -141,11 +141,20 @@ public class WorkerActivity extends AppCompatActivity {
                     actions.popUpMessage("המייל שהוזן עבור המנהל אינו תקין");
                     return;
                 }
-                Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
-                DB.setInJobs(job);
-                actions.popUpMessage(R.string.job_added_success);
-                showListOfShifts();
-                dialog.dismiss();
+                DB.CheckIfTheUserMailIsExists(bossMail, new Callback<Boolean>() {
+                    @Override
+                    public void play(Boolean isExits) {
+                        if (!isExits){
+                            actions.popUpMessage("המייל שהוזן עבור המנהל לא קיים במערכת");
+                            return;
+                        }
+                        Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
+                        DB.setInJobs(job);
+                        actions.popUpMessage(R.string.job_added_success);
+                        showListOfShifts();
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         dialog.show();
