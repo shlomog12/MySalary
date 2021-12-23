@@ -55,6 +55,7 @@ public class UiActions {
     }
 
     private void sendNotificationToTokenId(String tokenId, String title, String message){
+        System.out.println(tokenId);
         FcmNotificationsSender notificationsSender = new FcmNotificationsSender(tokenId,title
                 ,message, activity.getApplicationContext(),activity);
         notificationsSender.SendNotifications();
@@ -69,4 +70,11 @@ public class UiActions {
         });
     }
 
+    public String getMessgeNotification(String userName, String name, String hourPay) {
+        String s1 ="המשתמש ";
+        String s2 = " הוסיף אותך כמנהל למשרה ";
+        String s3 = " בשכר של ";
+        String s4 = " לשעה";
+        return s1+userName+" "+s2+name + s3+hourPay + s4;
+    }
 }

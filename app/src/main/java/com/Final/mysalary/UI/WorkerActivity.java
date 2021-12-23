@@ -149,6 +149,9 @@ public class WorkerActivity extends AppCompatActivity {
                             return;
                         }
                         Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
+                        String title = "שלום, נוסף לך עובד חדש";
+                        String message = actions.getMessgeNotification(currentUser.getUserName(),name,hourPay);
+                        actions.sendNotificationToUserMail(bossMail,title,message);
                         DB.setInJobs(job);
                         actions.popUpMessage(R.string.job_added_success);
                         showListOfShifts();
