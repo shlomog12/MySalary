@@ -258,12 +258,12 @@ public class WorkerActivity extends AppCompatActivity {
     }
 
     private void updateDropDownJobsName(AutoCompleteTextView jobName) {
-        DB.getJobs(currentUser.getMail(), new Callback<ArrayList<Job>>() {
+        DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
             @Override
-            public void play(ArrayList<Job> jobs) {
-                String[] jobsName = new String[jobs.size()];
-                for (int i = 0; i < jobs.size(); i++) {
-                    jobsName[i] = String.valueOf(jobs.get(i));
+            public void play(ArrayList<String> jobsNames) {
+                String[] jobsName = new String[jobsNames.size()];
+                for (int i = 0; i < jobsNames.size(); i++) {
+                    jobsName[i] = jobsNames.get(i);
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>
                         (WorkerActivity.this,android.R.layout.select_dialog_item,jobsName);
