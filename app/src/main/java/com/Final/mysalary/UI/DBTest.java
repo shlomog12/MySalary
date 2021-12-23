@@ -36,9 +36,10 @@ public class DBTest{
 //        testCheckIfTheUserNameIsExists();
 //        testGetJobs();
 //        testgetShiftsByBossMail();
-        testgetMailsOfWorkersByBossMail();
+//        testgetMailsOfWorkersByBossMail();
 
     }
+
 
     private static void testgetMailsOfWorkersByBossMail() {
         DB.getMailsOfWorkersByBossMail("btest1@gmail.com", new Callback<ArrayList<String>>() {

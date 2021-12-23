@@ -17,4 +17,5 @@ public class config {
     public static final String USERS = "users";
     public static final String WORKER = "userNameWorker";
     public static final String JOB_NAME = "jobName";
+    public static final String TOKEN_ID = "tokenID";
 }

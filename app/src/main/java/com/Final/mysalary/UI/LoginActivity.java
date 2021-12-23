@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         DB.getUserByUserMail(mail, new Callback<User>() {
             @Override
             public void play(User user) {
+                if (user == null) return;
                 curUser = user;
                 actions.moveToMainScreen(curUser);
             }
@@ -189,7 +191,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void testDB(View view) {
-        DBTest.test();
+
+        String title = ((EditText) findViewById(R.id.input_username)).getText().toString();
+        String message = ((EditText) findViewById(R.id.input_pass)).getText().toString();
+        actions.sendNotificationToUserMail("shlomog12@googlemail.com",title,message);
+        actions.sendNotificationToAllUsers(title,message);
+    //        DBTest.test();
     }
 
     private void showSelectTypeDialog() {
@@ -220,6 +227,9 @@ public class LoginActivity extends AppCompatActivity {
         });
         builder.show();
     }
+
+
+
 
 
 }

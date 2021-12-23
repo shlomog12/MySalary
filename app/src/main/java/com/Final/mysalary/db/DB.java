@@ -4,15 +4,20 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import com.Final.mysalary.DTO.*;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class DB {
@@ -24,6 +29,7 @@ public class DB {
         database.getReference().child(config.USERS).child(userId).setValue(user);
     }
     private static String getSHA(String input) {
+        input.toLowerCase(Locale.ROOT);
         return Hashing.sha256().hashString(input, StandardCharsets.UTF_8).toString();
     }
     public static void setInJobs(Job newJob) {
@@ -259,6 +265,44 @@ public class DB {
             }
 
 
+        });
+    }
+
+    public static void getTokenIdByUserMail(String userMail,Callback callback){
+        if (userMail ==null) return;
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.exists()) return;
+                String tokenId = (String) snapshot.getValue();
+                callback.play(tokenId);
+                return;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                return;
+            }
+        });
+        return;
+
+    }
+
+    public static void setToken(String userMail,String tokenId) {
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
+        dbRef.setValue(tokenId);
+    }
+    public static void updateToken(String userMail) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()){
+                    String token = task.getResult();
+                    DB.setToken(userMail,token);
+                }
+            }
         });
     }
 
