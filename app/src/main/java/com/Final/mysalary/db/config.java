@@ -18,4 +18,6 @@ public class config {
     public static final String WORKER = "userNameWorker";
     public static final String JOB_NAME = "jobName";
     public static final String TOKEN_ID = "tokenID";
+    public static final String CANCELED = "canceled";
+    public static final Object TRUE = "1";
 }
