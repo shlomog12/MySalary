@@ -1,7 +1,12 @@
 package com.Final.mysalary.UI;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.Final.mysalary.DTO.Shift;
 import com.Final.mysalary.DTO.User;
@@ -26,6 +32,8 @@ import com.Final.mysalary.db.DB;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,6 +43,9 @@ public class BossActivity extends AppCompatActivity {
     User currentUser;
     FirebaseAuth mAuth;
     UiActions actions;
+    NotificationManager myNotificationManager;
+    int notificationIdOne = 111;
+    int numMessagesOne = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +65,7 @@ public class BossActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_boss_search:
@@ -62,9 +74,60 @@ public class BossActivity extends AppCompatActivity {
             case R.id.menu_boss_logout:
                 logout();
                 return true;
+            case R.id.refresh_shifts:
+                showListOfShifts(LocalDateTime.MIN,LocalDateTime.MAX, currentUser.getMail());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void notify_user() {
+        TextView notOneBtn = (TextView) findViewById(R.id.notify_one);
+        notOneBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                displayNotificationOne();
+            }
+        });
+    }
+
+    protected void displayNotificationOne() {
+
+        // Invoking the default notification service
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+
+        mBuilder.setContentTitle("New Message with explicit intent");
+        mBuilder.setContentText("New message from javacodegeeks received");
+        mBuilder.setTicker("Explicit: New Message Received!");
+        mBuilder.setSmallIcon(R.drawable.ic_launcher_foreground);
+
+        // Increase notification number every time a new notification arrives
+        mBuilder.setNumber(++numMessagesOne);
+
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, BossActivity.class);
+        resultIntent.putExtra("notificationId", notificationIdOne);
+
+        //This ensures that navigating backward from the Activity leads out of the app to Home page
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        // Adds the back stack for the Intent
+        stackBuilder.addParentStack(BossActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_ONE_SHOT //can only be used once
+                );
+        // start the activity when the user clicks the notification text
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        myNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // pass the Notification object to the system
+        myNotificationManager.notify(notificationIdOne, mBuilder.build());
     }
 
     private void showSearch() {
@@ -97,7 +160,7 @@ public class BossActivity extends AppCompatActivity {
                 try {
                     shift_start = LocalDateTime.parse(StartDate.getText().toString() + " " + "00:00", formatter);
                     shift_end = LocalDateTime.parse(EndDate.getText().toString() + " " + "23:59", formatter);
-                    if(!Validate.isValidDateTime(shift_start,shift_end)){
+                    if (!Validate.isValidDateTime(shift_start, shift_end)) {
                         actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                         return;
                     }
@@ -105,14 +168,14 @@ public class BossActivity extends AppCompatActivity {
                     actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                     return;
                 }
-                showListOfShifts(shift_start,shift_end,mail);
+                showListOfShifts(shift_start, shift_end, mail);
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
 
-    private void showListOfShifts(LocalDateTime start,LocalDateTime end,String mail) {
+    private void showListOfShifts(LocalDateTime start, LocalDateTime end, String mail) {
         if (currentUser == null) {
             return;
         }
