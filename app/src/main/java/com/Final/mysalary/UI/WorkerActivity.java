@@ -235,6 +235,10 @@ public class WorkerActivity extends AppCompatActivity {
                 try {
                     LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
                     LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
+                    if (shift_end.isBefore(shift_start)){
+                        actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
+                        return;
+                    }
                     Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                     DB.setInShifts(shift);
                     actions.popUpMessage(R.string.shift_added_successfully);
@@ -314,4 +318,6 @@ public class WorkerActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 }

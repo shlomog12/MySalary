@@ -15,11 +15,19 @@ public class Shift{
     private double totalHours;
     private double totalSalary;
     private String userMail;
+    private String shiftId;
 
 
 
     public Shift(){ }
 
+    public String gShiftId() {
+        return shiftId;
+    }
+
+    public void sShiftId(String shiftId) {
+        this.shiftId = shiftId;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Shift(LocalDateTime start, LocalDateTime end, String userMail, String jobName) {

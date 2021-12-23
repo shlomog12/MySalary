@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 
 import com.Final.mysalary.db.DTO.Job;
 import com.Final.mysalary.db.DTO.Shift;
+import com.Final.mysalary.db.DTO.Type;
 import com.Final.mysalary.db.DTO.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -93,7 +94,6 @@ public class DB {
                 else{
                     DataSnapshot snapshotOfJob = snapshot.child(jobName);
                     shifts = getListOfShifts(start,end,snapshotOfJob,shifts,userMailWorker);
-
                 }
                 callback.play(shifts);
                 return;
@@ -123,7 +123,8 @@ public class DB {
             Shift shift = shiftFromDB.getValue(Shift.class);
             shift.updateSalary(salaryForHour);
             shift.setJobOfName(jobName);
-            if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
+            shift.sShiftId(shiftFromDB.getKey());
+            if (shift.Start().isAfter(start) && shift.End().isBefore(end) && !shiftFromDB.child(config.CANCELED).exists()) {
                 shifts.add(shift);
             }
         }
@@ -250,7 +251,7 @@ public class DB {
                             .child(job.getJobName()).child(config.SHIFTS);
                     for (DataSnapshot shiftSnapshot: jobsSnapshot.getChildren()){
                         Shift shift = shiftSnapshot.getValue(Shift.class);
-                        if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
+                        if (shift.Start().isAfter(start) && shift.End().isBefore(end) && !shiftSnapshot.child(config.CANCELED).exists()) {
                             shift.setUserMail(job.getMailWorker());
                             shift.updateSalary(salaryForHour);
                             String jobName=job.getJobName()+" ("+job.getMailWorker()+")";
@@ -271,7 +272,6 @@ public class DB {
 
         });
     }
-
     public static void getTokenIdByUserMail(String userMail,Callback callback){
         if (userMail ==null) return;
         DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
@@ -293,7 +293,6 @@ public class DB {
         return;
 
     }
-
     public static void setToken(String userMail,String tokenId) {
         DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
         dbRef.setValue(tokenId);
@@ -309,7 +308,11 @@ public class DB {
             }
         });
     }
-
+    public static void removeShift(Shift shift){
+        database.getReference().child(config.USERS).child(getSHA(shift.UserMail()))
+                .child(config.JOBS).child(shift.JobName()).child(config.SHIFTS).child(shift.gShiftId())
+                .child(config.CANCELED).setValue(config.TRUE);
+    }
 
 }
 
