@@ -13,12 +13,13 @@
         android:textColor="@color/black"
         android:layout_marginBottom="16dp"/>
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/worker_mail"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:imeOptions="actionNext"
+        android:completionThreshold="0"
         android:id="@+id/SearchWorkerMail"/>
 
     <EditText
