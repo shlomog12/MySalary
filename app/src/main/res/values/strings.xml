@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MySalary</string>
+    <string name="selected_language">English</string>
     <string name="firstName">First Name</string>
     <string name="password">Password</string>
     <string name="mail">Mail</string>
@@ -51,4 +52,5 @@
     <string name="mail_not_exist">mail doesn\'t exists</string>
     <string name="search">Search</string>
     <string name="worker_mail">Worker Mail</string>
+    <string name="thank_you">Thank You</string>
 </resources>

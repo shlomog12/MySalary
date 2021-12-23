@@ -149,9 +149,9 @@ public class LoginActivity extends AppCompatActivity {
     public void forgot(View view) {
         final EditText email = new EditText(this);
         email.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        email.setHint("Email...");
+        email.setHint(getResources().getString(R.string.mail));
         final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Enter your email")
+                .setTitle(getResources().getString(R.string.enterMail))
                 .setView(email)
                 .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
                 .setNegativeButton(android.R.string.cancel, null)
@@ -193,9 +193,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showSelectTypeDialog() {
-        String[] types = {"עובד", "מנהל"};
+        String[] types = {getResources().getString(R.string.worker), getResources().getString(R.string.boss)};
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setTitle("בחר את סוג המשתמש");
+        builder.setTitle(getResources().getString(R.string.choose_user_type));
         builder.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -206,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
         builder.setPositiveButton("אישור", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                actions.popUpMessage("תודה");
+                actions.popUpMessage(getResources().getString(R.string.thank_you));
                 dialog.dismiss();
                 DB.setUser(curUser);
                 actions.moveToMainScreen(curUser);
