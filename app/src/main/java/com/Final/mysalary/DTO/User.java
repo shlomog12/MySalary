@@ -11,6 +11,7 @@ public class User {
     private String password;
     private String userName;
     private Type type;
+    private String tokenID;
 
 
     public User(String mail, String firstName, String lastName , String password, String userName, Type type) {
@@ -59,6 +60,13 @@ public class User {
     }
     public void setType(int type) {
         this.type = (type == 0) ? Type.WORKER : Type.BOSS;
+    }
+    public String getTokenID() {
+        return tokenID;
+    }
+
+    public void setTokenID(String tokenID) {
+        this.tokenID = tokenID;
     }
 
     @Override
