@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -29,6 +30,8 @@ import com.Final.mysalary.R;
 import com.Final.mysalary.UI.date.DatePickerFragment;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -82,14 +85,14 @@ public class BossActivity extends AppCompatActivity {
         }
     }
 
-    private void notify_user() {
-        TextView notOneBtn = (TextView) findViewById(R.id.notify_one);
-        notOneBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                displayNotificationOne();
-            }
-        });
-    }
+//    private void notify_user() {
+//        TextView notOneBtn = (TextView) findViewById(R.id.notify_one);
+//        notOneBtn.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View view) {
+//                displayNotificationOne();
+//            }
+//        });
+//    }
 
     protected void displayNotificationOne() {
 
@@ -246,6 +249,17 @@ public class BossActivity extends AppCompatActivity {
 
     public void logout() {
         FirebaseAuth.getInstance().signOut();
+        signOutFromGoogle();
         startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
+    public void signOutFromGoogle() {
+        LoginActivity.mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        actions.popUpMessage(R.string.bye);
+                    }
+                });
     }
 }
