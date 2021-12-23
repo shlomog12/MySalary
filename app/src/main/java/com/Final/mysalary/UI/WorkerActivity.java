@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.Final.mysalary.DTO.Job;
 import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.ShiftsAdapter;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.UI.date.DatePickerFragment;
@@ -142,11 +141,23 @@ public class WorkerActivity extends AppCompatActivity {
                     actions.popUpMessage("המייל שהוזן עבור המנהל אינו תקין");
                     return;
                 }
-                Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
-                DB.setInJobs(job);
-                actions.popUpMessage(R.string.job_added_success);
-                showListOfShifts();
-                dialog.dismiss();
+                DB.CheckIfTheUserMailIsExists(bossMail, new Callback<Boolean>() {
+                    @Override
+                    public void play(Boolean isExits) {
+                        if (!isExits){
+                            actions.popUpMessage("המייל שהוזן עבור המנהל לא קיים במערכת");
+                            return;
+                        }
+                        Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
+                        String title = "שלום, נוסף לך עובד חדש";
+                        String message = actions.getMessgeNotification(currentUser.getUserName(),name,hourPay);
+                        actions.sendNotificationToUserMail(bossMail,title,message);
+                        DB.setInJobs(job);
+                        actions.popUpMessage(R.string.job_added_success);
+                        showListOfShifts();
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         dialog.show();

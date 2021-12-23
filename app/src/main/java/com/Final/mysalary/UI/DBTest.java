@@ -10,6 +10,7 @@ import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DBTest{
 
@@ -20,31 +21,61 @@ public class DBTest{
         user.setUserName("testDb4");
         user.setFirstName("testDB9_12");
         user.setLastName("LAtestDB9_12");
-//        user.setPassword("A#0912");
-        user.setMail("shlomog12@googlemail.com");
+        user.setMail("tv1@gmail.com");
         user.setType(Type.WORKER.ordinal());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void test(){
-        initUser();
+//        initUser();
 //        testSetUser();
 //        testSetJobs();
-        testSetShifts();
+//        testSetShifts();
 //        testGetShifts();
 //        testGetUser();
 //        testCheckIfTheUserNameIsExists();
 //        testGetJobs();
+//        testgetShiftsByBossMail();
+//        testgetMailsOfWorkersByBossMail();
+
     }
+
+
+    private static void testgetMailsOfWorkersByBossMail() {
+        DB.getMailsOfWorkersByBossMail("btest1@gmail.com", new Callback<ArrayList<String>>() {
+            @Override
+            public void play(ArrayList<String> strings) {
+                System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm");
+                System.out.println(Arrays.toString(strings.toArray()));
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIILLLLLLLLLLLLLL");
+            }
+
+
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static void testgetShiftsByBossMail() {
+        DB.getShiftsByBossMail(LocalDateTime.MIN, LocalDateTime.MAX, "btest1@gmail.com", new Callback<ArrayList<Shift>>() {
+            @Override
+            public void play(ArrayList<Shift> shifts) {
+                System.out.println("********************8start**********************************");
+                System.out.println(Arrays.toString(shifts.toArray()));
+                System.out.println("********************end**********************************");
+            }
+
+        });
+    }
+
     private static void testSetUser() {
 
         DB.setUser(user);
     }
     private static void testSetJobs() {
-        Job job = new Job("test@gmail.com","22",user.getMail(),"teacher");
+        Job job = new Job("bosstest1@gmail.com","50",user.getMail(),"teacher");
         DB.setInJobs(job);
-        Job job2 = new Job("test@gmail.com","200",user.getMail(),"programmer");
-        DB.setInJobs(job2);
+//        Job job2 = new Job("bosstest2@gmail.com","200",user.getMail(),"programmer");
+//        DB.setInJobs(job2);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void testSetShifts(){

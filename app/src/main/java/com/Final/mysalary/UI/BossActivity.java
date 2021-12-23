@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.ShiftsAdapter;
 import com.Final.mysalary.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.UI.date.DatePickerFragment;
@@ -150,8 +149,7 @@ public class BossActivity extends AppCompatActivity {
                 DB.CheckIfTheUserMailIsExists(mail, new Callback<Boolean>() {
                     @Override
                     public void play(Boolean aBoolean) {
-                        if (!aBoolean)
-                            actions.popUpMessage(R.string.mail_not_exist);
+                        if (!aBoolean) actions.popUpMessage(R.string.mail_not_exist);
                         actions.moveToMainScreen(currentUser);
                         return;
                     }

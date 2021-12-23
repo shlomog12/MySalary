@@ -4,15 +4,20 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import com.Final.mysalary.DTO.*;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class DB {
@@ -24,6 +29,7 @@ public class DB {
         database.getReference().child(config.USERS).child(userId).setValue(user);
     }
     private static String getSHA(String input) {
+        input.toLowerCase(Locale.ROOT);
         return Hashing.sha256().hashString(input, StandardCharsets.UTF_8).toString();
     }
     public static void setInJobs(Job newJob) {
@@ -45,7 +51,7 @@ public class DB {
     }
     private static void setJObWithTheUser(Job newJob, int jobId) {
         DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(newJob.getMailWorker()))
-                .child(config.JOBS).child(newJob.JobName());
+                .child(config.JOBS).child(newJob.getJobName());
         dbRef.child(config.SALARY_FOR_HOUR).setValue(newJob.getSalaryForHour());
         dbRef.child(config.JOB_ID).setValue(jobId);
     }
@@ -182,9 +188,126 @@ public class DB {
             }
         });
     }
+    public static void getMailsOfWorkersByBossMail(String userMailBoss, Callback callback) {
+        if (userMailBoss ==null ) return;
+        DB.getJobsByBossMail(userMailBoss, new Callback<ArrayList<Job>>() {
+            @Override
+            public void play(ArrayList<Job> jobs) {
+                ArrayList<String> mailsOfWorkers = new ArrayList<>();
+                for (Job job:jobs) {
+                    mailsOfWorkers.add(job.getMailWorker());
+                }
+                callback.play(mailsOfWorkers);
+            }
+        });
+    }
+    public static void getJobsByBossMail(String userMailBoss, Callback callback) {
+        if (userMailBoss ==null ) return;
+        DatabaseReference dbRef = database.getReference().child(config.JOBS);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.exists()) return;
+                ArrayList <Job> jobs = new ArrayList<>();
+                for (DataSnapshot jobSnapshot :snapshot.getChildren()) {
+                    Job job = jobSnapshot.getValue(Job.class);
+                    if (job.getMailBoss().equals(userMailBoss)) {
+                        jobs.add(job);
+                    }
+                }
+                callback.play(jobs);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    }
+    public static void getShiftsByBossMail(LocalDateTime start, LocalDateTime end, String userMailBoss, Callback callback) {
+        if (userMailBoss ==null || start == null || end == null) return;
+        DB.getJobsByBossMail(userMailBoss, new Callback<ArrayList<Job>>() {
+            @Override
+            public void play(ArrayList<Job> jobs) {
+                getShiftsByJobs(start,end,jobs,callback);
+            }
+        });
+    }
+    private static void getShiftsByJobs(LocalDateTime start, LocalDateTime end, ArrayList<Job> jobs, Callback callback) {
+        if (jobs.size() < 1 ) return;
+        DatabaseReference dbRef = database.getReference().child(config.USERS);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Shift> shifts = new ArrayList<>();
+                for (Job job : jobs) {
+                    String salaryForHour = job.getSalaryForHour();
+                    DataSnapshot jobsSnapshot = snapshot.child(getSHA(job.getMailWorker())).child(config.JOBS)
+                            .child(job.getJobName()).child(config.SHIFTS);
+                    for (DataSnapshot shiftSnapshot: jobsSnapshot.getChildren()){
+                        Shift shift = shiftSnapshot.getValue(Shift.class);
+                        if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
+                            shift.setUserMail(job.getMailWorker());
+                            shift.updateSalary(salaryForHour);
+                            shift.setJobOfName(job.getJobName());
+                            shifts.add(shift);
+                        }
+                    }
+                }
+                callback.play(shifts);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
+    }
+
+    public static void getTokenIdByUserMail(String userMail,Callback callback){
+        if (userMail ==null) return;
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.exists()) return;
+                String tokenId = (String) snapshot.getValue();
+                callback.play(tokenId);
+                return;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                return;
+            }
+        });
+        return;
+
+    }
+
+    public static void setToken(String userMail,String tokenId) {
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
+        dbRef.setValue(tokenId);
+    }
+    public static void updateToken(String userMail) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()){
+                    String token = task.getResult();
+                    DB.setToken(userMail,token);
+                }
+            }
+        });
+    }
+
 
 }
-
 
 
 
