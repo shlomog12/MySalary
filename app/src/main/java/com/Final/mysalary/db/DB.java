@@ -263,6 +263,32 @@ public class DB {
     }
 
 
+    public static void getTokenIdByUserMail(String userMail,Callback callback){
+        if (userMail ==null) return;
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.exists()) return;
+                String tokenId = (String) snapshot.getValue();
+                callback.play(tokenId);
+                return;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                return;
+            }
+        });
+        return;
+
+    }
+
+    public static void setToken(String userMail,String tokenId) {
+        DatabaseReference dbRef = database.getReference().child(config.USERS).child(getSHA(userMail)).child(config.TOKEN_ID);
+        dbRef.setValue(tokenId);
+    }
 }
 
 

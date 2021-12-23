@@ -51,4 +51,5 @@
     <string name="mail_not_exist">mail doesn\'t exists</string>
     <string name="search">Search</string>
     <string name="worker_mail">Worker Mail</string>
+
 </resources>

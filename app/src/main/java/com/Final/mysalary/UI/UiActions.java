@@ -1,17 +1,14 @@
 package com.Final.mysalary.UI;
 
 import android.content.Intent;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.Final.mysalary.DTO.Type;
 import com.Final.mysalary.DTO.User;
-import com.Final.mysalary.UI.date.DatePickerFragment;
-import com.Final.mysalary.UI.date.TimePickerFragment;
+import com.Final.mysalary.notfication.FcmNotificationsSender;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class UiActions {
 
@@ -38,5 +35,17 @@ public class UiActions {
     public void popUpMessage(int message) {
         String messageStr = activity.getApplicationContext().getString(message);
         Toast.makeText(activity, messageStr, Toast.LENGTH_LONG).show();
+    }
+
+    public void sendNotificationToAllUsers(String title, String message){
+        String tokenId = "/topics/all";
+        sendNotificationToTokenId(tokenId,title,message);
+    }
+
+    public void sendNotificationToTokenId(String tokenId, String title, String message){
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+        FcmNotificationsSender notificationsSender = new FcmNotificationsSender(tokenId,title
+                ,message, activity.getApplicationContext(),activity);
+        notificationsSender.SendNotifications();
     }
 }

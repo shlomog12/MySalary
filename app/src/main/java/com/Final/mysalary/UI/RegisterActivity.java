@@ -23,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -177,8 +178,17 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             System.out.println(newUser.getUserName());
                             firebaseUser.updateProfile(profileChangeRequest);
-                            DB.setUser(newUser);
-                            actions.moveToMainScreen(newUser);
+                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull Task<String> task) {
+                                    if (task.isSuccessful()){
+                                        String token = task.getResult();
+                                        newUser.setTokenID(token);
+                                        DB.setUser(newUser);
+                                        actions.moveToMainScreen(newUser);
+                                    }
+                                }
+                            });
                         } else {
                             System.out.println(task.getException());
                             actions.popUpMessage(getApplicationContext().getString(R.string.register_failed));
