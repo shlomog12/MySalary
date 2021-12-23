@@ -14,8 +14,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.DTO.Type;
-import com.Final.mysalary.DTO.User;
+import com.Final.mysalary.Controller.UiActions;
+import com.Final.mysalary.Controller.Validate;
+import com.Final.mysalary.db.DTO.Type;
+import com.Final.mysalary.db.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
@@ -29,7 +31,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
 

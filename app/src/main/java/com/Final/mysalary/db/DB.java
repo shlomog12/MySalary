@@ -1,9 +1,13 @@
 package com.Final.mysalary.db;
 
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import com.Final.mysalary.DTO.*;
+
+import com.Final.mysalary.db.DTO.Job;
+import com.Final.mysalary.db.DTO.Shift;
+import com.Final.mysalary.db.DTO.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
@@ -222,7 +226,6 @@ public class DB {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
     }
     public static void getShiftsByBossMail(LocalDateTime start, LocalDateTime end, String userMailBoss, Callback callback) {
         if (userMailBoss ==null || start == null || end == null) return;
@@ -250,7 +253,8 @@ public class DB {
                         if (shift.Start().isAfter(start) && shift.End().isBefore(end)) {
                             shift.setUserMail(job.getMailWorker());
                             shift.updateSalary(salaryForHour);
-                            shift.setJobOfName(job.getJobName());
+                            String jobName=job.getJobName()+" ("+job.getMailWorker()+")";
+                            shift.setJobOfName(jobName);
                             shifts.add(shift);
                         }
                     }

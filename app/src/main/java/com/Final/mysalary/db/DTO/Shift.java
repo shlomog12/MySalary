@@ -1,4 +1,4 @@
-package com.Final.mysalary.DTO;
+package com.Final.mysalary.db.DTO;
 
 import android.os.Build;
 
@@ -22,8 +22,8 @@ public class Shift{
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Shift(LocalDateTime start, LocalDateTime end , String userMail, String jobName) {
-        this.start =start;
+    public Shift(LocalDateTime start, LocalDateTime end, String userMail, String jobName) {
+        this.start = start;
         this.end = end;
         this.userMail = userMail;
         this.jobName = jobName;
@@ -32,30 +32,37 @@ public class Shift{
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateTotalHours() {
         double totalMinutes = this.start.until(this.end, ChronoUnit.MINUTES);
-        this.totalHours = totalMinutes/60;
+        this.totalHours = totalMinutes / 60;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setStartTime(LocalDateTime start) {
         this.start = start;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setStart(String start) {
         this.setStartTime(LocalDateTime.parse(start));
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEndTime(LocalDateTime end) {
         this.end = end;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEnd(String end) {
         this.setEndTime(LocalDateTime.parse(end));
     }
+
     public LocalDateTime Start() {
         return start;
     }
+
     public LocalDateTime End() {
         return end;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateSalary(String salary) {
         updateTotalHours();

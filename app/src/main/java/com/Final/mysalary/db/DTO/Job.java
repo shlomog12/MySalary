@@ -1,4 +1,4 @@
-package com.Final.mysalary.DTO;
+package com.Final.mysalary.db.DTO;
 
 public class Job {
 

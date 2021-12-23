@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".notfication.FirebaseMessagingService"
+            android:name=".Controller.notfication.FirebaseMessagingService"
             android:permission="TODO"
             android:exported="false">
             <intent-filter>

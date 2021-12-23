@@ -51,7 +51,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/TextBossSum"
         android:layout_width="413dp"
         android:layout_height="71dp"
         android:text="TextView"
@@ -63,8 +63,9 @@
         app:layout_constraintVertical_bias="0.998" />
 
     <ListView
+        android:id="@+id/ShiftsForBoss"
         android:layout_width="413dp"
-        android:layout_height="621dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="74dp"
         android:layout_marginBottom="74dp"
         app:layout_constraintBottom_toBottomOf="parent"

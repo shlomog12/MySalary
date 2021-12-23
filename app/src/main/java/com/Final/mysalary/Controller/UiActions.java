@@ -1,23 +1,17 @@
-package com.Final.mysalary.UI;
+package com.Final.mysalary.Controller;
 
 import android.content.Intent;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
-import com.Final.mysalary.DTO.Type;
-import com.Final.mysalary.DTO.User;
-import com.Final.mysalary.UI.date.DatePickerFragment;
-import com.Final.mysalary.UI.date.TimePickerFragment;
+import com.Final.mysalary.db.DTO.Type;
+import com.Final.mysalary.db.DTO.User;
+import com.Final.mysalary.UI.BossActivity;
+import com.Final.mysalary.UI.WorkerActivity;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
-import com.Final.mysalary.notfication.FcmNotificationsSender;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.Final.mysalary.Controller.notfication.FcmNotificationsSender;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class UiActions {
