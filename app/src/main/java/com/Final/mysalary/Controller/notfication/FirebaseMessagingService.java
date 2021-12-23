@@ -1,4 +1,4 @@
-package com.Final.mysalary.notfication;
+package com.Final.mysalary.Controller.notfication;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

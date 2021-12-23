@@ -1,4 +1,4 @@
-package com.Final.mysalary.UI;
+package com.Final.mysalary.Controller;
 
 import android.content.Context;
 import android.os.Build;
@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.Final.mysalary.DTO.Shift;
+import com.Final.mysalary.db.DTO.Shift;
 import com.Final.mysalary.R;
 
 import java.time.LocalDateTime;
@@ -54,7 +54,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
 
         TextView textView = currentItemView.findViewById(R.id.jobs_border);
-        if (jobName != currentShift.JobName()) {
+        if (!jobName.equals(currentShift.JobName())) {
             textView.setText(currentShift.JobName());
             jobName = currentShift.JobName();
         } else {

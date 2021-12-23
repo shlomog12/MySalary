@@ -54,4 +54,5 @@
     <string name="search">חיפוש</string>
     <string name="worker_mail">מייל עובד</string>
     <string name="thank_you">תודה</string>
+    <string name="invalid_details">Invalid Details</string>
 </resources>

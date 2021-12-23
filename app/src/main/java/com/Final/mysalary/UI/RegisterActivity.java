@@ -12,8 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.DTO.Type;
-import com.Final.mysalary.DTO.User;
+import com.Final.mysalary.Controller.UiActions;
+import com.Final.mysalary.Controller.Validate;
+import com.Final.mysalary.db.DTO.Type;
+import com.Final.mysalary.db.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;

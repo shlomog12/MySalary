@@ -53,4 +53,5 @@
     <string name="search">Search</string>
     <string name="worker_mail">Worker Mail</string>
     <string name="thank_you">Thank You</string>
+    <string name="invalid_details">Invalid Details</string>
 </resources>

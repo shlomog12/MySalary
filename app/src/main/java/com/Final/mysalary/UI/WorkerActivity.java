@@ -20,12 +20,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.DTO.Job;
-import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.User;
+import com.Final.mysalary.Controller.ShiftsAdapter;
+import com.Final.mysalary.Controller.UiActions;
+import com.Final.mysalary.Controller.Validate;
+import com.Final.mysalary.db.DTO.Job;
+import com.Final.mysalary.db.DTO.Shift;
+import com.Final.mysalary.db.DTO.User;
 import com.Final.mysalary.R;
-import com.Final.mysalary.UI.date.DatePickerFragment;
-import com.Final.mysalary.UI.date.TimePickerFragment;
+import com.Final.mysalary.Controller.date.DatePickerFragment;
+import com.Final.mysalary.Controller.date.TimePickerFragment;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -235,8 +238,8 @@ public class WorkerActivity extends AppCompatActivity {
                     Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
                     DB.setInShifts(shift);
                     actions.popUpMessage(R.string.shift_added_successfully);
-                    dialog.dismiss();
                     showListOfShifts();
+                    dialog.dismiss();
                 } catch (Exception e) {
                     actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                     return;

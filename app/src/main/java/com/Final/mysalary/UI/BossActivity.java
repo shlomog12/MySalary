@@ -1,12 +1,7 @@
 package com.Final.mysalary.UI;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,12 +17,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
-import com.Final.mysalary.DTO.Shift;
-import com.Final.mysalary.DTO.User;
+import com.Final.mysalary.Controller.ShiftsAdapter;
+import com.Final.mysalary.Controller.UiActions;
+import com.Final.mysalary.Controller.Validate;
+import com.Final.mysalary.db.DTO.Shift;
+import com.Final.mysalary.db.DTO.User;
 import com.Final.mysalary.R;
-import com.Final.mysalary.UI.date.DatePickerFragment;
+import com.Final.mysalary.Controller.date.DatePickerFragment;
 import com.Final.mysalary.db.Callback;
 import com.Final.mysalary.db.DB;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,20 +32,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class BossActivity extends AppCompatActivity {
 
     User currentUser;
     FirebaseAuth mAuth;
     UiActions actions;
-    NotificationManager myNotificationManager;
-    int notificationIdOne = 111;
-    int numMessagesOne = 0;
+    LocalDateTime shift_start = LocalDateTime.MIN;
+    LocalDateTime shift_end = LocalDateTime.MAX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,59 +73,17 @@ public class BossActivity extends AppCompatActivity {
                 logout();
                 return true;
             case R.id.refresh_shifts:
-                showListOfShifts(LocalDateTime.MIN,LocalDateTime.MAX, currentUser.getMail());
+                refresh();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-//    private void notify_user() {
-//        TextView notOneBtn = (TextView) findViewById(R.id.notify_one);
-//        notOneBtn.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                displayNotificationOne();
-//            }
-//        });
-//    }
-
-    protected void displayNotificationOne() {
-
-        // Invoking the default notification service
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-
-        mBuilder.setContentTitle("New Message with explicit intent");
-        mBuilder.setContentText("New message from javacodegeeks received");
-        mBuilder.setTicker("Explicit: New Message Received!");
-        mBuilder.setSmallIcon(R.drawable.ic_launcher_foreground);
-
-        // Increase notification number every time a new notification arrives
-        mBuilder.setNumber(++numMessagesOne);
-
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, BossActivity.class);
-        resultIntent.putExtra("notificationId", notificationIdOne);
-
-        //This ensures that navigating backward from the Activity leads out of the app to Home page
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
-        // Adds the back stack for the Intent
-        stackBuilder.addParentStack(BossActivity.class);
-
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_ONE_SHOT //can only be used once
-                );
-        // start the activity when the user clicks the notification text
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        myNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // pass the Notification object to the system
-        myNotificationManager.notify(notificationIdOne, mBuilder.build());
+    private void refresh() {
+        shift_start=LocalDateTime.MIN;
+        shift_end=LocalDateTime.MAX;
+        showListOfShifts("");
     }
 
     private void showSearch() {
@@ -149,56 +102,77 @@ public class BossActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String mail = workerMail.getText().toString();
-                DB.CheckIfTheUserMailIsExists(mail, new Callback<Boolean>() {
-                    @Override
-                    public void play(Boolean aBoolean) {
-                        if (!aBoolean) actions.popUpMessage(R.string.mail_not_exist);
-                        actions.moveToMainScreen(currentUser);
-                        return;
-                    }
-                });
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                LocalDateTime shift_start;
-                LocalDateTime shift_end;
-                try {
-                    shift_start = LocalDateTime.parse(StartDate.getText().toString() + " " + "00:00", formatter);
-                    shift_end = LocalDateTime.parse(EndDate.getText().toString() + " " + "23:59", formatter);
-                    if (!Validate.isValidDateTime(shift_start, shift_end)) {
-                        actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
-                        return;
-                    }
-                } catch (Exception e) {
-                    actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
-                    return;
+                if (mail.equals("")) {
+                    filter_results(StartDate, EndDate, mail);
+                } else if(Validate.isValidEmail(mail)){
+                    DB.CheckIfTheUserMailIsExists(mail, new Callback<Boolean>() {
+                        @Override
+                        public void play(Boolean mailExist) {
+                            if (!mailExist) {
+                                actions.popUpMessage(R.string.mail_not_exist);
+                                dialog.dismiss();
+                                return;
+                            }
+                            filter_results(StartDate, EndDate, mail);
+                        }
+                    });
                 }
-                showListOfShifts(shift_start, shift_end, mail);
+                else {
+                    actions.popUpMessage(R.string.mail_incorrect);
+                }
                 dialog.dismiss();
+                return;
             }
         });
         dialog.show();
     }
 
-    private void showListOfShifts(LocalDateTime start, LocalDateTime end, String mail) {
+    private void filter_results(EditText StartDate, EditText EndDate, String mail) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        try {
+            shift_start = LocalDateTime.parse(StartDate.getText().toString() + " " + "00:00", formatter);
+            shift_end = LocalDateTime.parse(EndDate.getText().toString() + " " + "23:59", formatter);
+            if (!Validate.isValidDateTime(shift_start, shift_end)) {
+                actions.popUpMessage(R.string.invalid_details);
+                return;
+            }
+        } catch (Exception e) {
+            actions.popUpMessage(R.string.invalid_details);
+            return;
+        }
+        showListOfShifts(mail);
+    }
+
+    private void showListOfShifts(String mail) {
         if (currentUser == null) {
             return;
         }
-        DB.getShifts("", start, end, mail, new Callback<ArrayList<Shift>>() {
+        final double[] totalsum = {0};
+        final double[] totalHr = {0};
+        ArrayList<Shift> shift_of_worker = new ArrayList<>();
+        DB.getShiftsByBossMail(shift_start, shift_end, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void play(ArrayList<Shift> shifts) {
-                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(BossActivity.this, shifts);
-//                shiftsArrayAdapter.setShowSalary(ShowSalary);
-                ListView shiftsListView = findViewById(R.id.listView);
-                shiftsListView.setAdapter(shiftsArrayAdapter);
-                double totalsum = 0;
-                double totalHr = 0;
                 for (Shift s : shifts) {
-                    totalsum += s.TotalSalary();
-                    totalHr += s.TotalHours();
+                    if (s.UserMail().equals(mail) || mail.equals("")) {
+                        shift_of_worker.add(s);
+                        totalsum[0] += s.TotalSalary();
+                        totalHr[0] += s.TotalHours();
+                    }
                 }
-                TextView sum = findViewById(R.id.sumSalary);
-                sum.setText(getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
+                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(BossActivity.this, shift_of_worker);
+                //                    shiftsArrayAdapter.setShowSalary(ShowSalary);
+                ListView shiftsListView = findViewById(R.id.ShiftsForBoss);
+                shiftsListView.setAdapter(shiftsArrayAdapter);
+                TextView sum = findViewById(R.id.TextBossSum);
+                sum.setText(getApplicationContext().
+                        getString(R.string.sum_payment) + ": " + String.format("%.2f", totalsum[0])
+                        + "\n" +
+                        getApplicationContext().getString(R.string.total_hours) + ": " + String.format("%.2f", totalHr[0]));
             }
         });
+        return;
     }
 
     public void updateDate(EditText shiftDate) {
@@ -230,6 +204,7 @@ public class BossActivity extends AppCompatActivity {
             @Override
             public void play(User user) {
                 currentUser = user;
+                showListOfShifts("");
             }
         });
     }
