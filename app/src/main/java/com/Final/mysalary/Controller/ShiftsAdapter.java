@@ -85,7 +85,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         String formattedString3 = localDate3.format(formatter3);
         textView3.setText(formattedString3);
 
-        // then according to the position of the view assign the desired TextView 2 for the same
+
         TextView textView4 = currentItemView.findViewById(R.id.textViewSum);
         if (ShowSalary){
             textView4.setText(String.format("%.2f", currentShift.TotalSalary()));

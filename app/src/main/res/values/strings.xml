@@ -23,8 +23,8 @@
     <string name="forgot_the_password">Forgot The Password</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
-    <string name="total_hours">Total Hours:</string>
-    <string name="sum_payment">Sum Payment:</string>
+    <string name="total_hours">Total Hours</string>
+    <string name="sum_payment">Sum Payment</string>
     <string name="add_shift">Add New Shift</string>
     <string name="add_job">Add New Job</string>
     <string name="logout">Logout</string>

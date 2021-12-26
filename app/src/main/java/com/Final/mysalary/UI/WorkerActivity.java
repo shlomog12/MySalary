@@ -206,7 +206,7 @@ public class WorkerActivity extends AppCompatActivity {
                     totalHr += s.TotalHours();
                 }
                 TextView sum = findViewById(R.id.sumSalary);
-                sum.setText(getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
+                sum.setText(getApplicationContext().getString(R.string.sum_payment) + ": " + String.format("%.2f", totalsum) + "\n" + getApplicationContext().getString(R.string.total_hours) + ": " + String.format("%.2f", totalHr));
             }
         });
     }
@@ -243,11 +243,14 @@ public class WorkerActivity extends AppCompatActivity {
                         actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                         return;
                     }
-                    Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
-                    DB.setInShifts(shift);
-                    actions.popUpMessage(R.string.shift_added_successfully);
-                    showListOfShifts();
-                    dialog.dismiss();
+                    if (Validate.isValidDateTime(shift_start,shift_end)) {
+                        Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
+                        DB.setInShifts(shift);
+                        actions.popUpMessage(R.string.shift_added_successfully);
+                        showListOfShifts();
+                        dialog.dismiss();
+                    }
+                    else throw new Exception();
                 } catch (Exception e) {
                     actions.popUpMessage("הנתונים שהוזנו אינם תקינים");
                     return;
