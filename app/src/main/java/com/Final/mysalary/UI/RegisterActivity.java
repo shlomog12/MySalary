@@ -1,6 +1,5 @@
 package com.Final.mysalary.UI;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,22 +8,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.UiActions;
+import com.Final.mysalary.Controller.Actions.RegisterActions;
 import com.Final.mysalary.Controller.Validate;
-import com.Final.mysalary.db.DTO.Type;
-import com.Final.mysalary.db.DTO.User;
+import com.Final.mysalary.Model.DTO.Type;
+import com.Final.mysalary.Model.DTO.User;
 import com.Final.mysalary.R;
-import com.Final.mysalary.db.Callback;
-import com.Final.mysalary.db.DB;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.Final.mysalary.Model.Callback;
+import com.Final.mysalary.Model.DB;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -32,14 +25,14 @@ public class RegisterActivity extends AppCompatActivity {
     boolean validate;
     User newUser;
     public FirebaseAuth mAuth;
-    UiActions actions;
+    RegisterActions actions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
-        actions = new UiActions(this);
+        actions = new RegisterActions(this);
     }
 
     public void moveToLoginScreen() {
@@ -90,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
             actions.popUpMessage(getApplicationContext().getString(R.string.user_name_used));
             return;
         }
-        registerWithFireBase();
+        actions.registerWithFireBase(newUser);
     }
 
     private Type getTypeOfUser() {
@@ -164,29 +157,6 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
         return;
-    }
-
-    public void registerWithFireBase() {
-        mAuth.createUserWithEmailAndPassword(newUser.getMail(), newUser.Password())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @SuppressLint("RestrictedApi")
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            actions.popUpMessage(getApplicationContext().getString(R.string.register_success));
-                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(newUser.getUserName()).build();
-                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                            System.out.println(newUser.getUserName());
-                            firebaseUser.updateProfile(profileChangeRequest);
-                            DB.setUser(newUser);
-                            actions.moveToMainScreen(newUser);
-                        } else {
-                            System.out.println(task.getException());
-                            actions.popUpMessage(getApplicationContext().getString(R.string.register_failed));
-                        }
-                    }
-                });
     }
 
 }
