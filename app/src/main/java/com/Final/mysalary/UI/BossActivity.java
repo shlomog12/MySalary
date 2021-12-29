@@ -1,5 +1,6 @@
 package com.Final.mysalary.UI;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
@@ -49,6 +50,7 @@ public class BossActivity extends AppCompatActivity {
     User currentUser;
     FirebaseAuth mAuth;
     UiActions actions;
+    boolean ShowSalary = true;
     LocalDateTime shift_start = LocalDateTime.MIN;
     LocalDateTime shift_end = LocalDateTime.MAX;
 
@@ -88,9 +90,27 @@ public class BossActivity extends AppCompatActivity {
     }
 
     private void refresh() {
-        shift_start=LocalDateTime.MIN;
-        shift_end=LocalDateTime.MAX;
+        shift_start = LocalDateTime.MIN;
+        shift_end = LocalDateTime.MAX;
         showListOfShifts("");
+    }
+
+    private void ChangeSum() {
+        TextView ShowHoursOrSalary = findViewById(R.id.SumSalaryBar);
+        ShowHoursOrSalary.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                if (ShowSalary) {
+                    ShowHoursOrSalary.setText(R.string.sum_payment);
+                    ShowSalary = false;
+                } else {
+                    ShowHoursOrSalary.setText(R.string.total_hours);
+                    ShowSalary = true;
+                }
+                showListOfShifts("");
+            }
+        });
     }
 
     private void showSearch() {
@@ -112,7 +132,7 @@ public class BossActivity extends AppCompatActivity {
                 String mail = AutoTextWorkerMail.getText().toString();
                 if (mail.equals("")) {
                     filter_results(StartDate, EndDate, mail);
-                } else if(Validate.isValidEmail(mail)){
+                } else if (Validate.isValidEmail(mail)) {
                     DB.CheckIfTheUserMailIsExists(mail, new Callback<Boolean>() {
                         @Override
                         public void play(Boolean mailExist) {
@@ -124,8 +144,7 @@ public class BossActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     });
-                }
-                else {
+                } else {
                     actions.popUpMessage(R.string.mail_incorrect);
                 }
                 return;
@@ -200,7 +219,7 @@ public class BossActivity extends AppCompatActivity {
                     }
                 }
                 ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(BossActivity.this, shift_of_worker);
-                //                    shiftsArrayAdapter.setShowSalary(ShowSalary);
+                shiftsArrayAdapter.setShowSalary(ShowSalary);
                 ListView shiftsListView = findViewById(R.id.ShiftsForBoss);
                 shiftsListView.setAdapter(shiftsArrayAdapter);
                 TextView sum = findViewById(R.id.TextBossSum);
@@ -242,6 +261,7 @@ public class BossActivity extends AppCompatActivity {
             @Override
             public void play(User user) {
                 currentUser = user;
+                ChangeSum();
                 showListOfShifts("");
             }
         });

@@ -62,14 +62,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.544"
-        tools:context=".LoginActivity" />
+        tools:context=".UI.WorkerActivity" />
 
     <TextView
         android:id="@+id/sumSalary"
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:background="@color/white"
-        android:text="@string/sum_payment"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

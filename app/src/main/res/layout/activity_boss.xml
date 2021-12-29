@@ -55,6 +55,8 @@
         android:layout_width="413dp"
         android:layout_height="71dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -64,16 +66,15 @@
 
     <ListView
         android:id="@+id/ShiftsForBoss"
-        android:layout_width="413dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="74dp"
-        android:layout_marginBottom="74dp"
+        android:layout_width="match_parent"
+        android:layout_height="540dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" >
+        app:layout_constraintVertical_bias="0.544"
+        tools:context=".UI.BossActivity" >
     </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
