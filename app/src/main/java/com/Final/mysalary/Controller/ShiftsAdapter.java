@@ -11,16 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.Final.mysalary.Controller.Actions.WorkerActions;
 import com.Final.mysalary.Model.DTO.Shift;
+import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.R;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
+    private final Type type;
     String jobName = "";
     boolean ShowSalary=false;
 
@@ -29,10 +34,12 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
     }
 
     // invoke the suitable constructor of the ArrayAdapter class
-    public ShiftsAdapter(@NonNull Context context, ArrayList<Shift> arrayList) {
+    public ShiftsAdapter(@NonNull Context context, ArrayList<Shift> arrayList, Type type) {
+
         // pass the context and arrayList for the super
         // constructor of the ArrayAdapter class
         super(context, 0, arrayList);
+        this.type = type;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -52,6 +59,8 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         // get the position of the view from the ArrayAdapter
         Shift currentShift = getItem(position);
 
+        View editShift = currentItemView.findViewById(R.id.UpperBar);
+        if (type == Type.WORKER) new WorkerActions((AppCompatActivity) editShift.getContext()).setEditAndRemove(editShift,currentShift);
 
         TextView textView = currentItemView.findViewById(R.id.jobs_border);
         if (!jobName.equals(currentShift.JobName())) {
@@ -96,4 +105,13 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         // then return the recyclable view
         return currentItemView;
     }
+
+
+
+
+
+
+
+
+
 }

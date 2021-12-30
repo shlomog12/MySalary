@@ -9,11 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Final.mysalary.Controller.*;
+import com.Final.mysalary.Model.DTO.Shift;
+import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
@@ -24,12 +28,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class BossActions extends UiActions{
 
     public BossActions(AppCompatActivity activity) {
         super(activity);
+    }
+
+    @Override
+    public void showListOfShifts() {
+        showListOfShifts("");
     }
 
     public void showSearch() {
@@ -60,11 +71,6 @@ public class BossActions extends UiActions{
                                 return;
                             }
                             filter_results(StartDate, EndDate, mail);
-                            System.out.println("**************************************************************79");
-                            System.out.println(StartDate);
-                            System.out.println(EndDate);
-                            System.out.println(mail);
-                            System.out.println("**************************************************************79");
                             dialog.dismiss();
                         }
                     });
@@ -111,7 +117,7 @@ public class BossActions extends UiActions{
     public void refresh() {
         shift_start = LocalDateTime.MIN;
         shift_end = LocalDateTime.MAX;
-        showListOfShifts("");
+        showListOfShifts();
     }
 
     private void filter_results(EditText StartDate, EditText EndDate, String mail) {
@@ -119,45 +125,45 @@ public class BossActions extends UiActions{
         try {
             shift_start = LocalDateTime.parse(StartDate.getText().toString() + " " + "00:00", formatter);
             shift_end = LocalDateTime.parse(EndDate.getText().toString() + " " + "23:59", formatter);
-
-
-            System.out.println("**************************************************************140");
-            System.out.println(shift_start);
-            System.out.println(shift_end);
-            System.out.println(mail);
-            System.out.println("**************************************************************144");
-
-
-
-
-
             if (!Validate.isValidDateTime(shift_start, shift_end)) {
-                System.out.println("**************************************************************151");
                 popUpMessage(R.string.invalid_details);
                 return;
             }
         } catch (Exception e) {
-            System.out.println("**************************************************************156");
             popUpMessage(R.string.invalid_details);
             return;
         }
-        System.out.println("**************************************************************160");
-        super.showListOfShifts(mail);
+        showListOfShifts(mail);
     }
 
-    public void updateUser() {
-        String userMail = getUserMail();
-        if (userMail == null) return;
-        DB.getUserByUserMail(userMail, new Callback<User>() {
+    protected void showListOfShifts(String mail) {
+        if (currentUser == null) return;
+        final double[] totalsum = {0};
+        final double[] totalHr = {0};
+        ArrayList<Shift> shift_of_worker = new ArrayList<>();
+        DB.getShiftsByBossMail(shift_start, shift_end, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void play(User user) {
-                currentUser = user;
-                ChangeSum();
-//                ChangeSum();
-                showListOfShifts("");
+            public void play(ArrayList<Shift> shifts) {
+                for (Shift s : shifts) {
+                    if (s.UserMail().equals(mail) || mail.equals("")) {
+                        shift_of_worker.add(s);
+                        totalsum[0] += s.TotalSalary();
+                        totalHr[0] += s.TotalHours();
+                    }
+                }
+                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shift_of_worker, Type.BOSS);
+                shiftsArrayAdapter.setShowSalary(ShowSalary);
+                ListView shiftsListView = activity.findViewById(R.id.ShiftsForBoss);
+                shiftsListView.setAdapter(shiftsArrayAdapter);
+                TextView sum = activity.findViewById(R.id.TextBossSum);
+                sum.setText(activity.getApplicationContext().
+                        getString(R.string.sum_payment) + ": " + String.format("%.2f", totalsum[0])
+                        + "\n" +
+                        activity.getApplicationContext().getString(R.string.total_hours) + ": " + String.format("%.2f", totalHr[0]));
             }
         });
+        return;
     }
 
 }

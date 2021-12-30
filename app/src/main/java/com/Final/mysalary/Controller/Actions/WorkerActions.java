@@ -1,6 +1,9 @@
 package com.Final.mysalary.Controller.Actions;
 
+import static java.lang.Thread.sleep;
+
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,10 +12,18 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Final.mysalary.Controller.*;
+import com.Final.mysalary.Controller.date.DatePickerFragment;
+import com.Final.mysalary.Controller.date.TimePickerFragment;
+import com.Final.mysalary.Model.DTO.Type;
+import com.Final.mysalary.Model.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
@@ -35,13 +46,14 @@ public class WorkerActions extends UiActions{
         DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
             @Override
             public void play(ArrayList<String> jobs) {
-                addNewShiftToJobFromJobs(jobs);
+                addNewShiftToJobFromJobs(jobs,null);
             }
         });
     }
 
-    private void addNewShiftToJobFromJobs(ArrayList<String> jobs) {
+    public void addNewShiftToJobFromJobs(ArrayList<String> jobs,Shift oldShift) {
         final Dialog dialog = new Dialog(activity);
+
         //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
@@ -52,9 +64,10 @@ public class WorkerActions extends UiActions{
         final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStartTime);
         final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
         final EditText shiftTimeEnd = dialog.findViewById(R.id.editShiftEndTime);
-        updateDateTime(shiftStartDate, shiftTimeStart, shiftEndDate, shiftTimeEnd);
+        updateInput(shiftStartDate,shiftTimeStart,shiftEndDate ,shiftTimeEnd,oldShift ,AutoTextJobName);
         updateDropDownJobsName(AutoTextJobName);
         Button submitButton = dialog.findViewById(R.id.btnNewShiftSave);
+        updateDateTime(shiftStartDate, shiftTimeStart, shiftEndDate, shiftTimeEnd);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -73,10 +86,11 @@ public class WorkerActions extends UiActions{
                         return;
                     }
                     if (Validate.isValidDateTime(shift_start,shift_end)) {
-                        Shift shift = new Shift(shift_start, shift_end, currentUser.getMail(), name);
+                        DB.removeShift(oldShift);
+                        String mailUser = (currentUser != null)?  currentUser.getMail() : oldShift.UserMail();
+                        Shift shift = new Shift(shift_start, shift_end, mailUser, name);
                         DB.setInShifts(shift);
                         popUpMessage(R.string.shift_added_successfully);
-                        showListOfShifts();
                         dialog.dismiss();
                     }
                     else throw new Exception();
@@ -89,9 +103,25 @@ public class WorkerActions extends UiActions{
         dialog.show();
     }
 
+    private void updateInput(EditText startDate, EditText StartTime, EditText endDate, EditText endTime, Shift shift, AutoCompleteTextView jobName) {
+        if (shift == null) return;
+        LocalDateTime startShift = LocalDateTime.parse(shift.getStart());
+        LocalDateTime endShift = LocalDateTime.parse(shift.getEnd());
 
+        String strStartDate = DatePickerFragment.getStrOfDate(startShift.getYear(),startShift.getMonthValue()-1,startShift.getDayOfMonth());
+        String strEndDate =DatePickerFragment.getStrOfDate(endShift.getYear(),endShift.getMonthValue()-1,endShift.getDayOfMonth());
+        String strStartTime = TimePickerFragment.getStringFromTime(startShift.getHour(),startShift.getMinute());
+        String strEndTime = TimePickerFragment.getStringFromTime(endShift.getHour(),endShift.getMinute());
+
+        startDate.setText(strStartDate, TextView.BufferType.EDITABLE);
+        StartTime.setText(strStartTime,TextView.BufferType.EDITABLE);
+        endTime.setText(strEndTime,TextView.BufferType.EDITABLE);
+        endDate.setText(strEndDate,TextView.BufferType.EDITABLE);
+        jobName.setText(shift.JobName(),TextView.BufferType.EDITABLE);
+    }
 
     private void updateDropDownJobsName(AutoCompleteTextView jobName) {
+        if (currentUser == null) return;
         DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
             @Override
             public void play(ArrayList<String> jobsNames) {
@@ -167,13 +197,98 @@ public class WorkerActions extends UiActions{
                         sendNotificationToUserMail(bossMail,title,message);
                         DB.setInJobs(job);
                         popUpMessage(R.string.job_added_success);
-                        showListOfShifts();
+//                        showListOfShifts();
                         dialog.dismiss();
                     }
                 });
             }
         });
         dialog.show();
+    }
+
+    public void setEditAndRemove(View editShift, Shift currentShift) {
+        DB.getUserByUserMail(currentShift.UserMail(), new Callback<User>() {
+            @Override
+            public void play(User user) {
+                currentUser = user;
+                openDialogEditAndRemove(editShift,currentShift);
+            }
+        });
+    }
+
+    private void openDialogEditAndRemove(View editShift, Shift currentShift) {
+        editShift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog alert = new AlertDialog.Builder(editShift.getContext()).create();
+                alert.setButton(Dialog.BUTTON_NEUTRAL, "ערוך משמרת", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showEditShift(currentShift);
+                    }
+                });
+                alert.setButton(Dialog.BUTTON_NEGATIVE, "מחק משמרת", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showDialogRemoveShift(editShift,currentShift);
+                    }
+                });
+                alert.show();
+            }
+        });
+    }
+
+    private void showEditShift(Shift currentShift) {
+        ArrayList<String> jobsNames = new ArrayList<>();
+        jobsNames.add(currentShift.JobName());
+        addNewShiftToJobFromJobs(jobsNames,currentShift);
+    }
+    private void showDialogRemoveShift(View editShift,Shift currentShift) {
+        AlertDialog alert = new AlertDialog.Builder(editShift.getContext()).create();
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+//                showListOfShifts();
+            }
+        });
+        alert.setTitle("בטוח שאתה רוצה למחוק את המשמרת?");
+        alert.setButton(Dialog.BUTTON_POSITIVE, "אישור", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DB.removeShift(currentShift);
+                alert.dismiss();
+            }
+        });
+        alert.setButton(Dialog.BUTTON_NEGATIVE, "ביטול", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alert.dismiss();
+            }
+        });
+        alert.show();
+    }
+
+    public void showListOfShifts() {
+        if (currentUser == null) {
+            return;
+        }
+        DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
+            @Override
+            public void play(ArrayList<Shift> shifts) {
+                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shifts, Type.WORKER);
+                shiftsArrayAdapter.setShowSalary(ShowSalary);
+                ListView shiftsListView = activity.findViewById(R.id.listView);
+                shiftsListView.setAdapter(shiftsArrayAdapter);
+                double totalsum = 0;
+                double totalHr = 0;
+                for (Shift s : shifts) {
+                    totalsum += s.TotalSalary();
+                    totalHr += s.TotalHours();
+                }
+                TextView sum = activity.findViewById(R.id.sumSalary);
+                sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
+            }
+        });
     }
 
 }

@@ -17,38 +17,32 @@ import com.Final.mysalary.R;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class WorkerActivity extends AppCompatActivity {
 
     WorkerActions actions;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
         actions = new WorkerActions(this);
+        actions.setTimer();
     }
+
+
 
     public void onStart() {
         super.onStart();
-        updateUser();
+        actions.updateUser();
     }
 
-    private void updateUser() {
-        String userMail = actions.getUserMail();
-        if (userMail == null) return;
-        DB.getUserByUserMail(userMail, new Callback<User>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void play(User user) {
-                actions.setCurrentUser(user);
-                actions.ChangeSum();
-                System.out.println("**************************************************71");
-                actions.showListOfShifts();
-                System.out.println("**************************************************73");
-            }
-        });
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
