@@ -1,8 +1,10 @@
 package com.Final.mysalary.Controller.Actions;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Final.mysalary.R;
@@ -15,15 +17,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class RegisterActions extends UiActions{
 
 
     public RegisterActions(AppCompatActivity activity) {
         super(activity);
     }
-
-
-
     public void registerWithFireBase(User newUser) {
         mAuth.createUserWithEmailAndPassword(newUser.getMail(), newUser.Password())
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -46,7 +46,4 @@ public class RegisterActions extends UiActions{
                     }
                 });
     }
-
-
-
 }

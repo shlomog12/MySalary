@@ -31,11 +31,18 @@ public class DatePickerFragment extends DialogFragment
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onDateSet(DatePicker view, int year, int month, int day) {
+        this.editText.setText(getStrOfDate(year,month,day));
+    }
+
+
+    public static String getStrOfDate(int year,int month,int day ) {
         month++;
         String monthStr = (month > 9) ? String.valueOf(month) : "0" + month;
         String dayStr = (day > 9) ? String.valueOf(day) : "0" + day;
-        this.editText.setText(dayStr + "/" + monthStr + "/" + year);
+        return dayStr + "/" + monthStr + "/" + year;
     }
+
+
 
     public void setEdit(EditText editText) {
         this.editText = editText;

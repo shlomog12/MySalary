@@ -34,10 +34,11 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class UiActions {
+public abstract class UiActions {
 
     protected User currentUser;
     boolean ShowSalary = true;
@@ -79,7 +80,6 @@ public class UiActions {
     }
 
     private void sendNotificationToTokenId(String tokenId, String title, String message){
-        System.out.println(tokenId);
         FcmNotificationsSender notificationsSender = new FcmNotificationsSender(tokenId,title
                 ,message, activity.getApplicationContext(),activity);
         notificationsSender.SendNotifications();
@@ -115,97 +115,12 @@ public class UiActions {
                     ShowHoursOrSalary.setText(R.string.total_hours);
                     ShowSalary = true;
                 }
-                showListOfShifts("");
+                showListOfShifts();
             }
         });
     }
 
-    public void showListOfShifts(LocalDateTime start, LocalDateTime end, String mail) {
-        if (currentUser == null) return;
-        DB.getShifts("", start, end, mail, new Callback<ArrayList<Shift>>() {
-            @Override
-            public void play(ArrayList<Shift> shifts) {
-                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shifts);
-                shiftsArrayAdapter.setShowSalary(ShowSalary);
-                ListView shiftsListView = activity.findViewById(R.id.listView);
-                shiftsListView.setAdapter(shiftsArrayAdapter);
-                double totalsum = 0;
-                double totalHr = 0;
-                for (Shift s : shifts) {
-                    totalsum += s.TotalSalary();
-                    totalHr += s.TotalHours();
-                }
-                TextView sum = activity.findViewById(R.id.sumSalary);
-                sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
-            }
-        });
-    }
-
-
-    protected void showListOfShifts(String mail) {
-        System.out.println("**************************************************************146");
-        if (currentUser == null) {
-            System.out.println("**************************************************************1148");
-            return;
-        }
-        System.out.println("**************************************************************151");
-        final double[] totalsum = {0};
-        final double[] totalHr = {0};
-        ArrayList<Shift> shift_of_worker = new ArrayList<>();
-        DB.getShiftsByBossMail(shift_start, shift_end, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void play(ArrayList<Shift> shifts) {
-                for (Shift s : shifts) {
-                    if (s.UserMail().equals(mail) || mail.equals("")) {
-                        shift_of_worker.add(s);
-                        totalsum[0] += s.TotalSalary();
-                        totalHr[0] += s.TotalHours();
-                    }
-                }
-                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shift_of_worker);
-                shiftsArrayAdapter.setShowSalary(ShowSalary);
-                ListView shiftsListView = activity.findViewById(R.id.ShiftsForBoss);
-                shiftsListView.setAdapter(shiftsArrayAdapter);
-                TextView sum = activity.findViewById(R.id.TextBossSum);
-                sum.setText(activity.getApplicationContext().
-                        getString(R.string.sum_payment) + ": " + String.format("%.2f", totalsum[0])
-                        + "\n" +
-                        activity.getApplicationContext().getString(R.string.total_hours) + ": " + String.format("%.2f", totalHr[0]));
-            }
-        });
-        return;
-    }
-
-    public void showListOfShifts(LocalDateTime start, LocalDateTime end) {
-        showListOfShifts(start, end, currentUser.getMail());
-    }
-
-    public void showListOfShifts() {
-        if (currentUser == null) {
-            return;
-        }
-        DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
-            @Override
-            public void play(ArrayList<Shift> shifts) {
-                System.out.println("**************************************************88");
-                System.out.println(Arrays.toString(shifts.toArray()));
-                System.out.println("**************************************************88");
-                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shifts);
-                shiftsArrayAdapter.setShowSalary(ShowSalary);
-                ListView shiftsListView = activity.findViewById(R.id.listView);
-                shiftsListView.setAdapter(shiftsArrayAdapter);
-                double totalsum = 0;
-                double totalHr = 0;
-                for (Shift s : shifts) {
-                    totalsum += s.TotalSalary();
-                    totalHr += s.TotalHours();
-                }
-                TextView sum = activity.findViewById(R.id.sumSalary);
-                sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
-            }
-        });
-    }
+    public void showListOfShifts(){};
 
     public String getUserMail() {
         String userMail;
@@ -219,8 +134,6 @@ public class UiActions {
         userMail = firebaseUser.getEmail();
         return userMail;
     }
-
-
     protected void updateDateTime(EditText shiftStartDate, EditText shiftTimeStart, EditText shiftEndDate, EditText shiftTimeEnd) {
         updateDate(shiftStartDate);
         updateDate(shiftEndDate);
@@ -265,8 +178,6 @@ public class UiActions {
         date.show(activity.getSupportFragmentManager(), "datePicker");
         date.setEdit(shiftDate);
     }
-
-
     public void logout() {
         FirebaseAuth.getInstance().signOut();
         signOutFromGoogle();
@@ -282,9 +193,53 @@ public class UiActions {
                     }
                 });
     }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    public void updateUser() {
+        String userMail = getUserMail();
+        if (userMail == null) return;
+        DB.getUserByUserMail(userMail, new Callback<User>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void play(User user) {
+                currentUser = user;
+                ChangeSum();
+                showListOfShifts();
+            }
+        });
+    }
+    public void setTimer() {
+        new Timer().scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run(){
+                showListOfShifts();
+            }
+        },0,1000);
     }
 
+    //    public void showListOfShifts(LocalDateTime start, LocalDateTime end, String mail) {
+//        if (currentUser == null) return;
+//        DB.getShifts("", start, end, mail, new Callback<ArrayList<Shift>>() {
+//            @Override
+//            public void play(ArrayList<Shift> shifts) {
+//                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shifts, Type.BOSS);
+//                shiftsArrayAdapter.setShowSalary(ShowSalary);
+//                ListView shiftsListView = activity.findViewById(R.id.listView);
+//                shiftsListView.setAdapter(shiftsArrayAdapter);
+//                double totalsum = 0;
+//                double totalHr = 0;
+//                for (Shift s : shifts) {
+//                    totalsum += s.TotalSalary();
+//                    totalHr += s.TotalHours();
+//                }
+//                TextView sum = activity.findViewById(R.id.sumSalary);
+//                sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
+//            }
+//        });
+//    }
+
+
+
+
+//    public void showListOfShifts(LocalDateTime start, LocalDateTime end) {
+//        showListOfShifts(start, end, currentUser.getMail());
+//    }
 }

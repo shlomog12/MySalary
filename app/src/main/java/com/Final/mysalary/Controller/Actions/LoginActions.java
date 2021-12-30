@@ -1,12 +1,14 @@
 package com.Final.mysalary.Controller.Actions;
 
 import android.content.DialogInterface;
+import android.os.Build;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,12 +25,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class LoginActions extends UiActions{
+
 
     public LoginActions(AppCompatActivity activity) {
         super(activity);
     }
-
 
     public void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
@@ -52,8 +56,6 @@ public class LoginActions extends UiActions{
         } catch (ApiException e) {
         }
     }
-
-
     private void showSelectTypeDialog(User curUser) {
         String[] types = {activity.getResources().getString(R.string.worker), activity.getResources().getString(R.string.boss)};
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -121,7 +123,6 @@ public class LoginActions extends UiActions{
         });
         dialog.show();
     }
-
     public void login(){
         String mail = ((EditText) activity.findViewById(R.id.input_username)).getText().toString();
         String password = ((EditText) activity.findViewById(R.id.input_pass)).getText().toString();

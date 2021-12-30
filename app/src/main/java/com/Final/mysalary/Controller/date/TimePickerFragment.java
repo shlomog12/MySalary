@@ -29,9 +29,13 @@ public class TimePickerFragment extends DialogFragment
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        this.editText.setText(getStringFromTime(hourOfDay,minute));
+    }
+
+    public static String getStringFromTime(int hourOfDay, int minute) {
         String hourStr = (hourOfDay > 9) ? String.valueOf(hourOfDay) : "0"+hourOfDay;
         String minuteStr = (minute > 9) ? String.valueOf(minute) : "0"+minute;
-        this.editText.setText(hourStr+":"+minuteStr);
+        return hourStr+":"+minuteStr;
     }
 
     public void setEdit(EditText editText){

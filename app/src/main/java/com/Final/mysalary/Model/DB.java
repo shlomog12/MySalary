@@ -114,7 +114,7 @@ public class DB {
         return shifts;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static ArrayList getListOfShifts(LocalDateTime start, LocalDateTime end, DataSnapshot dataSnapshotJob, ArrayList shifts, String userNameWorker) {
+    private static ArrayList getListOfShifts(LocalDateTime start, LocalDateTime end, DataSnapshot dataSnapshotJob, ArrayList shifts, String mailWorker) {
         String salaryForHour = dataSnapshotJob.getValue(Job.class).getSalaryForHour();
         String jobName = dataSnapshotJob.getKey();
         DataSnapshot shiftsOfJob = dataSnapshotJob.child(config.SHIFTS);
@@ -123,6 +123,7 @@ public class DB {
             shift.updateSalary(salaryForHour);
             shift.setJobOfName(jobName);
             shift.sShiftId(shiftFromDB.getKey());
+            shift.setUserMail(mailWorker);
             if (shift.Start().isAfter(start) && shift.End().isBefore(end) && !shiftFromDB.child(config.CANCELED).exists()) {
                 shifts.add(shift);
             }
@@ -308,6 +309,7 @@ public class DB {
         });
     }
     public static void removeShift(Shift shift){
+        if (shift == null) return;
         database.getReference().child(config.USERS).child(getSHA(shift.UserMail()))
                 .child(config.JOBS).child(shift.JobName()).child(config.SHIFTS).child(shift.gShiftId())
                 .child(config.CANCELED).setValue(config.TRUE);
