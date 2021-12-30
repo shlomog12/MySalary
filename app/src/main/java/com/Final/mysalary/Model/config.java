@@ -1,4 +1,4 @@
-package com.Final.mysalary.db;
+package com.Final.mysalary.Model;
 
 public class config {
     public static final String JOBS = "jobs";

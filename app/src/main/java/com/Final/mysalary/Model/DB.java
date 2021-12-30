@@ -1,14 +1,13 @@
-package com.Final.mysalary.db;
+package com.Final.mysalary.Model;
 
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.Final.mysalary.db.DTO.Job;
-import com.Final.mysalary.db.DTO.Shift;
-import com.Final.mysalary.db.DTO.Type;
-import com.Final.mysalary.db.DTO.User;
+import com.Final.mysalary.Model.DTO.Job;
+import com.Final.mysalary.Model.DTO.Shift;
+import com.Final.mysalary.Model.DTO.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;

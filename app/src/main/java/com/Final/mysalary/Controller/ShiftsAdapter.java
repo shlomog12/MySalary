@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.Final.mysalary.db.DTO.Shift;
+import com.Final.mysalary.Model.DTO.Shift;
 import com.Final.mysalary.R;
 
 import java.time.LocalDateTime;
