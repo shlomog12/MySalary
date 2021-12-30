@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Final.mysalary.Controller.Validate;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.DB;
 import com.Final.mysalary.Model.DTO.User;

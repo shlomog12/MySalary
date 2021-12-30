@@ -1,6 +1,7 @@
 package com.Final.mysalary.UI;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -8,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Final.mysalary.Controller.Actions.RegisterActions;
@@ -19,27 +21,22 @@ import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
 import com.google.firebase.auth.FirebaseAuth;
 
-
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class RegisterActivity extends AppCompatActivity {
 
     boolean validate;
     User newUser;
-    public FirebaseAuth mAuth;
     RegisterActions actions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mAuth = FirebaseAuth.getInstance();
         actions = new RegisterActions(this);
     }
-
     public void moveToLoginScreen() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, LoginActivity.class));
     }
-
     public void clean(View view) {
         ((EditText) findViewById(R.id.editMail)).setText("", TextView.BufferType.EDITABLE);
         ((EditText) findViewById(R.id.editUserName)).setText("", TextView.BufferType.EDITABLE);
@@ -48,7 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.editPassword)).setText("", TextView.BufferType.EDITABLE);
         ((EditText) findViewById(R.id.editValidPassword)).setText("", TextView.BufferType.EDITABLE);
     }
-
     public void close(View view) {
         moveToLoginScreen();
     }
@@ -77,7 +73,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
-
     public void sendFeedbackToUser(boolean busyUserName) {
         if (busyUserName) {
             actions.popUpMessage(getApplicationContext().getString(R.string.user_name_used));
@@ -85,7 +80,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         actions.registerWithFireBase(newUser);
     }
-
     private Type getTypeOfUser() {
         RadioGroup radioGroup = findViewById(R.id.radioGroupReg);
         int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -97,7 +91,6 @@ public class RegisterActivity extends AppCompatActivity {
         if (radioButton == findViewById(R.id.radBtnBossReg)) return Type.BOSS;
         return Type.WORKER;
     }
-
     private String getUserNameFromScreen() {
         String userName = ((EditText) findViewById(R.id.editUserName)).getText().toString();
         if (!Validate.isValidInput(userName)) {
@@ -107,7 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return userName;
     }
-
     private String getMailFromScreen() {
         String mail = ((EditText) findViewById(R.id.editMail)).getText().toString();
         if (!Validate.isValidEmail(mail)) {
@@ -117,7 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return mail;
     }
-
     private String getFirstNameFromScreen() {
         String firstName = ((EditText) findViewById(R.id.editFirstName)).getText().toString();
         if (!Validate.isValidInput(firstName)) {
@@ -127,7 +118,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return firstName;
     }
-
     private String getLastNameFromScreen() {
         String lastName = ((EditText) findViewById(R.id.editLastName)).getText().toString();
         if (!Validate.isValidInput(lastName)) {
@@ -137,14 +127,12 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return lastName;
     }
-
     private String getPasswordFromScreen() {
         String password = ((EditText) findViewById(R.id.editPassword)).getText().toString();
         String validPassword = ((EditText) findViewById(R.id.editValidPassword)).getText().toString();
         passwordCheck(password, validPassword);
         return password;
     }
-
     private void passwordCheck(String password, String validPassword) {
         if (!Validate.isValidPassword(password)) {
             actions.popUpMessage(getApplicationContext().getString(R.string.password_invalid));
@@ -158,5 +146,4 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return;
     }
-
 }

@@ -18,12 +18,14 @@ import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.Model.DTO.User;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -64,10 +66,10 @@ public class LoginActions extends UiActions{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String type = types[which];
-                if (type == "מנהל") curUser.setType(Type.BOSS.ordinal());
+                if (type.equals(activity.getResources().getString(R.string.boss))) curUser.setType(Type.BOSS.ordinal());
             }
         });
-        builder.setPositiveButton("אישור", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(activity.getResources().getString(R.string.Confirmation), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 popUpMessage(activity.getResources().getString(R.string.thank_you));
@@ -76,7 +78,7 @@ public class LoginActions extends UiActions{
                 moveToMainScreen(curUser);
             }
         });
-        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(activity.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -152,4 +154,19 @@ public class LoginActions extends UiActions{
         });
     }
 
+    public void updateUser() {
+        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(activity);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String mail;
+        if (googleAccount != null) mail = googleAccount.getEmail();
+        else if (currentUser != null) mail = currentUser.getEmail();
+        else return;
+        DB.getUserByUserMail(mail, new Callback<User>() {
+            @Override
+            public void play(User user) {
+                if (user == null) return;
+                moveToMainScreen(user);
+            }
+        });
+    }
 }

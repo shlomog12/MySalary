@@ -52,7 +52,6 @@ public abstract class UiActions {
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
     }
-
     public void moveToMainScreen(User curUser) {
         if (curUser == null) return;
         DB.updateToken(curUser.getMail());
@@ -63,28 +62,18 @@ public abstract class UiActions {
         intent.putExtra("userMail", curUser.getMail());
         activity.startActivity(intent);
     }
-
     public void popUpMessage(String message) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
     }
-
     public void popUpMessage(int message) {
         String messageStr = activity.getApplicationContext().getString(message);
         Toast.makeText(activity, messageStr, Toast.LENGTH_LONG).show();
     }
-
-    public void sendNotificationToAllUsers(String title, String message){
-        String tokenId = "/topics/all";
-        FirebaseMessaging.getInstance().subscribeToTopic("all");
-        sendNotificationToTokenId(tokenId,title,message+"from ALL");
-    }
-
     private void sendNotificationToTokenId(String tokenId, String title, String message){
         FcmNotificationsSender notificationsSender = new FcmNotificationsSender(tokenId,title
                 ,message, activity.getApplicationContext(),activity);
         notificationsSender.SendNotifications();
     }
-
     public void sendNotificationToUserMail(String userMail, String title, String message){
         DB.getTokenIdByUserMail(userMail, new Callback<String>() {
             @Override
@@ -93,7 +82,6 @@ public abstract class UiActions {
             }
         });
     }
-
     public String getMessageNotification(String userName, String name, String hourPay) {
         String s1 =activity.getApplicationContext().getString(R.string.the_user);
         String s2 = activity.getApplicationContext().getString(R.string.added_you_boss);
@@ -101,7 +89,6 @@ public abstract class UiActions {
         String s4 = activity.getApplicationContext().getString(R.string.per_hour);
         return s1+" "+userName+" "+s2+" "+name +" "+ s3+": "+hourPay +" "+ s4;
     }
-
     public void ChangeSum() {
         TextView ShowHoursOrSalary = activity.findViewById(R.id.SumSalaryBar);
         ShowHoursOrSalary.setOnClickListener(new View.OnClickListener() {
@@ -119,9 +106,7 @@ public abstract class UiActions {
             }
         });
     }
-
     public void showListOfShifts(){};
-
     public String getUserMail() {
         String userMail;
         Bundle extras = activity.getIntent().getExtras();
@@ -215,31 +200,5 @@ public abstract class UiActions {
         },0,1000);
     }
 
-    //    public void showListOfShifts(LocalDateTime start, LocalDateTime end, String mail) {
-//        if (currentUser == null) return;
-//        DB.getShifts("", start, end, mail, new Callback<ArrayList<Shift>>() {
-//            @Override
-//            public void play(ArrayList<Shift> shifts) {
-//                ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shifts, Type.BOSS);
-//                shiftsArrayAdapter.setShowSalary(ShowSalary);
-//                ListView shiftsListView = activity.findViewById(R.id.listView);
-//                shiftsListView.setAdapter(shiftsArrayAdapter);
-//                double totalsum = 0;
-//                double totalHr = 0;
-//                for (Shift s : shifts) {
-//                    totalsum += s.TotalSalary();
-//                    totalHr += s.TotalHours();
-//                }
-//                TextView sum = activity.findViewById(R.id.sumSalary);
-//                sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
-//            }
-//        });
-//    }
 
-
-
-
-//    public void showListOfShifts(LocalDateTime start, LocalDateTime end) {
-//        showListOfShifts(start, end, currentUser.getMail());
-//    }
 }
