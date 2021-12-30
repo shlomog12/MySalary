@@ -95,11 +95,11 @@ public abstract class UiActions {
     }
 
     public String getMessageNotification(String userName, String name, String hourPay) {
-        String s1 ="המשתמש ";
-        String s2 = " הוסיף אותך כמנהל למשרה ";
-        String s3 = " בשכר של ";
-        String s4 = " לשעה";
-        return s1+userName+" "+s2+name + s3+hourPay + s4;
+        String s1 =activity.getApplicationContext().getString(R.string.the_user);
+        String s2 = activity.getApplicationContext().getString(R.string.added_you_boss);
+        String s3 = activity.getApplicationContext().getString(R.string.in_salary);
+        String s4 = activity.getApplicationContext().getString(R.string.per_hour);
+        return s1+" "+userName+" "+s2+" "+name +" "+ s3+": "+hourPay +" "+ s4;
     }
 
     public void ChangeSum() {

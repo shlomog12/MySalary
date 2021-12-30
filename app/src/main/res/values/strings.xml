@@ -54,4 +54,17 @@
     <string name="worker_mail">Worker Mail</string>
     <string name="thank_you">Thank You</string>
     <string name="invalid_details">Invalid Details</string>
+    <string name="user_added">Hello, you have another worker added</string>
+    <string name="boss_mail_wrong">the boss mail doesn\'t exist</string>
+    <string name="invalid_salary">the payment is invalid</string>
+    <string name="invalid_job">job name is invalid</string>
+    <string name="the_user">The user</string>
+    <string name="added_you_boss">added you as his employer at the job</string>
+    <string name="in_salary">in hourly pay of</string>
+    <string name="per_hour">per hour</string>
+    <string name="edit_shift">Edit shift</string>
+    <string name="delete_shift">Delete Shift</string>
+    <string name="sure_delete">Are you sure you want to delete?</string>
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

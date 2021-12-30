@@ -55,4 +55,17 @@
     <string name="worker_mail">מייל עובד</string>
     <string name="thank_you">תודה</string>
     <string name="invalid_details">הפרטים שהוכנסו שגויים</string>
+    <string name="user_added">שלום, נוסף לך עובד חדש</string>
+    <string name="boss_mail_wrong">המייל שהוזן עבור המנהל לא קיים במערכת</string>
+    <string name="invalid_salary">השכר שהוזן אינו תקין</string>
+    <string name="invalid_job">שם המשרה לא תקין</string>
+    <string name="the_user">המשתמש</string>
+    <string name="added_you_boss">הוסיף אותך כמנהל למשרה</string>
+    <string name="in_salary">בשכר של</string>
+    <string name="per_hour">לשעה</string>
+    <string name="edit_shift">ערוך משמרת</string>
+    <string name="delete_shift">מחק משמרת</string>
+    <string name="sure_delete">בטוח שאתה רוצה למחוק את המשמרת?</string>
+    <string name="OK">בסדר</string>
+    <string name="cancel">ביטול</string>
 </resources>

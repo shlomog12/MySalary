@@ -74,7 +74,7 @@ public class WorkerActions extends UiActions{
             public void onClick(View v) {
                 String name = AutoTextJobName.getText().toString();
                 if (!jobs.contains(name)) {
-                    popUpMessage("המשרה המבוקשת לא קיימת");
+                    popUpMessage(R.string.invalid_job);
                     return;
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -82,7 +82,7 @@ public class WorkerActions extends UiActions{
                     LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
                     LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
                     if (shift_end.isBefore(shift_start)){
-                        popUpMessage("הנתונים שהוזנו אינם תקינים");
+                        popUpMessage(R.string.invalid_details);
                         return;
                     }
                     if (Validate.isValidDateTime(shift_start,shift_end)) {
@@ -95,7 +95,7 @@ public class WorkerActions extends UiActions{
                     }
                     else throw new Exception();
                 } catch (Exception e) {
-                    popUpMessage("הנתונים שהוזנו אינם תקינים");
+                    popUpMessage(R.string.invalid_details);
                     return;
                 }
             }
@@ -171,28 +171,28 @@ public class WorkerActions extends UiActions{
             public void onClick(View v) {
                 String name = jobName.getText().toString();
                 if (!Validate.isValidInput(name)) {
-                    popUpMessage("שם המשרה לא תקין");
+                    popUpMessage(R.string.invalid_job);
                     return;
                 }
                 String hourPay = hourSal.getText().toString();
                 if (!Validate.isNumeric(hourPay)) {
-                    popUpMessage("השכר שהוזן אינו תקין");
+                    popUpMessage(R.string.invalid_salary);
                     return;
                 }
                 String bossMail = bossId.getText().toString();
                 if (!Validate.isValidEmail(bossMail)) {
-                    popUpMessage("המייל שהוזן עבור המנהל אינו תקין");
+                    popUpMessage(R.string.boss_mail_wrong);
                     return;
                 }
                 DB.CheckIfTheUserMailIsExists(bossMail, new Callback<Boolean>() {
                     @Override
                     public void play(Boolean isExits) {
                         if (!isExits){
-                            popUpMessage("המייל שהוזן עבור המנהל לא קיים במערכת");
+                            popUpMessage(R.string.boss_mail_wrong);
                             return;
                         }
                         Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
-                        String title = "שלום, נוסף לך עובד חדש";
+                        String title = activity.getApplicationContext().getString(R.string.user_added);
                         String message = getMessageNotification(currentUser.getUserName(),name,hourPay);
                         sendNotificationToUserMail(bossMail,title,message);
                         DB.setInJobs(job);
@@ -221,13 +221,13 @@ public class WorkerActions extends UiActions{
             @Override
             public void onClick(View v) {
                 AlertDialog alert = new AlertDialog.Builder(editShift.getContext()).create();
-                alert.setButton(Dialog.BUTTON_NEUTRAL, "ערוך משמרת", new DialogInterface.OnClickListener() {
+                alert.setButton(Dialog.BUTTON_NEUTRAL, activity.getApplicationContext().getString(R.string.edit_shift), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showEditShift(currentShift);
                     }
                 });
-                alert.setButton(Dialog.BUTTON_NEGATIVE, "מחק משמרת", new DialogInterface.OnClickListener() {
+                alert.setButton(Dialog.BUTTON_NEGATIVE, activity.getApplicationContext().getString(R.string.delete_shift), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showDialogRemoveShift(editShift,currentShift);
@@ -251,15 +251,15 @@ public class WorkerActions extends UiActions{
 //                showListOfShifts();
             }
         });
-        alert.setTitle("בטוח שאתה רוצה למחוק את המשמרת?");
-        alert.setButton(Dialog.BUTTON_POSITIVE, "אישור", new DialogInterface.OnClickListener() {
+        alert.setTitle(activity.getApplicationContext().getString(R.string.sure_delete));
+        alert.setButton(Dialog.BUTTON_POSITIVE, activity.getApplicationContext().getString(R.string.OK), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 DB.removeShift(currentShift);
                 alert.dismiss();
             }
         });
-        alert.setButton(Dialog.BUTTON_NEGATIVE, "ביטול", new DialogInterface.OnClickListener() {
+        alert.setButton(Dialog.BUTTON_NEGATIVE, activity.getApplicationContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 alert.dismiss();
