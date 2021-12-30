@@ -50,7 +50,6 @@ public class WorkerActions extends UiActions{
             }
         });
     }
-
     public void addNewShiftToJobFromJobs(ArrayList<String> jobs,Shift oldShift) {
         final Dialog dialog = new Dialog(activity);
 
@@ -102,7 +101,6 @@ public class WorkerActions extends UiActions{
         });
         dialog.show();
     }
-
     private void updateInput(EditText startDate, EditText StartTime, EditText endDate, EditText endTime, Shift shift, AutoCompleteTextView jobName) {
         if (shift == null) return;
         LocalDateTime startShift = LocalDateTime.parse(shift.getStart());
@@ -119,7 +117,6 @@ public class WorkerActions extends UiActions{
         endDate.setText(strEndDate,TextView.BufferType.EDITABLE);
         jobName.setText(shift.JobName(),TextView.BufferType.EDITABLE);
     }
-
     private void updateDropDownJobsName(AutoCompleteTextView jobName) {
         if (currentUser == null) return;
         DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
@@ -152,7 +149,6 @@ public class WorkerActions extends UiActions{
         });
 
     }
-
     public void addJob() {
         final Dialog dialog = new Dialog(activity);
         //We have added a title in the custom layout. So let's disable the default title.
@@ -205,7 +201,6 @@ public class WorkerActions extends UiActions{
         });
         dialog.show();
     }
-
     public void setEditAndRemove(View editShift, Shift currentShift) {
         DB.getUserByUserMail(currentShift.UserMail(), new Callback<User>() {
             @Override
@@ -215,7 +210,6 @@ public class WorkerActions extends UiActions{
             }
         });
     }
-
     private void openDialogEditAndRemove(View editShift, Shift currentShift) {
         editShift.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,7 +231,6 @@ public class WorkerActions extends UiActions{
             }
         });
     }
-
     private void showEditShift(Shift currentShift) {
         ArrayList<String> jobsNames = new ArrayList<>();
         jobsNames.add(currentShift.JobName());
@@ -267,7 +260,6 @@ public class WorkerActions extends UiActions{
         });
         alert.show();
     }
-
     public void showListOfShifts() {
         if (currentUser == null) {
             return;

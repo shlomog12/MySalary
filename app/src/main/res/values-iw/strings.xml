@@ -67,5 +67,6 @@
     <string name="delete_shift">מחק משמרת</string>
     <string name="sure_delete">בטוח שאתה רוצה למחוק את המשמרת?</string>
     <string name="OK">בסדר</string>
+    <string name="Confirmation">אישור</string>
     <string name="cancel">ביטול</string>
 </resources>

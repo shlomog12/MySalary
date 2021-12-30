@@ -37,12 +37,10 @@ public class BossActions extends UiActions{
     public BossActions(AppCompatActivity activity) {
         super(activity);
     }
-
     @Override
     public void showListOfShifts() {
         showListOfShifts("");
     }
-
     public void showSearch() {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,7 +80,6 @@ public class BossActions extends UiActions{
         });
         dialog.show();
     }
-
     private void updateDropDownWorkersMail(AutoCompleteTextView  WorkersMails) {
         DB.getJobsByBossMail(currentUser.getMail(),new Callback<ArrayList<Job>>() {
             @Override
@@ -113,13 +110,11 @@ public class BossActions extends UiActions{
             }
         });
     }
-
     public void refresh() {
         shift_start = LocalDateTime.MIN;
         shift_end = LocalDateTime.MAX;
         showListOfShifts();
     }
-
     private void filter_results(EditText StartDate, EditText EndDate, String mail) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         try {
@@ -135,7 +130,6 @@ public class BossActions extends UiActions{
         }
         showListOfShifts(mail);
     }
-
     protected void showListOfShifts(String mail) {
         if (currentUser == null) return;
         final double[] totalsum = {0};

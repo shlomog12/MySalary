@@ -67,4 +67,5 @@
     <string name="sure_delete">Are you sure you want to delete?</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="Confirmation">Confirmation</string>
 </resources>

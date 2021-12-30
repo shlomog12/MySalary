@@ -25,9 +25,6 @@ public class WorkerActivity extends AppCompatActivity {
 
     WorkerActions actions;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,21 +32,16 @@ public class WorkerActivity extends AppCompatActivity {
         actions = new WorkerActions(this);
         actions.setTimer();
     }
-
-
-
     public void onStart() {
         super.onStart();
         actions.updateUser();
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.worker_menu, menu);
         return true;
     }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_shift:
@@ -65,7 +57,5 @@ public class WorkerActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
 }

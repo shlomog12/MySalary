@@ -22,11 +22,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 120;
-    public FirebaseAuth mAuth;
-    User curUser;
     public static GoogleSignInClient mGoogleSignInClient;
     LoginActions actions;
 
@@ -35,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         actions = new LoginActions(this);
-        mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -44,25 +42,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
-        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(this);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String mail;
-        if (googleAccount != null) mail = googleAccount.getEmail();
-        else if (currentUser != null) mail = currentUser.getEmail();
-        else return;
-        DB.getUserByUserMail(mail, new Callback<User>() {
-            @Override
-            public void play(User user) {
-                if (user == null) return;
-                curUser = user;
-                actions.moveToMainScreen(curUser);
-            }
-        });
-
-
+        actions.updateUser();
     }
 
-    public void google_sign(View view) {
+    public void googleSign(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -80,29 +63,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(View view) {
         actions.login();
     }
-
     public void register(View view) {
         startActivity(new Intent(this, RegisterActivity.class));
     }
-
     public void forgot(View view) {
         actions.forgot();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void testDB(View view) {
 
-        String title = ((EditText) findViewById(R.id.input_username)).getText().toString();
-        String message = ((EditText) findViewById(R.id.input_pass)).getText().toString();
-        actions.sendNotificationToUserMail("shlomog12@googlemail.com",title,message);
-        actions.sendNotificationToAllUsers(title,message);
-    //        DBTest.test();
-    }
 
 
 
