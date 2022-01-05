@@ -8,8 +8,10 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -32,27 +34,39 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class BossActions extends UiActions{
+public class BossActions extends UiActions {
+
+    boolean showLiveOnly=false;
 
     public BossActions(AppCompatActivity activity) {
         super(activity);
     }
+
     @Override
     public void showListOfShifts() {
         showListOfShifts("");
     }
+
     public void showSearch() {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.popup_search_boss);
-        final AutoCompleteTextView AutoTextWorkerMail =(AutoCompleteTextView) dialog.findViewById(R.id.SearchWorkerMail);
+        final AutoCompleteTextView AutoTextWorkerMail = (AutoCompleteTextView) dialog.findViewById(R.id.SearchWorkerMail);
         final EditText StartDate = dialog.findViewById(R.id.SearchStartDate);
         final EditText EndDate = dialog.findViewById(R.id.SearchEndDate);
         Button submitButton = dialog.findViewById(R.id.btnBossSearch);
         updateDate(StartDate);
         updateDate(EndDate);
         updateDropDownWorkersMail(AutoTextWorkerMail);
+        Switch live_switch = dialog.findViewById(R.id.live_switch);
+        live_switch.setChecked(showLiveOnly);
+        live_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                showLiveOnly = isChecked;
+            }
+        });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -80,16 +94,17 @@ public class BossActions extends UiActions{
         });
         dialog.show();
     }
-    private void updateDropDownWorkersMail(AutoCompleteTextView  WorkersMails) {
-        DB.getJobsByBossMail(currentUser.getMail(),new Callback<ArrayList<Job>>() {
+
+    private void updateDropDownWorkersMail(AutoCompleteTextView WorkersMails) {
+        DB.getJobsByBossMail(currentUser.getMail(), new Callback<ArrayList<Job>>() {
             @Override
             public void play(ArrayList<Job> jobs) {
                 HashSet<String> Mails = new HashSet<>();
-                for (Job job:jobs) {
+                for (Job job : jobs) {
                     Mails.add(job.getMailWorker());
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                        (activity,android.R.layout.select_dialog_item, Mails.toArray(new String[0]));
+                        (activity, android.R.layout.select_dialog_item, Mails.toArray(new String[0]));
                 WorkersMails.setAdapter(adapter);
                 WorkersMails.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -110,11 +125,13 @@ public class BossActions extends UiActions{
             }
         });
     }
+
     public void refresh() {
         shift_start = LocalDateTime.MIN;
         shift_end = LocalDateTime.MAX;
         showListOfShifts();
     }
+
     private void filter_results(EditText StartDate, EditText EndDate, String mail) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         try {
@@ -130,6 +147,7 @@ public class BossActions extends UiActions{
         }
         showListOfShifts(mail);
     }
+
     protected void showListOfShifts(String mail) {
         if (currentUser == null) return;
         final double[] totalsum = {0};
@@ -140,11 +158,19 @@ public class BossActions extends UiActions{
             @Override
             public void play(ArrayList<Shift> shifts) {
                 for (Shift s : shifts) {
-                    if (s.UserMail().equals(mail) || mail.equals("")) {
-                        shift_of_worker.add(s);
-                        if (!s.End().equals(LocalDateTime.MAX)) {
-                            totalsum[0] += s.TotalSalary();
-                            totalHr[0] += s.TotalHours();
+                    if (showLiveOnly) {
+                        if (s.End().equals(LocalDateTime.MAX)) {
+                            if (s.UserMail().equals(mail) || mail.equals("")) {
+                                shift_of_worker.add(s);
+                            }
+                        }
+                    } else {
+                        if (s.UserMail().equals(mail) || mail.equals("")) {
+                            shift_of_worker.add(s);
+                            if (!s.End().equals(LocalDateTime.MAX)) {
+                                totalsum[0] += s.TotalSalary();
+                                totalHr[0] += s.TotalHours();
+                            }
                         }
                     }
                 }

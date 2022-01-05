@@ -54,6 +54,9 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
         // get the position of the view from the ArrayAdapter
         Shift currentShift = getItem(position);
+        if (currentShift.End().equals(LocalDateTime.MAX)){
+
+        }
         View editShift = currentItemView.findViewById(R.id.UpperBar);
         if (type == Type.WORKER)
             new WorkerActions((AppCompatActivity) editShift.getContext()).setEditAndRemove(editShift, currentShift);

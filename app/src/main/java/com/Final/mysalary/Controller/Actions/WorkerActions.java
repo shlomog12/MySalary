@@ -343,6 +343,10 @@ public class WorkerActions extends UiActions {
                     if (!s.End().equals(LocalDateTime.MAX)) {
                         totalsum += s.TotalSalary();
                         totalHr += s.TotalHours();
+                    } else {
+                        isLive = false;
+                        TextView temp = activity.findViewById(R.id.start_live_shift);
+                        temp.setText(activity.getApplicationContext().getString(R.string.end_live));
                     }
                 }
                 TextView sum = activity.findViewById(R.id.sumSalary);

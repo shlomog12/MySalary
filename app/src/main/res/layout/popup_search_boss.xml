@@ -14,36 +14,59 @@
         android:layout_marginBottom="16dp"/>
 
     <AutoCompleteTextView
+        android:id="@+id/SearchWorkerMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/worker_mail"
-        android:inputType="textEmailAddress"
-        android:imeOptions="actionNext"
         android:completionThreshold="0"
-        android:id="@+id/SearchWorkerMail"/>
+        android:hint="@string/worker_mail"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp" />
 
     <EditText
+        android:id="@+id/SearchStartDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/start_date"
-        android:inputType="number"
         android:imeOptions="actionNext"
-        android:id="@+id/SearchStartDate"/>
+        android:inputType="number"
+        android:minHeight="48dp" />
 
     <EditText
+        android:id="@+id/SearchEndDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/end_date"
-        android:inputType="text"
         android:imeOptions="actionNext"
-        android:id="@+id/SearchEndDate"/>
+        android:inputType="text"
+        android:minHeight="48dp" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/search"
-        android:textColor="@color/white"
-        android:background="@color/design_default_color_primary"
-        android:id="@+id/btnBossSearch"/>
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnBossSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:background="@color/design_default_color_primary"
+            android:text="@string/search"
+            android:textColor="@color/white" />
+
+        <Switch
+            android:id="@+id/live_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="30dp"
+            android:minHeight="48dp"
+            android:switchMinWidth="56dp"
+            android:text="@string/working_now"
+            android:textOff="OFF"
+            android:textOn="ON" />
+    </LinearLayout>
+
 </LinearLayout>

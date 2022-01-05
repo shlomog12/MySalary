@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Final.mysalary.Controller.Actions.BossActions;
@@ -33,6 +36,9 @@ public class BossActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.boss_menu, menu);
+//        ActionBar bar = getSupportActionBar();
+//        bar.setCustomView(R.layout.live_switch_layout);
+//        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM);
         return true;
     }
 
@@ -47,6 +53,20 @@ public class BossActivity extends AppCompatActivity {
                 return true;
             case R.id.refresh_shifts:
                 actions.refresh();
+                return true;
+            case R.id.live_switch_bar:
+                Switch toggle = (Switch) findViewById(R.id.live_switch_bar);
+                toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            actions.popUpMessage("ON");
+                        }
+                        else{
+                            actions.popUpMessage("OFF");
+                        }
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

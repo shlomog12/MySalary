@@ -12,9 +12,15 @@
         android:title="@string/logout" />
 
     <item
-        android:id="@+id/refresh_shifts"
+        android:id="@+id/live_switch_bar"
+        android:actionLayout="@layout/live_switch_layout"
         app:showAsAction="always"
-        android:title=""
+        android:title="" />
+
+    <item
+        android:id="@+id/refresh_shifts"
         android:icon="@drawable/ic_refresh"
-        android:iconTint="@color/black"/>
+        android:iconTint="@color/black"
+        android:title=""
+        app:showAsAction="always" />
 </menu>
