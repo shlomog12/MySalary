@@ -142,8 +142,10 @@ public class BossActions extends UiActions{
                 for (Shift s : shifts) {
                     if (s.UserMail().equals(mail) || mail.equals("")) {
                         shift_of_worker.add(s);
-                        totalsum[0] += s.TotalSalary();
-                        totalHr[0] += s.TotalHours();
+                        if (!s.End().equals(LocalDateTime.MAX)) {
+                            totalsum[0] += s.TotalSalary();
+                            totalHr[0] += s.TotalHours();
+                        }
                     }
                 }
                 ShiftsAdapter shiftsArrayAdapter = new ShiftsAdapter(activity, shift_of_worker, Type.BOSS);
