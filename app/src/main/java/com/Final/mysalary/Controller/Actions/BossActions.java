@@ -36,7 +36,7 @@ import java.util.TimerTask;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class BossActions extends UiActions {
 
-    boolean showLiveOnly=false;
+    public boolean showLiveOnly=false;
 
     public BossActions(AppCompatActivity activity) {
         super(activity);
@@ -59,14 +59,6 @@ public class BossActions extends UiActions {
         updateDate(StartDate);
         updateDate(EndDate);
         updateDropDownWorkersMail(AutoTextWorkerMail);
-        Switch live_switch = dialog.findViewById(R.id.live_switch);
-        live_switch.setChecked(showLiveOnly);
-        live_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                showLiveOnly = isChecked;
-            }
-        });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
