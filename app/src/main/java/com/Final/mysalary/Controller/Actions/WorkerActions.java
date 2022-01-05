@@ -30,12 +30,16 @@ import com.Final.mysalary.Model.DB;
 import com.Final.mysalary.Model.DTO.Job;
 import com.Final.mysalary.Model.DTO.Shift;
 
+import org.w3c.dom.Text;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class WorkerActions extends UiActions{
+public class WorkerActions extends UiActions {
+
+    boolean isLive = true;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public WorkerActions(AppCompatActivity activity) {
@@ -46,11 +50,12 @@ public class WorkerActions extends UiActions{
         DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
             @Override
             public void play(ArrayList<String> jobs) {
-                addNewShiftToJobFromJobs(jobs,null);
+                addNewShiftToJobFromJobs(jobs, null);
             }
         });
     }
-    public void addNewShiftToJobFromJobs(ArrayList<String> jobs,Shift oldShift) {
+
+    public void addNewShiftToJobFromJobs(ArrayList<String> jobs, Shift oldShift) {
         final Dialog dialog = new Dialog(activity);
 
         //We have added a title in the custom layout. So let's disable the default title.
@@ -58,12 +63,12 @@ public class WorkerActions extends UiActions{
         //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.popup_add_shift);
-        final AutoCompleteTextView AutoTextJobName =(AutoCompleteTextView) dialog.findViewById(R.id.editShiftName);
+        final AutoCompleteTextView AutoTextJobName = (AutoCompleteTextView) dialog.findViewById(R.id.editShiftName);
         final EditText shiftStartDate = dialog.findViewById(R.id.editShiftStartDate);
         final EditText shiftTimeStart = dialog.findViewById(R.id.editShiftStartTime);
         final EditText shiftEndDate = dialog.findViewById(R.id.editShiftEndDate);
         final EditText shiftTimeEnd = dialog.findViewById(R.id.editShiftEndTime);
-        updateInput(shiftStartDate,shiftTimeStart,shiftEndDate ,shiftTimeEnd,oldShift ,AutoTextJobName);
+        updateInput(shiftStartDate, shiftTimeStart, shiftEndDate, shiftTimeEnd, oldShift, AutoTextJobName);
         updateDropDownJobsName(AutoTextJobName);
         Button submitButton = dialog.findViewById(R.id.btnNewShiftSave);
         updateDateTime(shiftStartDate, shiftTimeStart, shiftEndDate, shiftTimeEnd);
@@ -80,19 +85,18 @@ public class WorkerActions extends UiActions{
                 try {
                     LocalDateTime shift_start = LocalDateTime.parse(shiftStartDate.getText().toString() + " " + shiftTimeStart.getText().toString(), formatter);
                     LocalDateTime shift_end = LocalDateTime.parse(shiftEndDate.getText().toString() + " " + shiftTimeEnd.getText().toString(), formatter);
-                    if (shift_end.isBefore(shift_start)){
+                    if (shift_end.isBefore(shift_start)) {
                         popUpMessage(R.string.invalid_details);
                         return;
                     }
-                    if (Validate.isValidDateTime(shift_start,shift_end)) {
+                    if (Validate.isValidDateTime(shift_start, shift_end)) {
                         DB.removeShift(oldShift);
-                        String mailUser = (currentUser != null)?  currentUser.getMail() : oldShift.UserMail();
+                        String mailUser = (currentUser != null) ? currentUser.getMail() : oldShift.UserMail();
                         Shift shift = new Shift(shift_start, shift_end, mailUser, name);
                         DB.setInShifts(shift);
                         popUpMessage(R.string.shift_added_successfully);
                         dialog.dismiss();
-                    }
-                    else throw new Exception();
+                    } else throw new Exception();
                 } catch (Exception e) {
                     popUpMessage(R.string.invalid_details);
                     return;
@@ -101,22 +105,78 @@ public class WorkerActions extends UiActions{
         });
         dialog.show();
     }
+
+    public void LiveShift() {
+        if (isLive)
+            StartNewLiveShift();
+        else EndNewLiveShift();
+    }
+
+    public void StartNewLiveShift() {
+        final Dialog dialog = new Dialog(activity);
+        //We have added a title in the custom layout. So let's disable the default title.
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.popup_live_shift);
+        TextView start_end = activity.findViewById(R.id.start_live_shift);
+        final AutoCompleteTextView AutoTextJobName = (AutoCompleteTextView) dialog.findViewById(R.id.editLiveShiftName);
+        updateDropDownJobsName(AutoTextJobName);
+        Button submitButton = dialog.findViewById(R.id.btnDialogLiveShift);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String name = AutoTextJobName.getText().toString();
+                Shift shift = new Shift(LocalDateTime.now(), LocalDateTime.MAX, currentUser.getMail(), name);
+                DB.setInShifts(shift);
+                popUpMessage(R.string.live_shift_started);
+                start_end.setText(activity.getApplicationContext().getString(R.string.end_live));
+                isLive = false;
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    public void EndNewLiveShift() {
+        DB.getShifts("", LocalDateTime.MIN, LocalDateTime.MAX, currentUser.getMail(), new Callback<ArrayList<Shift>>() {
+            @Override
+            public void play(ArrayList<Shift> shifts) {
+                for (Shift shift : shifts) {
+                    if (shift.End().equals(LocalDateTime.MAX)) {
+                        shift.setEndTime(LocalDateTime.now());
+                        DB.removeShift(shift);
+                        DB.setInShifts(shift);
+                        popUpMessage(R.string.live_shift_ended);
+                        TextView start_end = activity.findViewById(R.id.start_live_shift);
+                        start_end.setText(activity.getApplicationContext().getString(R.string.start_live));
+                        isLive = true;
+                        break;
+                    }
+                }
+            }
+        });
+        return;
+    }
+
     private void updateInput(EditText startDate, EditText StartTime, EditText endDate, EditText endTime, Shift shift, AutoCompleteTextView jobName) {
         if (shift == null) return;
         LocalDateTime startShift = LocalDateTime.parse(shift.getStart());
         LocalDateTime endShift = LocalDateTime.parse(shift.getEnd());
 
-        String strStartDate = DatePickerFragment.getStrOfDate(startShift.getYear(),startShift.getMonthValue()-1,startShift.getDayOfMonth());
-        String strEndDate =DatePickerFragment.getStrOfDate(endShift.getYear(),endShift.getMonthValue()-1,endShift.getDayOfMonth());
-        String strStartTime = TimePickerFragment.getStringFromTime(startShift.getHour(),startShift.getMinute());
-        String strEndTime = TimePickerFragment.getStringFromTime(endShift.getHour(),endShift.getMinute());
+        String strStartDate = DatePickerFragment.getStrOfDate(startShift.getYear(), startShift.getMonthValue() - 1, startShift.getDayOfMonth());
+        String strEndDate = DatePickerFragment.getStrOfDate(endShift.getYear(), endShift.getMonthValue() - 1, endShift.getDayOfMonth());
+        String strStartTime = TimePickerFragment.getStringFromTime(startShift.getHour(), startShift.getMinute());
+        String strEndTime = TimePickerFragment.getStringFromTime(endShift.getHour(), endShift.getMinute());
 
         startDate.setText(strStartDate, TextView.BufferType.EDITABLE);
-        StartTime.setText(strStartTime,TextView.BufferType.EDITABLE);
-        endTime.setText(strEndTime,TextView.BufferType.EDITABLE);
-        endDate.setText(strEndDate,TextView.BufferType.EDITABLE);
-        jobName.setText(shift.JobName(),TextView.BufferType.EDITABLE);
+        StartTime.setText(strStartTime, TextView.BufferType.EDITABLE);
+        endTime.setText(strEndTime, TextView.BufferType.EDITABLE);
+        endDate.setText(strEndDate, TextView.BufferType.EDITABLE);
+        jobName.setText(shift.JobName(), TextView.BufferType.EDITABLE);
     }
+
     private void updateDropDownJobsName(AutoCompleteTextView jobName) {
         if (currentUser == null) return;
         DB.getJobs(currentUser.getMail(), new Callback<ArrayList<String>>() {
@@ -127,7 +187,7 @@ public class WorkerActions extends UiActions{
                     jobsName[i] = jobsNames.get(i);
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                        (activity,android.R.layout.select_dialog_item,jobsName);
+                        (activity, android.R.layout.select_dialog_item, jobsName);
                 jobName.setAdapter(adapter);
                 jobName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -149,6 +209,7 @@ public class WorkerActions extends UiActions{
         });
 
     }
+
     public void addJob() {
         final Dialog dialog = new Dialog(activity);
         //We have added a title in the custom layout. So let's disable the default title.
@@ -183,14 +244,14 @@ public class WorkerActions extends UiActions{
                 DB.CheckIfTheUserMailIsExists(bossMail, new Callback<Boolean>() {
                     @Override
                     public void play(Boolean isExits) {
-                        if (!isExits){
+                        if (!isExits) {
                             popUpMessage(R.string.boss_mail_wrong);
                             return;
                         }
                         Job job = new Job(bossMail, hourPay, currentUser.getMail(), name);
                         String title = activity.getApplicationContext().getString(R.string.user_added);
-                        String message = getMessageNotification(currentUser.getUserName(),name,hourPay);
-                        sendNotificationToUserMail(bossMail,title,message);
+                        String message = getMessageNotification(currentUser.getUserName(), name, hourPay);
+                        sendNotificationToUserMail(bossMail, title, message);
                         DB.setInJobs(job);
                         popUpMessage(R.string.job_added_success);
 //                        showListOfShifts();
@@ -201,15 +262,17 @@ public class WorkerActions extends UiActions{
         });
         dialog.show();
     }
+
     public void setEditAndRemove(View editShift, Shift currentShift) {
         DB.getUserByUserMail(currentShift.UserMail(), new Callback<User>() {
             @Override
             public void play(User user) {
                 currentUser = user;
-                openDialogEditAndRemove(editShift,currentShift);
+                openDialogEditAndRemove(editShift, currentShift);
             }
         });
     }
+
     private void openDialogEditAndRemove(View editShift, Shift currentShift) {
         editShift.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,19 +287,21 @@ public class WorkerActions extends UiActions{
                 alert.setButton(Dialog.BUTTON_NEGATIVE, activity.getApplicationContext().getString(R.string.delete_shift), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showDialogRemoveShift(editShift,currentShift);
+                        showDialogRemoveShift(editShift, currentShift);
                     }
                 });
                 alert.show();
             }
         });
     }
+
     private void showEditShift(Shift currentShift) {
         ArrayList<String> jobsNames = new ArrayList<>();
         jobsNames.add(currentShift.JobName());
-        addNewShiftToJobFromJobs(jobsNames,currentShift);
+        addNewShiftToJobFromJobs(jobsNames, currentShift);
     }
-    private void showDialogRemoveShift(View editShift,Shift currentShift) {
+
+    private void showDialogRemoveShift(View editShift, Shift currentShift) {
         AlertDialog alert = new AlertDialog.Builder(editShift.getContext()).create();
         alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -260,6 +325,7 @@ public class WorkerActions extends UiActions{
         });
         alert.show();
     }
+
     public void showListOfShifts() {
         if (currentUser == null) {
             return;
@@ -274,8 +340,10 @@ public class WorkerActions extends UiActions{
                 double totalsum = 0;
                 double totalHr = 0;
                 for (Shift s : shifts) {
-                    totalsum += s.TotalSalary();
-                    totalHr += s.TotalHours();
+                    if (!s.End().equals(LocalDateTime.MAX)) {
+                        totalsum += s.TotalSalary();
+                        totalHr += s.TotalHours();
+                    }
                 }
                 TextView sum = activity.findViewById(R.id.sumSalary);
                 sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));

@@ -20,6 +20,7 @@ import com.Final.mysalary.R;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -27,11 +28,12 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
     private final Type type;
     String jobName = "";
-    boolean ShowSalary=false;
+    boolean ShowSalary = false;
 
     public void setShowSalary(boolean showSalary) {
         ShowSalary = !showSalary;
     }
+
     public ShiftsAdapter(@NonNull Context context, ArrayList<Shift> arrayList, Type type) {
         super(context, 0, arrayList);
         this.type = type;
@@ -53,7 +55,8 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         // get the position of the view from the ArrayAdapter
         Shift currentShift = getItem(position);
         View editShift = currentItemView.findViewById(R.id.UpperBar);
-        if (type == Type.WORKER) new WorkerActions((AppCompatActivity) editShift.getContext()).setEditAndRemove(editShift,currentShift);
+        if (type == Type.WORKER)
+            new WorkerActions((AppCompatActivity) editShift.getContext()).setEditAndRemove(editShift, currentShift);
         TextView textView = currentItemView.findViewById(R.id.jobs_border);
         if (!jobName.equals(currentShift.JobName())) {
             textView.setText(currentShift.JobName());
@@ -75,11 +78,20 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
         LocalDateTime localDate3 = currentShift.End();//For reference
         DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String formattedString3 = localDate3.format(formatter3);
+        TextView textView4 = currentItemView.findViewById(R.id.textViewSum);
+        if (currentShift.getEnd().equals(LocalDateTime.MAX.toString())) {
+            formattedString3 = getContext().getString(R.string.active_shift);
+        }
         textView3.setText(formattedString3);
 
-        TextView textView4 = currentItemView.findViewById(R.id.textViewSum);
-        if (ShowSalary) textView4.setText(String.format("%.2f", currentShift.TotalSalary()));
-        else textView4.setText(String.format("%.2f", currentShift.TotalHours()));
+        if (ShowSalary) {
+            textView4.setText(String.format("%.2f", currentShift.TotalSalary()));
+        } else {
+            textView4.setText(String.format("%.2f", currentShift.TotalHours()));
+        }
+
+        if (currentShift.getEnd().equals(LocalDateTime.MAX.toString()))
+            textView4.setText("-");
         // then return the recyclable view
         return currentItemView;
     }
