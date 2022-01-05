@@ -12,15 +12,18 @@
         android:theme="@style/Theme.MySalary">
         <activity
             android:name=".UI.WorkerActivity"
+            android:theme="@style/Theme.AppCompat"
             android:exported="false" />
         <activity
             android:name=".UI.RegisterActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".UI.BossActivity"
             android:exported="false" />
         <activity
             android:name=".UI.LoginActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

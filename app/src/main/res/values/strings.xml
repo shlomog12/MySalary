@@ -20,7 +20,7 @@
     <string name="server_client_id">30652896089-12272i8lgqvqlbb6ber8rs16v2kig76j.apps.googleusercontent.com</string>
     <string name="login">Login</string>
     <string name="google_sign_in">Google Sign-In</string>
-    <string name="forgot_the_password">Forgot The Password</string>
+    <string name="forgot_the_password">Forgot The Password?</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="total_hours">Total Hours</string>
@@ -74,5 +74,5 @@
     <string name="live_shift_started">Shift Started</string>
     <string name="active_shift">Active</string>
     <string name="live_shift_ended">Shift ended</string>
-    <string name="working_now">      Working now</string>
+    <string name="working_now">Working now</string>
 </resources>
