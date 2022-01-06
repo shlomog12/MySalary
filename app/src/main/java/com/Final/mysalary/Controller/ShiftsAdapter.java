@@ -17,6 +17,7 @@ import com.Final.mysalary.Controller.Actions.WorkerActions;
 import com.Final.mysalary.Model.DTO.Shift;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.R;
+import com.Final.mysalary.UI.WorkerActivity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
     private final Type type;
     String jobName = "";
     boolean ShowSalary = false;
+    int i=0;
 
     public void setShowSalary(boolean showSalary) {
         ShowSalary = !showSalary;
@@ -43,7 +45,7 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+        i++;
         // convertView which is recyclable view
         View currentItemView = convertView;
 
@@ -58,6 +60,9 @@ public class ShiftsAdapter extends ArrayAdapter<Shift> {
 
         }
         View editShift = currentItemView.findViewById(R.id.UpperBar);
+        if (i%2==0){
+            editShift.setBackgroundColor(editShift.getContext().getResources().getColor(R.color.cream));
+        }
         if (type == Type.WORKER)
             new WorkerActions((AppCompatActivity) editShift.getContext()).setEditAndRemove(editShift, currentShift);
         TextView textView = currentItemView.findViewById(R.id.jobs_border);

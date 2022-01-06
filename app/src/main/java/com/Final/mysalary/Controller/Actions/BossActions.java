@@ -76,6 +76,7 @@ public class BossActions extends UiActions {
                             }
                             filter_results(StartDate, EndDate, mail);
                             dialog.dismiss();
+                            showListOfShifts();
                         }
                     });
                 } else {

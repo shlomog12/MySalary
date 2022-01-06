@@ -284,6 +284,7 @@ public class WorkerActions extends UiActions {
         editShift.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                editShift.setBackgroundColor(editShift.getContext().getResources().getColor(R.color.cream));
                 AlertDialog alert = new AlertDialog.Builder(editShift.getContext()).create();
                 alert.setButton(Dialog.BUTTON_NEUTRAL, activity.getApplicationContext().getString(R.string.edit_shift), new DialogInterface.OnClickListener() {
                     @Override

@@ -12,12 +12,13 @@
         android:id="@+id/jobs_border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#8F9BA1"
+        android:background="#12150F"
         android:padding="12dp"
         android:text=""
         android:textAlignment="center"
-        android:textColor="#000"
+        android:textColor="#F8F4F4"
         android:textSize="14dp"
+        android:textStyle="bold"
         android:visibility="visible"
         tools:ignore="MissingConstraints" />
 
@@ -27,7 +28,8 @@
 
         android:id="@+id/UpperBar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#EDECE6">
 
         <!-- first element of the row-->
 
@@ -37,10 +39,9 @@
             android:id="@+id/textViewStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#3F51B5"
             android:padding="18dip"
             android:text="Text 1"
-            android:textColor="#CFD8DC"
+            android:textColor="#000000"
             android:textSize="14dp" />
 
         <TextView
@@ -48,10 +49,9 @@
             android:id="@+id/textViewEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#3F51B5"
             android:padding="18dip"
             android:text="Text 2"
-            android:textColor="#CFD8DC"
+            android:textColor="#000000"
             android:textSize="14dp" />
 
         <TextView
@@ -59,10 +59,9 @@
             android:id="@+id/textViewSum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#3F51B5"
             android:padding="18dip"
             android:text="Text 3"
-            android:textColor="#CFD8DC"
+            android:textColor="#000000"
             android:textSize="14dp" />
 
     </TableRow>

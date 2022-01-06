@@ -47,6 +47,7 @@ public class BossActivity extends AppCompatActivity {
         Switch tog = (Switch) view;
         if (tog.isChecked())actions.showLiveOnly = true;
         else actions.showLiveOnly = false;
+        actions.showListOfShifts();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
