@@ -46,7 +46,7 @@
 
     <RadioGroup
         android:id="@+id/radioGroupReg"
-        android:layout_width="191dp"
+        android:layout_width="wrap_content"
         android:layout_height="51dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,7 +68,7 @@
         <RadioButton
             android:textColor="#000000"
             android:id="@+id/radBtnBossReg"
-            android:layout_width="89dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/boss"
             android:textAlignment="center"

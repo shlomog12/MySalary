@@ -76,7 +76,6 @@ public class BossActions extends UiActions {
                             }
                             filter_results(StartDate, EndDate, mail);
                             dialog.dismiss();
-                            showListOfShifts();
                         }
                     });
                 } else {
@@ -142,6 +141,7 @@ public class BossActions extends UiActions {
     }
 
     protected void showListOfShifts(String mail) {
+        System.out.println("MAILLLLLL"+mail);
         if (currentUser == null) return;
         final double[] totalsum = {0};
         final double[] totalHr = {0};
