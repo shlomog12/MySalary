@@ -53,9 +53,9 @@
 
     <TextView
         android:id="@+id/TextBossSum"
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="71dp"
-        android:text="TextView"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"

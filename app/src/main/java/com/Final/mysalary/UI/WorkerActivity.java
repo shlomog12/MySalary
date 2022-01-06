@@ -25,7 +25,6 @@ public class WorkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker);
         actions = new WorkerActions(this);
-        actions.setTimer();
     }
 
     public void onStart() {

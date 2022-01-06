@@ -9,20 +9,20 @@
 
     <Button
         android:id="@+id/btnRegisterClean"
-        android:layout_width="127dp"
-        android:layout_height="92dp"
+        android:layout_width="113dp"
+        android:layout_height="65dp"
         android:backgroundTint="#d67601"
         android:onClick="clean"
         android:text="@string/cleanAll"
         android:textAlignment="center"
-        android:textSize="24sp"
         android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.137"
+        app:layout_constraintHorizontal_bias="0.204"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.948" />
+        app:layout_constraintVertical_bias="0.924" />
 
     <EditText
         android:id="@+id/editFirstName"
@@ -31,6 +31,7 @@
         android:layout_centerInParent="true"
         android:ems="10"
         android:hint="@string/firstName"
+        android:textSize="20sp"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textAlignment="center"
@@ -82,6 +83,7 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#000000"
         android:inputType="textPassword"
+        android:textSize="20sp"
         android:minHeight="48dp"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -96,6 +98,7 @@
         android:layout_width="221dp"
         android:layout_height="50dp"
         android:ems="10"
+        android:textSize="20sp"
         android:hint="@string/userName"
         android:textColor="#FFFFFF"
         android:textColorHint="#000000"
@@ -118,6 +121,7 @@
         android:textColorHint="#000000"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textSize="20sp"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -133,6 +137,7 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:textSize="20sp"
         android:minHeight="48dp"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
@@ -164,19 +169,19 @@
 
     <Button
         android:id="@+id/btnRegisterSave"
-        android:layout_width="127dp"
-        android:layout_height="92dp"
+        android:layout_width="120dp"
+        android:layout_height="62dp"
         android:backgroundTint="#d67601"
         android:onClick="saveDetails"
         android:text="@string/save"
-        android:textSize="24sp"
         android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintHorizontal_bias="0.824"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.949" />
+        app:layout_constraintVertical_bias="0.925" />
 
     <ImageView
         android:id="@+id/btnRegisterExit"

@@ -191,14 +191,5 @@ public abstract class UiActions {
             }
         });
     }
-    public void setTimer() {
-        new Timer().scheduleAtFixedRate(new TimerTask(){
-            @Override
-            public void run(){
-                showListOfShifts();
-            }
-        },0,1000);
-    }
-
 
 }

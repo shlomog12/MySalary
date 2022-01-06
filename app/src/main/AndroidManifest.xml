@@ -12,7 +12,6 @@
         android:theme="@style/Theme.MySalary">
         <activity
             android:name=".UI.WorkerActivity"
-            android:theme="@style/Theme.AppCompat"
             android:exported="false" />
         <activity
             android:name=".UI.RegisterActivity"

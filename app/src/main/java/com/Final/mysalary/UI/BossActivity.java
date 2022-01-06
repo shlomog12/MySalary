@@ -27,7 +27,6 @@ public class BossActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boss);
         actions = new BossActions(this);
-        actions.setTimer();
     }
 
     public void onStart() {

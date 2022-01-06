@@ -1,6 +1,7 @@
 package com.Final.mysalary.Model;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -51,7 +52,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("Set job","error");
             }
         });
     }
@@ -80,7 +81,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("set in shifts","error");
             }
 
         });
@@ -107,7 +108,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                return;
+                Log.d("get shifts","error");
             }
         });
         return;
@@ -159,7 +160,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("get user by mail","error");
             }
         });
         return;
@@ -177,7 +178,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.out.println("error = " + error.toString());
+                Log.d("user mail exists","error");
             }
         });
 
@@ -202,7 +203,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                return;
+                Log.d("get jobs","error");
             }
         });
     }
@@ -241,6 +242,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("get jobs by boss mail","error");
             }
         });
     }
@@ -284,7 +286,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("get shifts by jobs","error");
             }
 
 
@@ -306,7 +308,7 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                return;
+                Log.d("get token by user mail","error");
             }
         });
         return;

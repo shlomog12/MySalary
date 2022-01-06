@@ -24,8 +24,8 @@
     <string name="forgot_the_password">שכחתי את הסיסמה</string>
     <string name="start_time">שעת התחלה</string>
     <string name="end_time">שעת סיום</string>
-    <string name="total_hours">סה"כ שעות</string>
-    <string name="sum_payment">סה"כ תשלום</string>
+    <string name="total_hours">סהכ שעות</string>
+    <string name="sum_payment">סהכ תשלום</string>
     <string name="add_shift">הוספת משמרת חדשה</string>
     <string name="add_job">הוספת משרה חדשה</string>
     <string name="logout">התנתק</string>

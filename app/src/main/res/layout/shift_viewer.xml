@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:background="#3F51B5"
             android:padding="18dip"
-            android:text="Text 2"
+            android:text="Text 3"
             android:textColor="#CFD8DC"
             android:textSize="14dp" />
 

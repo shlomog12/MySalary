@@ -94,6 +94,7 @@ public class WorkerActions extends UiActions {
                         String mailUser = (currentUser != null) ? currentUser.getMail() : oldShift.UserMail();
                         Shift shift = new Shift(shift_start, shift_end, mailUser, name);
                         DB.setInShifts(shift);
+                        showListOfShifts();
                         popUpMessage(R.string.shift_added_successfully);
                         dialog.dismiss();
                     } else throw new Exception();
@@ -128,12 +129,18 @@ public class WorkerActions extends UiActions {
             @Override
             public void onClick(View v) {
                 String name = AutoTextJobName.getText().toString();
+                if (name.equals("")){
+                    popUpMessage(R.string.invalid_details);
+                    return;
+                }
                 Shift shift = new Shift(LocalDateTime.now(), LocalDateTime.MAX, currentUser.getMail(), name);
                 DB.setInShifts(shift);
                 popUpMessage(R.string.live_shift_started);
                 start_end.setText(activity.getApplicationContext().getString(R.string.end_live));
                 isLive = false;
                 dialog.dismiss();
+                waitToDB();
+                showListOfShifts();
             }
         });
         dialog.show();
@@ -152,6 +159,8 @@ public class WorkerActions extends UiActions {
                         TextView start_end = activity.findViewById(R.id.start_live_shift);
                         start_end.setText(activity.getApplicationContext().getString(R.string.start_live));
                         isLive = true;
+                        waitToDB();
+                        showListOfShifts();
                         break;
                     }
                 }
@@ -190,7 +199,6 @@ public class WorkerActions extends UiActions {
                         (activity, android.R.layout.select_dialog_item, jobsName);
                 jobName.setAdapter(adapter);
                 jobName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (hasFocus)
@@ -198,7 +206,6 @@ public class WorkerActions extends UiActions {
                     }
                 });
                 jobName.setOnTouchListener(new View.OnTouchListener() {
-
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         jobName.showDropDown();
@@ -254,7 +261,7 @@ public class WorkerActions extends UiActions {
                         sendNotificationToUserMail(bossMail, title, message);
                         DB.setInJobs(job);
                         popUpMessage(R.string.job_added_success);
-//                        showListOfShifts();
+                        showListOfShifts();
                         dialog.dismiss();
                     }
                 });
@@ -306,7 +313,7 @@ public class WorkerActions extends UiActions {
         alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-//                showListOfShifts();
+                showListOfShifts();
             }
         });
         alert.setTitle(activity.getApplicationContext().getString(R.string.sure_delete));
@@ -353,6 +360,14 @@ public class WorkerActions extends UiActions {
                 sum.setText(activity.getApplicationContext().getString(R.string.sum_payment) + " " + String.format("%.2f", totalsum) + "\n" + activity.getApplicationContext().getString(R.string.total_hours) + " " + String.format("%.2f", totalHr));
             }
         });
+    }
+
+    private void waitToDB() {
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
