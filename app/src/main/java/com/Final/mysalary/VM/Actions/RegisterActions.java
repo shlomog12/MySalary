@@ -1,4 +1,4 @@
-package com.Final.mysalary.Controller.Actions;
+package com.Final.mysalary.VM.Actions;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.Validate;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.DB;
 import com.Final.mysalary.Model.DTO.User;

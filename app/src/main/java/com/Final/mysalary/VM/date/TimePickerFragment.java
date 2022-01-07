@@ -1,4 +1,4 @@
-package com.Final.mysalary.Controller.date;
+package com.Final.mysalary.VM.date;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

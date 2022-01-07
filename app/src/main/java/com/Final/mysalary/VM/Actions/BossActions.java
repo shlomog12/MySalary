@@ -1,4 +1,4 @@
-package com.Final.mysalary.Controller.Actions;
+package com.Final.mysalary.VM.Actions;
 
 import android.app.Dialog;
 import android.os.Build;
@@ -8,30 +8,25 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.*;
+import com.Final.mysalary.VM.*;
 import com.Final.mysalary.Model.DTO.Shift;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
 import com.Final.mysalary.Model.DTO.Job;
-import com.Final.mysalary.Model.DTO.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class BossActions extends UiActions {

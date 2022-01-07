@@ -1,11 +1,10 @@
-package com.Final.mysalary.Controller.Actions;
+package com.Final.mysalary.VM.Actions;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,29 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.ShiftsAdapter;
-import com.Final.mysalary.Controller.date.DatePickerFragment;
-import com.Final.mysalary.Controller.date.TimePickerFragment;
+import com.Final.mysalary.VM.date.DatePickerFragment;
+import com.Final.mysalary.VM.date.TimePickerFragment;
 import com.Final.mysalary.R;
 import com.Final.mysalary.UI.LoginActivity;
-import com.Final.mysalary.Model.DTO.Shift;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.Model.DTO.User;
 import com.Final.mysalary.UI.BossActivity;
 import com.Final.mysalary.UI.WorkerActivity;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
-import com.Final.mysalary.Controller.notfication.FcmNotificationsSender;
+import com.Final.mysalary.VM.notfication.FcmNotificationsSender;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public abstract class UiActions {

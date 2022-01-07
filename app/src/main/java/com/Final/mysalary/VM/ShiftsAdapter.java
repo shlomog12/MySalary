@@ -1,4 +1,4 @@
-package com.Final.mysalary.Controller;
+package com.Final.mysalary.VM;
 
 import android.content.Context;
 import android.os.Build;
@@ -13,15 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.Actions.WorkerActions;
+import com.Final.mysalary.VM.Actions.WorkerActions;
 import com.Final.mysalary.Model.DTO.Shift;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.R;
-import com.Final.mysalary.UI.WorkerActivity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)

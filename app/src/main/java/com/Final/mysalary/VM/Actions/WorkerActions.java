@@ -1,4 +1,4 @@
-package com.Final.mysalary.Controller.Actions;
+package com.Final.mysalary.VM.Actions;
 
 import static java.lang.Thread.sleep;
 
@@ -19,9 +19,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.*;
-import com.Final.mysalary.Controller.date.DatePickerFragment;
-import com.Final.mysalary.Controller.date.TimePickerFragment;
+import com.Final.mysalary.VM.*;
+import com.Final.mysalary.VM.date.DatePickerFragment;
+import com.Final.mysalary.VM.date.TimePickerFragment;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.Model.DTO.User;
 import com.Final.mysalary.R;
@@ -29,8 +29,6 @@ import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
 import com.Final.mysalary.Model.DTO.Job;
 import com.Final.mysalary.Model.DTO.Shift;
-
-import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

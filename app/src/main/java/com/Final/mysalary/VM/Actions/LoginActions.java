@@ -1,4 +1,4 @@
-package com.Final.mysalary.Controller.Actions;
+package com.Final.mysalary.VM.Actions;
 
 import android.content.DialogInterface;
 import android.os.Build;
@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.*;
+import com.Final.mysalary.VM.*;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;

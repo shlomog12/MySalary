@@ -4,23 +4,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.Actions.LoginActions;
-import com.Final.mysalary.Model.DTO.User;
+import com.Final.mysalary.VM.Actions.LoginActions;
 import com.Final.mysalary.R;
-import com.Final.mysalary.Model.Callback;
-import com.Final.mysalary.Model.DB;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LoginActivity extends AppCompatActivity {

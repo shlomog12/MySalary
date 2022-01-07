@@ -12,14 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Final.mysalary.Controller.Actions.RegisterActions;
-import com.Final.mysalary.Controller.Validate;
+import com.Final.mysalary.VM.Actions.RegisterActions;
+import com.Final.mysalary.VM.Validate;
 import com.Final.mysalary.Model.DTO.Type;
 import com.Final.mysalary.Model.DTO.User;
 import com.Final.mysalary.R;
 import com.Final.mysalary.Model.Callback;
 import com.Final.mysalary.Model.DB;
-import com.google.firebase.auth.FirebaseAuth;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class RegisterActivity extends AppCompatActivity {
